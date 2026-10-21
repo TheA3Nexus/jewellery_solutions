@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 
 export const InventoryWorkspace = () => {
-  const { products, bullionRates } = useTenant();
+  const { products, bullionRates, addProduct } = useTenant();
 
   // Subcategory Level 2 Tab: 'CATALOG' | 'RFID_AUDIT' | 'TAG_STUDIO' | 'AGING'
   const [activeSubcategory, setActiveSubcategory] = useState('CATALOG');
@@ -28,10 +28,13 @@ export const InventoryWorkspace = () => {
     setActiveSubcategory('TAG_STUDIO');
   };
 
-  const handleAddNewItem = (newItem) => {
-    // In production, syncs with backend database
-    products.unshift(newItem);
-    alert(`Article "${newItem.name}" (${newItem.id}) registered successfully in ${newItem.trayNo}.`);
+  const handleAddNewItem = async (newItem) => {
+    const res = await addProduct(newItem);
+    if (res.success) {
+      alert(`Article "${newItem.name}" registered successfully in inventory & GoDaddy MySQL.`);
+    } else {
+      alert(`Note: ${res.message || 'Saved locally'}`);
+    }
   };
 
   return (

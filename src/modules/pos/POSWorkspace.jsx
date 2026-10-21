@@ -114,12 +114,13 @@ export const POSWorkspace = () => {
   const isPanMandatory = grandTotal >= 200000;
 
   // Finalize Sale from Split Payment Modal
-  const handleFinalizeSale = ({ paymentBreakdown, cardDetails, chequeDetails, invoiceType }) => {
+  const handleFinalizeSale = async ({ paymentBreakdown, cardDetails, chequeDetails, invoiceType }) => {
     const invoiceCounter = invoices.length + 101;
-    const invoiceId = `INV-${new Date().getFullYear()}-${invoiceCounter}`;
+    const fallbackId = `INV-${new Date().getFullYear()}-${invoiceCounter}`;
 
     const newInvoice = {
-      id: invoiceId,
+      id: fallbackId,
+      invoiceNo: fallbackId,
       shopName: tenant.name,
       shopAddress: tenant.address,
       shopPhone: tenant.phone,
@@ -127,35 +128,72 @@ export const POSWorkspace = () => {
       shopBisNo: tenant.bisLicenseNo,
       createdAt: new Date().toISOString(),
       customer,
-      items: cart,
+      items: cart.map(item => ({
+        ...item,
+        productId: item.productId || item.id,
+        itemName: item.name,
+        grossWeight: item.grossWeight,
+        netWeight: item.netWeight,
+        purity: item.purity,
+        goldRate: item.rate || bullionRates.gold22k,
+        makingCharges: item.makingCharges || 0,
+        stoneCharges: item.stoneCharges || 0,
+        totalAmount: item.rowTotal || item.finalPrice
+      })),
       grossTotal,
+      subtotal: grossTotal,
       exchangeCredit,
       hasExchange: exchange.active,
       exchangeDetails: exchange.active ? exchange : null,
       taxableAmount,
       gstAmount,
+      cgst: gstAmount / 2,
+      sgst: gstAmount / 2,
       grandTotal,
+      paymentMode: paymentBreakdown?.cash && paymentBreakdown?.upi ? 'SPLIT' : (paymentBreakdown?.upi ? 'UPI' : (paymentBreakdown?.card ? 'CARD' : 'CASH')),
       paymentBreakdown,
       cardDetails,
       chequeDetails,
-      invoiceType
+      invoiceType: invoiceType || 'TAX_INVOICE',
+      oldGoldExchange: exchange.active ? {
+        grossWeight: exchange.grossWeight,
+        lessWeight: exchange.lessWeight,
+        netWeight: Math.max(0, parseFloat(exchange.grossWeight || 0) - parseFloat(exchange.lessWeight || 0)),
+        purityPercent: exchange.purityPercent,
+        fineGoldWeight: ((Math.max(0, parseFloat(exchange.grossWeight || 0) - parseFloat(exchange.lessWeight || 0))) * parseFloat(exchange.purityPercent || 84)) / 100,
+        scrapRate: exchange.customRate || Math.round(bullionRates.gold24k * 0.98),
+        totalCredit: exchangeCredit
+      } : null
     };
 
-    // Mark products as sold in catalog
+    // Mark products as sold in local catalog
     cart.forEach(item => {
-      markProductSold(item.id, invoiceId);
+      markProductSold(item.id, fallbackId);
     });
 
-    // Record invoice in history
-    recordInvoice(newInvoice);
+    // Record invoice in history and persist to GoDaddy MySQL
+    let finalInvoice = newInvoice;
+    try {
+      const res = await recordInvoice(newInvoice);
+      if (res?.success && res?.data) {
+        finalInvoice = {
+          ...newInvoice,
+          ...res.data,
+          id: res.data.invoiceNo || res.data.id || fallbackId,
+          invoiceNo: res.data.invoiceNo || fallbackId
+        };
+      }
+    } catch (e) {
+      console.warn('Saved invoice in offline mode:', e);
+    }
 
     setIsSplitModalOpen(false);
-    setInvoiceSuccess(newInvoice);
+    setInvoiceSuccess(finalInvoice);
 
     if (invoiceType === 'ESTIMATE') {
-      setActiveEstimateInvoice(newInvoice);
+      setActiveEstimateInvoice(finalInvoice);
     } else {
-      setActiveTaxInvoice(newInvoice);
+      setActiveTaxInvoice(finalInvoice);
     }
   };
 

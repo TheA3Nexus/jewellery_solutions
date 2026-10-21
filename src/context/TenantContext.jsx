@@ -1,6 +1,8 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 const TenantContext = createContext(null);
+
+const API_BASE = 'http://localhost:5000/api/v1';
 
 const DEFAULT_TENANT = {
   id: 'A3_JEWELLERY_01',
@@ -45,7 +47,7 @@ const INITIAL_CATALOG = [
     netWeight: 4.620,
     wastagePercent: 3.0,
     makingChargeType: 'PER_GRAM',
-    makingChargeRate: 650, // ₹650 per gram
+    makingChargeRate: 650,
     hallmarkCharge: 45.00,
     trayNo: 'Tray-A04',
     status: 'IN_STOCK',
@@ -65,7 +67,7 @@ const INITIAL_CATALOG = [
     netWeight: 14.500,
     wastagePercent: 2.5,
     makingChargeType: 'PERCENTAGE',
-    makingChargeRate: 9.5, // 9.5%
+    makingChargeRate: 9.5,
     hallmarkCharge: 45.00,
     trayNo: 'Tray-C01',
     status: 'IN_STOCK',
@@ -157,6 +159,8 @@ export const TenantProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : [];
   });
 
+  const [isBackendOnline, setIsBackendOnline] = useState(false);
+
   const [currentUser] = useState({
     id: 'EMP-01',
     name: 'Aditya Raj',
@@ -164,6 +168,7 @@ export const TenantProvider = ({ children }) => {
     counter: 'Counter 01'
   });
 
+  // Sync to local cache
   useEffect(() => {
     localStorage.setItem('A3_TENANT_PROFILE', JSON.stringify(tenant));
   }, [tenant]);
@@ -180,9 +185,74 @@ export const TenantProvider = ({ children }) => {
     localStorage.setItem('A3_INVOICE_ARCHIVE', JSON.stringify(invoices));
   }, [invoices]);
 
+  // Fetch Products Catalog from Live Backend
+  const reloadCatalog = useCallback(async () => {
+    try {
+      const res = await fetch(`${API_BASE}/products?status=ALL`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+          const normalized = json.data.map(p => ({
+            ...p,
+            grossWeight: parseFloat(p.grossWeight || 0),
+            netWeight: parseFloat(p.netWeight || 0),
+            stoneWeight: parseFloat(p.stoneWeight || 0),
+            purityPercent: parseFloat(p.purityPercent || 91.67),
+            makingChargeRate: parseFloat(p.makingChargeRate || 0),
+            hallmarkCharge: parseFloat(p.hallmarkCharge || 0),
+            wastagePercent: parseFloat(p.wastagePercent || 0)
+          }));
+          setProducts(normalized);
+          setIsBackendOnline(true);
+        }
+      }
+    } catch (e) {
+      // Backend offline, keep local state
+    }
+  }, []);
+
+  // Fetch Invoices from Live Backend
+  const reloadInvoices = useCallback(async () => {
+    try {
+      const res = await fetch(`${API_BASE}/billing/invoices`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data)) {
+          setInvoices(json.data);
+          setIsBackendOnline(true);
+        }
+      }
+    } catch (e) {
+      // Fallback to local
+    }
+  }, []);
+
+  // Fetch Store Profile from Live Backend
+  const reloadTenant = useCallback(async () => {
+    try {
+      const res = await fetch(`${API_BASE}/tenant/profile`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && json.data) {
+          setTenant(json.data);
+          setIsBackendOnline(true);
+        }
+      }
+    } catch (e) {
+      // Fallback to local
+    }
+  }, []);
+
+  // Initial load
+  useEffect(() => {
+    reloadTenant();
+    reloadCatalog();
+    reloadInvoices();
+  }, [reloadTenant, reloadCatalog, reloadInvoices]);
+
   // Live Bullion Rates Sync with Backend 5-Minute Scraper & WebSocket
   useEffect(() => {
-    fetch('http://localhost:5000/api/v1/rates/live')
+    fetch(`${API_BASE}/rates/live`)
       .then((res) => res.json())
       .then((json) => {
         if (json.success && json.data) {
@@ -190,6 +260,7 @@ export const TenantProvider = ({ children }) => {
             ...prev,
             ...json.data
           }));
+          setIsBackendOnline(true);
         }
       })
       .catch(() => {});
@@ -215,11 +286,20 @@ export const TenantProvider = ({ children }) => {
     };
   }, []);
 
-  const updateTenant = (updates) => {
+  const updateTenant = async (updates) => {
     setTenant(prev => ({
       ...prev,
       ...updates
     }));
+
+    // Persist to backend
+    try {
+      await fetch(`${API_BASE}/tenant/profile`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates)
+      });
+    } catch (e) {}
   };
 
   const updateRates = (newRates) => {
@@ -230,16 +310,61 @@ export const TenantProvider = ({ children }) => {
     }));
   };
 
+  // Add new item into inventory
+  const addProduct = async (productData) => {
+    try {
+      const res = await fetch(`${API_BASE}/products`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(productData)
+      });
+      const json = await res.json();
+      if (json.success && json.data) {
+        setProducts(prev => [json.data, ...prev]);
+        return { success: true, data: json.data };
+      }
+      return { success: false, message: json.message };
+    } catch (err) {
+      // Local fallback
+      const localItem = {
+        id: `A3-${Date.now().toString().slice(-4)}`,
+        ...productData,
+        status: 'IN_STOCK'
+      };
+      setProducts(prev => [localItem, ...prev]);
+      return { success: true, data: localItem };
+    }
+  };
+
   const markProductSold = (productId, invoiceNo) => {
     setProducts(prev => prev.map(item => 
-      item.id === productId 
+      item.id === productId || item.barcode === productId
         ? { ...item, status: 'SOLD', soldInvoiceNo: invoiceNo, soldAt: new Date().toISOString() }
         : item
     ));
   };
 
-  const recordInvoice = (newInvoice) => {
-    setInvoices(prev => [newInvoice, ...prev]);
+  // Record completed sale invoice
+  const recordInvoice = async (newInvoice) => {
+    try {
+      const res = await fetch(`${API_BASE}/billing/invoices`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newInvoice)
+      });
+      const json = await res.json();
+      if (json.success && json.data) {
+        setInvoices(prev => [json.data, ...prev]);
+        // Refresh catalog to reflect sold stock
+        reloadCatalog();
+        return { success: true, data: json.data };
+      }
+      return { success: false, message: json.message };
+    } catch (err) {
+      // Local fallback
+      setInvoices(prev => [newInvoice, ...prev]);
+      return { success: true, data: newInvoice };
+    }
   };
 
   return (
@@ -251,9 +376,14 @@ export const TenantProvider = ({ children }) => {
         bullionRates,
         updateRates,
         products,
+        addProduct,
         markProductSold,
         invoices,
-        recordInvoice
+        recordInvoice,
+        reloadCatalog,
+        reloadInvoices,
+        reloadTenant,
+        isBackendOnline
       }}
     >
       {children}

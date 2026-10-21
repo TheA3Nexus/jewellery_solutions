@@ -60,6 +60,25 @@ export const KarigarWorkspace = () => {
     }
   ]);
 
+  // Load Artisans from GoDaddy MySQL backend on mount
+  React.useEffect(() => {
+    fetch('http://localhost:5000/api/v1/karigar/accounts')
+      .then(res => res.json())
+      .then(json => {
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+          const normalized = json.data.map(k => ({
+            ...k,
+            metalBalanceGrams: parseFloat(k.metalBalanceGrams || 0),
+            laborBalanceRupees: parseFloat(k.laborBalanceRupees || 0),
+            allowedGhatRate: parseFloat(k.allowedGhatRate || 2.0),
+            activeWorkOrdersCount: k._count?.transactions || 2
+          }));
+          setKarigars(normalized);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   // Initial Artisan Double-Entry Transactions
   const [transactions, setTransactions] = useState([
     {
@@ -165,7 +184,7 @@ export const KarigarWorkspace = () => {
     }
   ]);
 
-  const handleIssueMetal = (payload) => {
+  const handleIssueMetal = async (payload) => {
     const karigar = karigars.find((k) => k.id === payload.karigarId);
     const newMetalBal = (karigar?.metalBalanceGrams || 0) + payload.weightGrams;
 
@@ -201,6 +220,20 @@ export const KarigarWorkspace = () => {
     };
     setTransactions((prev) => [newTx, ...prev]);
 
+    // Persist to GoDaddy MySQL
+    try {
+      await fetch('http://localhost:5000/api/v1/karigar/issue-metal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          karigarId: payload.karigarId,
+          metalIssuedGrams: payload.weightGrams,
+          purity: payload.purity,
+          description: payload.workOrderDesc
+        })
+      });
+    } catch (e) {}
+
     // Append to work orders
     const newOrder = {
       id: payload.id,
@@ -216,7 +249,7 @@ export const KarigarWorkspace = () => {
     setWorkOrders((prev) => [newOrder, ...prev]);
   };
 
-  const handleReceiveGoods = (payload) => {
+  const handleReceiveGoods = async (payload) => {
     const karigar = karigars.find((k) => k.id === payload.karigarId);
     const metalAccounted = payload.grossWeight + payload.returnScrapWeight;
     const newMetalBal = Math.max(0, (karigar?.metalBalanceGrams || 0) - metalAccounted);
@@ -254,9 +287,24 @@ export const KarigarWorkspace = () => {
       runningLabourBalance: newLaborBal
     };
     setTransactions((prev) => [newTx, ...prev]);
+
+    // Persist to GoDaddy MySQL
+    try {
+      await fetch('http://localhost:5000/api/v1/karigar/receive-goods', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          karigarId: payload.karigarId,
+          metalReceivedGrams: metalAccounted,
+          wastageGrams: payload.returnScrapWeight,
+          labourEarned: payload.makingChargesPayable,
+          description: payload.articleName
+        })
+      });
+    } catch (e) {}
   };
 
-  const handleSettleLabor = (karigar) => {
+  const handleSettleLabor = async (karigar) => {
     const amountStr = prompt(`Enter advance / labour payment amount to ${karigar.name} (Current Due: ₹${karigar.laborBalanceRupees}):`, karigar.laborBalanceRupees);
     if (!amountStr) return;
     const amount = parseFloat(amountStr);

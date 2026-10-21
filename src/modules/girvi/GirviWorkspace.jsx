@@ -91,6 +91,26 @@ export const GirviWorkspace = () => {
   const [activeSettlementLoan, setActiveSettlementLoan] = useState(null);
   const [activeFormGLoan, setActiveFormGLoan] = useState(null);
 
+  // Sync loans from GoDaddy MySQL backend on mount
+  React.useEffect(() => {
+    fetch('http://localhost:5000/api/v1/girvi/loans')
+      .then(res => res.json())
+      .then(json => {
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+          const normalized = json.data.map(item => ({
+            ...item,
+            id: item.loanNo || item.id,
+            borrower: item.customer || { name: 'Customer' },
+            interestRateMonthly: parseFloat(item.monthlyInterestRate || 1.5),
+            principalAmount: parseFloat(item.principalAmount || 0),
+            startDate: item.sanctionedAt
+          }));
+          setLoans(normalized);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const [rePledges, setRePledges] = useState([
     {
       id: 'RPL-8012',
@@ -105,14 +125,31 @@ export const GirviWorkspace = () => {
     }
   ]);
 
-  const handleSanctionLoan = (newLoan) => {
+  const handleSanctionLoan = async (newLoan) => {
     const updated = [newLoan, ...loans];
     setLoans(updated);
     localStorage.setItem('A3_GIRVI_LOANS', JSON.stringify(updated));
     setActiveFormGLoan(newLoan); // Open Form G directly upon sanction
+
+    // Persist to backend GoDaddy MySQL
+    try {
+      await fetch('http://localhost:5000/api/v1/girvi/loans', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customer: newLoan.borrower,
+          principalAmount: newLoan.principalAmount,
+          monthlyInterestRate: newLoan.interestRateMonthly,
+          interestModel: newLoan.interestModel,
+          tenureMonths: newLoan.tenureMonths,
+          lockerBoxNo: newLoan.pledgedItems?.[0]?.lockerBoxNo,
+          pledgedItems: newLoan.pledgedItems
+        })
+      });
+    } catch (e) {}
   };
 
-  const handleConfirmRelease = ({ loanId, settlementAmount, paymentMode }) => {
+  const handleConfirmRelease = async ({ loanId, settlementAmount, paymentMode }) => {
     const updated = loans.map(l => 
       l.id === loanId 
         ? { ...l, status: 'RELEASED', releasedAt: new Date().toISOString(), settlementAmount, paymentMode }
@@ -120,6 +157,16 @@ export const GirviWorkspace = () => {
     );
     setLoans(updated);
     localStorage.setItem('A3_GIRVI_LOANS', JSON.stringify(updated));
+
+    // Persist to backend GoDaddy MySQL
+    try {
+      await fetch(`http://localhost:5000/api/v1/girvi/loans/${loanId}/settle`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paidInterest: settlementAmount - (loans.find(l => l.id === loanId)?.principalAmount || 0), paymentMode })
+      });
+    } catch (e) {}
+
     alert(`Loan ${loanId} settled successfully! Ornament released from locker vault.`);
   };
 

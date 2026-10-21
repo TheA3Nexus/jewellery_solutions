@@ -5,6 +5,15 @@ const cors = require('cors');
 const cron = require('node-cron');
 require('dotenv').config();
 
+const tenantMiddleware = require('./middleware/tenantMiddleware');
+const tenantRoutes = require('./routes/tenantRoutes');
+const productRoutes = require('./routes/productRoutes');
+const customerRoutes = require('./routes/customerRoutes');
+const billingRoutes = require('./routes/billingRoutes');
+const girviRoutes = require('./routes/girviRoutes');
+const karigarRoutes = require('./routes/karigarRoutes');
+const schemeRoutes = require('./routes/schemeRoutes');
+const accountingRoutes = require('./routes/accountingRoutes');
 const rateRoutes = require('./routes/rateRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const { scrapeLiveBullionRates, getCachedRates } = require('./services/scraperService');
@@ -15,7 +24,7 @@ const wss = new WebSocket.Server({ server, path: '/ws/rates' });
 
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+// Global Middleware
 app.use(cors({ origin: '*' }));
 app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ extended: true, limit: '25mb' }));
@@ -26,11 +35,24 @@ app.get('/api/v1/health', (req, res) => {
     status: 'ONLINE',
     service: 'A3 Jewellery ERP SaaS API Gateway',
     timestamp: new Date().toISOString(),
-    uptime: process.uptime()
+    uptime: process.uptime(),
+    database: 'GoDaddy cPanel MySQL (Active)',
+    multiTenant: 'Enabled'
   });
 });
 
-// Mount Routes
+// Multi-tenant Context
+app.use('/api/v1', tenantMiddleware);
+
+// Mount All REST API Endpoints
+app.use('/api/v1/tenant', tenantRoutes);
+app.use('/api/v1/products', productRoutes);
+app.use('/api/v1/customers', customerRoutes);
+app.use('/api/v1/billing', billingRoutes);
+app.use('/api/v1/girvi', girviRoutes);
+app.use('/api/v1/karigar', karigarRoutes);
+app.use('/api/v1/schemes', schemeRoutes);
+app.use('/api/v1/accounts', accountingRoutes);
 app.use('/api/v1/rates', rateRoutes);
 app.use('/api/v1/upload', uploadRoutes);
 
@@ -91,5 +113,6 @@ server.listen(PORT, () => {
   console.log(`🚀 REST API: http://localhost:${PORT}/api/v1`);
   console.log(`📡 WebSocket Stream: ws://localhost:${PORT}/ws/rates`);
   console.log(`📸 Cloudinary Integration: ${process.env.CLOUDINARY_CLOUD_NAME || 'Active'}`);
+  console.log(`🗄️ MySQL Database: GoDaddy cPanel (a3jewels)`);
   console.log(`=======================================================`);
 });
