@@ -54,11 +54,11 @@
 
   /* Cards */
   .card-surface {
-    @apply bg-surface-900 border border-surface-800 rounded-xl p-4 shadow-card;
+    @apply bg-surface-900 border border-surface-800 rounded-xl p-4 shadow-sm;
   }
 
   .card-luxury {
-    @apply bg-gradient-to-b from-surface-900 to-surface-850 border border-brand-300 rounded-xl p-5 shadow-luxury;
+    @apply bg-gradient-to-b from-surface-900 to-surface-850 border border-brand-300 rounded-xl p-5 shadow-md;
   }
 
   /* Precious Gemstone & Metal Badges */
