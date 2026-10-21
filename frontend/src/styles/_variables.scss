@@ -1,0 +1,78 @@
+// ==============================================================================
+// LUXURY JEWELLERY ERP - SCSS DESIGN TOKENS & VARIABLES
+// Benchmark standards for precious metals, gemstones, typography, & elevation
+// ==============================================================================
+
+// --- Typography Scales ---
+$font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
+
+// --- Precious Metals Palettes ---
+// 22K Hallmarked & 24K Bullion Gold Benchmark
+$gold-pure-24k: #b45309;      // Rich 24K bullion primary for high-contrast CTA
+$gold-hallmark-22k: #d97706;  // 22K BIS hallmarked gold for tickers and rates
+$gold-hover: #92400e;         // Deep burnished antique gold
+$gold-light-tint: #fffbeb;    // Champagne silk tint for pill backgrounds
+$gold-light-border: #fde68a;  // Soft gold border
+
+// 18K Rose Gold (Copper-Blush Accent)
+$rosegold-accent: #e11d48;
+$rosegold-tint: #fff1f2;
+$rosegold-border: #fecdd3;
+
+// 950 Platinum & 925 Sterling Silver
+$platinum-accent: #475569;
+$platinum-tint: #f1f5f9;
+$platinum-border: #cbd5e1;
+
+// --- Gemstone Semantic Accents ---
+// Colombian Emerald (Verified, Paid Invoices, Active Schemes)
+$emerald-text-light: #047857;
+$emerald-bg-light: #ecfdf5;
+$emerald-border-light: #a7f3d0;
+
+// Burmese Ruby (Statutory Alerts, Missing Tray RFID, Overdue Loans)
+$ruby-text-light: #be123c;
+$ruby-bg-light: #fff1f2;
+$ruby-border-light: #fecdd3;
+
+// Kashmir Sapphire (RFID Transponder Sync, Pole Display Push)
+$sapphire-text-light: #1d4ed8;
+$sapphire-bg-light: #eff6ff;
+$sapphire-border-light: #bfdbfe;
+
+// Topaz Amber (Statutory PAN Alert, Pending Approval Memos)
+$amber-text-light: #b45309;
+$amber-bg-light: #fffbeb;
+$amber-border-light: #fde68a;
+
+// --- SCSS Mixins for Clean Architecture ---
+@mixin glass-panel($bg-color, $border-color, $blur: 8px) {
+  background-color: $bg-color;
+  border: 1px solid $border-color;
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+}
+
+@mixin luxury-card {
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+@mixin gemstone-badge($bg, $border, $text) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.125rem 0.625rem;
+  border-radius: 0.375rem;
+  font-family: $font-mono;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  background-color: $bg;
+  border: 1px solid $border;
+  color: $text;
+}

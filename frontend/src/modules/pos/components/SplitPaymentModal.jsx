@@ -147,7 +147,7 @@ export const SplitPaymentModal = ({
           <div className="p-3 rounded-xl bg-surface-950/60 border border-surface-800 space-y-2">
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-2 font-medium text-surface-200">
-                <Banknote className="w-4 h-4 text-emerald-400" />
+                <Banknote className="w-4 h-4 text-emerald-600" />
                 <span>Cash Payment</span>
               </span>
               <input
@@ -156,13 +156,13 @@ export const SplitPaymentModal = ({
                 onChange={(e) => setPayments({ ...payments, cash: parseFloat(e.target.value) || 0 })}
                 placeholder="0.00"
                 className={`w-36 text-right input-field font-bold ${
-                  isCashRestricted ? 'border-rose-500 bg-rose-950/30 text-rose-300' : ''
+                  isCashRestricted ? 'border-rose-500 bg-rose-50 text-rose-700' : ''
                 }`}
               />
             </div>
             {isCashRestricted && (
-              <div className="p-2 rounded bg-rose-950/50 border border-rose-800/50 text-[10px] text-rose-300 flex items-start gap-1.5">
-                <AlertTriangle className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
+              <div className="p-2 rounded bg-rose-50 border border-rose-300 text-[10px] text-rose-800 flex items-start gap-1.5">
+                <AlertTriangle className="w-3.5 h-3.5 text-rose-600 shrink-0 mt-0.5" />
                 <span>
                   <strong>Section 269ST Blocker:</strong> Single cash receipt of ₹2,00,000 or more is illegal under the Indian Income Tax Act. Transaction blocked until cash is reduced.
                 </span>
@@ -186,14 +186,14 @@ export const SplitPaymentModal = ({
               value={payments.upi || ''}
               onChange={(e) => setPayments({ ...payments, upi: parseFloat(e.target.value) || 0 })}
               placeholder="0.00"
-              className="w-36 text-right input-field font-bold text-sky-300"
+              className="w-36 text-right input-field font-bold text-sky-700"
             />
           </div>
 
           {/* Card Payment Row */}
           <div className="p-3 rounded-xl bg-surface-950/60 border border-surface-800 flex items-center justify-between">
             <div className="flex items-center gap-2 font-medium text-surface-200">
-              <CreditCard className="w-4 h-4 text-amber-400" />
+              <CreditCard className="w-4 h-4 text-brand-500" />
               <span>Credit / Debit Card</span>
             </div>
             <input
@@ -201,14 +201,14 @@ export const SplitPaymentModal = ({
               value={payments.card || ''}
               onChange={(e) => setPayments({ ...payments, card: parseFloat(e.target.value) || 0 })}
               placeholder="0.00"
-              className="w-36 text-right input-field font-bold text-amber-300"
+              className="w-36 text-right input-field font-bold text-brand-600"
             />
           </div>
 
           {/* Cheque / RTGS Row */}
           <div className="p-3 rounded-xl bg-surface-950/60 border border-surface-800 flex items-center justify-between">
             <div className="flex items-center gap-2 font-medium text-surface-200">
-              <Building className="w-4 h-4 text-violet-400" />
+              <Building className="w-4 h-4 text-violet-600" />
               <span>Cheque / NEFT / RTGS</span>
             </div>
             <input
@@ -216,14 +216,14 @@ export const SplitPaymentModal = ({
               value={payments.cheque || ''}
               onChange={(e) => setPayments({ ...payments, cheque: parseFloat(e.target.value) || 0 })}
               placeholder="0.00"
-              className="w-36 text-right input-field font-bold text-violet-300"
+              className="w-36 text-right input-field font-bold text-violet-700"
             />
           </div>
 
           {/* Udhaar (Customer Credit Balance) */}
           <div className="p-3 rounded-xl bg-surface-950/60 border border-surface-800 flex items-center justify-between">
             <div className="flex items-center gap-2 font-medium text-surface-200">
-              <BookOpen className="w-4 h-4 text-rose-400" />
+              <BookOpen className="w-4 h-4 text-rose-600" />
               <div>
                 <span>Customer Khata (Udhaar)</span>
                 <span className="text-[10px] text-surface-400 block font-sans">
@@ -236,7 +236,7 @@ export const SplitPaymentModal = ({
               value={payments.udhaar || ''}
               onChange={(e) => setPayments({ ...payments, udhaar: parseFloat(e.target.value) || 0 })}
               placeholder="0.00"
-              className="w-36 text-right input-field font-bold text-rose-300"
+              className="w-36 text-right input-field font-bold text-rose-700"
             />
           </div>
 
@@ -251,7 +251,7 @@ export const SplitPaymentModal = ({
           <div>
             <span className="text-surface-400">Remaining Balance: </span>
             <strong className={`text-sm font-bold ${
-              Math.abs(remainingBalance) <= 1 ? 'text-emerald-400' : 'text-rose-400'
+              Math.abs(remainingBalance) <= 1 ? 'text-emerald-700' : 'text-rose-700'
             }`}>
               ₹{remainingBalance.toLocaleString('en-IN')}
             </strong>

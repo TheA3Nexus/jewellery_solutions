@@ -311,7 +311,7 @@ export const POSWorkspace = () => {
 
               {/* Statutory PAN warning indicator */}
               {isPanMandatory && !customer.pan && (
-                <div className="p-2 rounded bg-amber-950/40 border border-amber-800/40 text-[10px] text-amber-300 font-sans">
+                <div className="p-2 rounded bg-amber-50 border border-amber-300 text-[10px] text-amber-800 font-sans">
                   Rule 114B: Invoice &gt;= ₹2 Lakh requires Customer PAN before finalizing.
                 </div>
               )}
@@ -332,7 +332,7 @@ export const POSWorkspace = () => {
                   <button
                     type="button"
                     onClick={handleClearBill}
-                    className="w-full btn-secondary py-2 text-xs text-rose-300 hover:text-rose-200"
+                    className="w-full btn-secondary py-2 text-xs text-rose-700 hover:text-rose-800 hover:bg-rose-50"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                     <span>Clear Active Counter</span>
@@ -418,7 +418,7 @@ export const POSWorkspace = () => {
                       <td className="p-2.5">
                         <span className={`px-1.5 py-0.5 rounded text-[10px] font-sans ${
                           inv.invoiceType === 'TAX_INVOICE' 
-                            ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' 
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-300' 
                             : 'bg-surface-800 text-surface-300'
                         }`}>
                           {inv.invoiceType}

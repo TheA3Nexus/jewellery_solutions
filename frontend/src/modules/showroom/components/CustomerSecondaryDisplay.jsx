@@ -120,7 +120,7 @@ export const CustomerSecondaryDisplay = () => {
               <span className="text-surface-700">|</span>
               <div>
                 <span className="text-surface-500 text-[10px] block">22K 916:</span>
-                <span className="text-amber-300 font-bold">₹{bullionRates.gold22k} /g</span>
+                <span className="text-brand-600 font-bold">₹{bullionRates.gold22k} /g</span>
               </div>
               <span className="text-surface-700">|</span>
               <div>
@@ -141,7 +141,7 @@ export const CustomerSecondaryDisplay = () => {
                   <Scale className="w-4 h-4 text-brand-400" />
                   Live Electronic Scale Readout
                 </span>
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${isScaleStable ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-amber-500/10 text-amber-400'}`}>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${isScaleStable ? 'bg-emerald-50 text-emerald-700 border border-emerald-300' : 'bg-amber-50 text-amber-700 border border-amber-300'}`}>
                   {isScaleStable ? 'Stable' : 'Unstable'}
                 </span>
               </div>
@@ -163,11 +163,11 @@ export const CustomerSecondaryDisplay = () => {
 
             <div className="text-xs text-surface-400 space-y-2 border-t border-surface-800/80 pt-4">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                 <span>100% BIS Hallmarked jewellery with 6-digit laser HUID.</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                 <span>Zero stone weight deduction guarantee on pure metal.</span>
               </div>
             </div>
@@ -189,7 +189,7 @@ export const CustomerSecondaryDisplay = () => {
                     <div>
                       <h4 className="font-semibold text-surface-100">{item.name}</h4>
                       <div className="text-[11px] text-surface-400 font-mono flex items-center gap-2 mt-0.5">
-                        <span className="text-amber-400 font-bold">{item.purity}</span>
+                        <span className="text-brand-600 font-bold">{item.purity}</span>
                         <span>&bull;</span>
                         <span>Net Wt: {item.netWeight.toFixed(3)}g</span>
                         <span>&bull;</span>

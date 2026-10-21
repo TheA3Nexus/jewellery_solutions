@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ThemeProvider } from './context/ThemeContext';
 import { TenantProvider } from './context/TenantContext';
 import { HardwareProvider } from './context/HardwareContext';
 import { TopHeader } from './components/layout/TopHeader';
@@ -16,7 +17,7 @@ import {
   CreditCard, 
   Tag, 
   Coins, 
-  Sparkles, 
+ 
   Hammer, 
   BookOpen, 
   Settings as SettingsIcon,
@@ -99,10 +100,12 @@ function AppContent() {
 
 export default function App() {
   return (
-    <TenantProvider>
+    <ThemeProvider>
+      <TenantProvider>
       <HardwareProvider>
         <AppContent />
       </HardwareProvider>
-    </TenantProvider>
+      </TenantProvider>
+    </ThemeProvider>
   );
 }

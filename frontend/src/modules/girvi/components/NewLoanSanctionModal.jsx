@@ -314,7 +314,7 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
                   value={loanTerms.principalAmount}
                   onChange={(e) => setLoanTerms({ ...loanTerms, principalAmount: e.target.value })}
                   className={`input-field font-bold text-sm ${
-                    isLtvExceeded ? 'border-rose-500 text-rose-300' : 'text-brand-300'
+                    isLtvExceeded ? 'border-rose-500 text-rose-700 bg-rose-50' : 'text-brand-600'
                   }`}
                 />
               </div>
@@ -346,8 +346,8 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
             </div>
 
             {isLtvExceeded && (
-              <div className="p-2 rounded bg-rose-950/40 border border-rose-800/40 text-[10px] text-rose-300 flex items-center gap-1.5 font-sans">
-                <AlertTriangle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+              <div className="p-2 rounded bg-rose-50 border border-rose-300 text-[10px] text-rose-800 flex items-center gap-1.5 font-sans">
+                <AlertTriangle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
                 <span>
                   LTV Warning: Principal exceeds statutory 75% market valuation limit (₹{maxLtvSanctionable.toLocaleString('en-IN')}).
                 </span>

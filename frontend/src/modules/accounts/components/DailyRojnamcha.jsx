@@ -237,7 +237,7 @@ export const DailyRojnamcha = () => {
             <IndianRupee className="w-3.5 h-3.5 text-emerald-400" />
             Book Cash in Safe
           </span>
-          <div className="text-2xl font-mono font-bold text-emerald-400 mt-1">
+          <div className="text-2xl font-mono font-bold text-emerald-700 mt-1">
             ₹{netClosingCashBook.toLocaleString('en-IN')}
           </div>
           <div className="mt-2 text-[11px] text-surface-400 flex justify-between font-mono">
@@ -247,7 +247,7 @@ export const DailyRojnamcha = () => {
         </div>
 
         {/* Physical Cash Counted */}
-        <div className={`bg-surface-900 border rounded-xl p-4 ${cashDiscrepancy === 0 ? 'border-surface-700/60' : 'border-rose-500/40 bg-rose-950/10'}`}>
+        <div className={`bg-surface-900 border rounded-xl p-4 ${cashDiscrepancy === 0 ? 'border-surface-700/60' : 'border-rose-300 bg-rose-50'}`}>
           <div className="flex justify-between items-start">
             <span className="text-xs font-medium uppercase text-surface-400 flex items-center gap-1">
               <CheckCircle2 className="w-3.5 h-3.5 text-brand-400" />

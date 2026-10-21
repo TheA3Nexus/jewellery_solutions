@@ -147,14 +147,14 @@ export const ActiveLoansTable = ({
                       <div className="text-[9px] text-surface-500 font-normal">{diffDays} Days</div>
                     </td>
 
-                    <td className="py-2.5 px-3 text-right font-bold text-brand-300 text-sm">
+                    <td className="py-2.5 px-3 text-right font-bold text-brand-600 text-sm">
                       ₹{totalDue.toLocaleString('en-IN')}
                     </td>
 
                     <td className="py-2.5 px-3 text-center">
                       <span className={`px-2 py-0.5 rounded text-[10px] font-sans ${
                         loan.status === 'ACTIVE'
-                          ? 'bg-emerald-950/60 text-emerald-400 border border-emerald-800/40'
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-300'
                           : 'bg-surface-800 text-surface-400'
                       }`}>
                         {loan.status}

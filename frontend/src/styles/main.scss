@@ -1,0 +1,40 @@
+// ==============================================================================
+// LUXURY JEWELLERY ERP - MAIN STYLESHEET
+// Orchestrates SCSS Tokens, Dynamic Variables, Components & Tailwind Layers
+// ==============================================================================
+
+@use './variables' as *;
+@use './tokens' as *;
+@use './components' as *;
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// --- Global Body & Scrollbars ---
+body {
+  background-color: var(--canvas-bg);
+  color: var(--text-secondary);
+  font-family: $font-sans;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}

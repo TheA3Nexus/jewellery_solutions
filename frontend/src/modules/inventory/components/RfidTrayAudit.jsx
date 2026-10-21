@@ -128,21 +128,21 @@ export const RfidTrayAudit = () => {
           <span className="text-surface-400 text-[10px] block uppercase font-sans">
             Scanned &amp; Verified
           </span>
-          <strong className="text-lg font-bold text-emerald-400">
+          <strong className="text-lg font-bold text-emerald-700">
             {auditComplete ? matchedItems.length : 0} Verified
           </strong>
         </div>
 
         <div className={`p-3 rounded-xl border ${
           auditComplete && missingItems.length > 0 
-            ? 'bg-rose-950/40 border-rose-800 text-rose-300' 
+            ? 'bg-rose-50 border-rose-300 text-rose-800' 
             : 'bg-surface-950 border-surface-800 text-surface-400'
         }`}>
           <span className="text-[10px] block uppercase font-sans font-bold">
             Missing Discrepancies
           </span>
           <strong className={`text-lg font-bold ${
-            auditComplete && missingItems.length > 0 ? 'text-rose-400' : 'text-surface-300'
+            auditComplete && missingItems.length > 0 ? 'text-rose-700' : 'text-surface-300'
           }`}>
             {auditComplete ? missingItems.length : 0} Missing
           </strong>
@@ -151,14 +151,14 @@ export const RfidTrayAudit = () => {
 
       {/* Red Alert Banner if Missing */}
       {auditComplete && missingItems.length > 0 && (
-        <div className="p-3.5 rounded-xl bg-rose-950/60 border border-rose-800 text-rose-200 flex items-start justify-between gap-3 animate-in zoom-in-95 duration-150">
+        <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-300 text-rose-900 flex items-start justify-between gap-3 animate-in zoom-in-95 duration-150">
           <div className="flex items-start gap-2.5">
-            <ShieldAlert className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
+            <ShieldAlert className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-rose-300">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-rose-800">
                 Security Alert: {missingItems.length} Jewellery Article(s) Unaccounted For
               </h4>
-              <p className="text-[11px] text-rose-300/80 mt-0.5 font-sans">
+              <p className="text-[11px] text-rose-700 mt-0.5 font-sans">
                 These items are officially marked as IN_STOCK in {selectedTray}, but their RFID transponders failed to respond on the scanning mat.
               </p>
             </div>
@@ -208,12 +208,12 @@ export const RfidTrayAudit = () => {
                       {!auditComplete ? (
                         <span className="text-[10px] text-surface-500 font-sans">Pending Scan</span>
                       ) : isMatched ? (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-sans font-semibold bg-emerald-950/60 text-emerald-400 border border-emerald-800/50 flex items-center justify-center gap-1 w-24 mx-auto">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-sans font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300 flex items-center justify-center gap-1 w-24 mx-auto">
                           <CheckCircle2 className="w-3 h-3" />
                           <span>Verified</span>
                         </span>
                       ) : (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-sans font-bold bg-rose-950 text-rose-400 border border-rose-800 flex items-center justify-center gap-1 w-24 mx-auto">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-sans font-bold bg-rose-50 text-rose-700 border border-rose-300 flex items-center justify-center gap-1 w-24 mx-auto">
                           <AlertTriangle className="w-3 h-3" />
                           <span>MISSING</span>
                         </span>

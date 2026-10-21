@@ -1,0 +1,141 @@
+// ==============================================================================
+// LUXURY JEWELLERY ERP - DYNAMIC THEME TOKENS
+// CSS Custom Properties driven theme system supporting Light (Default) and Dark
+// ==============================================================================
+
+:root,
+[data-theme="light"] {
+  // --- Surfaces & Backdrops ---
+  --canvas-bg: #f8f6f0;               // Warm ivory pearl boutique showroom backdrop
+  --surface-card: #ffffff;            // Crisp porcelain white for cards, trays, modals, tables
+  --surface-hover: #f4f0e6;           // Soft alabaster for hover states & subtle strips
+  --surface-subtle: #ede7d9;          // Subtle nested container background
+  --surface-elevated: #ffffff;        // Modals & dropdown flyouts
+
+  // --- Borders & Dividing Lines ---
+  --border-subtle: #e8e2d2;           // Warm champagne hairline card borders & table dividers
+  --border-medium: #d5ccb6;           // Input field borders & active button borders
+  --border-focus: #b45309;            // Focused input gold border ring
+
+  // --- Text Contrast Hierarchy (Strictly WCAG 2.1 AAA Compliant) ---
+  --text-primary: #12100c;            // Deep rich obsidian for primary titles, weights, amounts
+  --text-secondary: #231f18;          // Rich dark body text for descriptions and labels
+  --text-subtle: #4a4337;             // Sub-headings and muted indicators
+  --text-muted: #575043;              // Table column headers, helper notes
+  --text-disabled: #8c826f;           // Input placeholders, disabled controls
+
+  // --- Precious Metals Core Hues ---
+  --gold-primary: #b45309;            // 24K pure bullion primary button & CTAs
+  --gold-accent: #d97706;             // 22K hallmarked gold rate tickers & accent text
+  --gold-hover: #92400e;              // Burnished antique gold hover
+  --gold-bg: #fffbeb;                 // Soft champagne tint for gold badges & highlights
+  --gold-border: #fde68a;             // Champagne gold border
+  --gold-text: #92400e;               // High-contrast gold badge text
+
+  --rosegold-accent: #e11d48;         // 18K rose gold
+  --rosegold-bg: #fff1f2;
+  --rosegold-border: #fecdd3;
+  --rosegold-text: #be123c;
+
+  --platinum-accent: #475569;         // 950 platinum & silver
+  --platinum-bg: #f1f5f9;
+  --platinum-border: #cbd5e1;
+  --platinum-text: #334155;
+
+  // --- Gemstone Semantic Accents ---
+  // Colombian Emerald (Paid bills, verified hallmark, in-stock articles)
+  --emerald-bg: #ecfdf5;
+  --emerald-border: #a7f3d0;
+  --emerald-text: #047857;
+
+  // Burmese Ruby (Missing RFID, overdue Girvi, high-risk flags)
+  --ruby-bg: #fff1f2;
+  --ruby-border: #fecdd3;
+  --ruby-text: #be123c;
+
+  // Kashmir Sapphire (RFID scanned transponder, secondary customer display)
+  --sapphire-bg: #eff6ff;
+  --sapphire-border: #bfdbfe;
+  --sapphire-text: #1d4ed8;
+
+  // Topaz Amber (Statutory Rule 114B PAN alert, pending approvals)
+  --amber-bg: #fffbeb;
+  --amber-border: #fde68a;
+  --amber-text: #b45309;
+
+  // --- Elevation & Shadows ---
+  --shadow-card: 0 1px 3px 0 rgba(90, 37, 11, 0.05), 0 1px 2px -1px rgba(90, 37, 11, 0.03);
+  --shadow-dropdown: 0 10px 15px -3px rgba(90, 37, 11, 0.08), 0 4px 6px -4px rgba(90, 37, 11, 0.04);
+  --shadow-gold-glow: 0 0 15px -3px rgba(217, 119, 6, 0.35);
+
+  // --- Scrollbars ---
+  --scrollbar-track: #f4f0e6;
+  --scrollbar-thumb: #d5ccb6;
+  --scrollbar-thumb-hover: #b3a88f;
+}
+
+[data-theme="dark"] {
+  // --- Surfaces & Backdrops ---
+  --canvas-bg: #060a12;               // Deep showroom velvet display backdrop
+  --surface-card: #0d1322;            // Velvet card tray
+  --surface-hover: #141c2e;           // Deep navy hover
+  --surface-subtle: #090e18;
+  --surface-elevated: #101828;
+
+  // --- Borders & Dividing Lines ---
+  --border-subtle: #1e293b;           // Deep slate hairline dividers
+  --border-medium: #334155;           // Input field borders
+  --border-focus: #f5c242;            // High-luster gold focus ring
+
+  // --- Text Contrast Hierarchy ---
+  --text-primary: #f8fafc;            // Crisp ivory white
+  --text-secondary: #f1f5f9;          // Soft white body
+  --text-subtle: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-disabled: #475569;
+
+  // --- Precious Metals Core Hues ---
+  --gold-primary: #e5a817;            // 24K pure bullion button
+  --gold-accent: #f5c242;             // 22K hallmarked gold text & tickers
+  --gold-hover: #d97706;
+  --gold-bg: rgba(245, 194, 66, 0.12);
+  --gold-border: rgba(245, 194, 66, 0.35);
+  --gold-text: #fcd34d;
+
+  --rosegold-accent: #fb7185;
+  --rosegold-bg: rgba(251, 113, 133, 0.12);
+  --rosegold-border: rgba(251, 113, 133, 0.35);
+  --rosegold-text: #fda4af;
+
+  --platinum-accent: #cbd5e1;
+  --platinum-bg: rgba(203, 213, 225, 0.12);
+  --platinum-border: rgba(203, 213, 225, 0.3);
+  --platinum-text: #e2e8f0;
+
+  // --- Gemstone Semantic Accents ---
+  --emerald-bg: rgba(16, 185, 129, 0.14);
+  --emerald-border: rgba(16, 185, 129, 0.35);
+  --emerald-text: #34d399;
+
+  --ruby-bg: rgba(244, 63, 94, 0.14);
+  --ruby-border: rgba(244, 63, 94, 0.35);
+  --ruby-text: #fb7185;
+
+  --sapphire-bg: rgba(59, 130, 246, 0.14);
+  --sapphire-border: rgba(59, 130, 246, 0.35);
+  --sapphire-text: #60a5fa;
+
+  --amber-bg: rgba(245, 158, 11, 0.14);
+  --amber-border: rgba(245, 158, 11, 0.35);
+  --amber-text: #fcd34d;
+
+  // --- Elevation & Shadows ---
+  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+  --shadow-dropdown: 0 10px 25px -5px rgba(0, 0, 0, 0.7);
+  --shadow-gold-glow: 0 0 15px -3px rgba(245, 194, 66, 0.25);
+
+  // --- Scrollbars ---
+  --scrollbar-track: #0d1322;
+  --scrollbar-thumb: #1e293b;
+  --scrollbar-thumb-hover: #334155;
+}

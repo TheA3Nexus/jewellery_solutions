@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTenant } from '../../context/TenantContext';
 import { useHardware } from '../../context/HardwareContext';
+import { useTheme } from '../../context/ThemeContext';
 import { 
   Scale, 
   Printer, 
@@ -12,11 +13,14 @@ import {
   RefreshCw,
   SlidersHorizontal,
   X,
-  Check
+  Check,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 export const TopHeader = ({ activeCategory, setActiveCategory }) => {
   const { tenant, currentUser, bullionRates, updateRates } = useTenant();
+  const { theme, toggleTheme } = useTheme();
   const { 
     scaleStatus, 
     printerStatus, 
@@ -132,6 +136,25 @@ export const TopHeader = ({ activeCategory, setActiveCategory }) => {
             <UserCheck className="w-3.5 h-3.5 text-brand-400" />
             <span className="font-medium">{currentUser.name}</span>
           </div>
+
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="flex items-center gap-1.5 px-2.5 py-1 bg-surface-card hover:bg-surface-hover border border-surface-input rounded-lg text-[10px] text-surface-200 font-sans transition-all shadow-card cursor-pointer"
+            title={`Active Theme: ${theme === 'light' ? 'Boutique Light' : 'Velvet Dark'}. Click to toggle.`}
+          >
+            {theme === 'light' ? (
+              <>
+                <Sun className="w-3.5 h-3.5 text-brand-benchmark" />
+                <span className="font-semibold text-surface-100">Light Theme</span>
+              </>
+            ) : (
+              <>
+                <Moon className="w-3.5 h-3.5 text-brand-accent" />
+                <span className="font-semibold text-surface-100">Dark Theme</span>
+              </>
+            )}
+          </button>
         </div>
       </div>
 

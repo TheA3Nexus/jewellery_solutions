@@ -228,11 +228,11 @@ export const UdhaarCollectionDrawer = ({ isOpen, onClose, account, onPaymentReco
                   <span>Previous Balance:</span>
                   <span>₹{lastPaymentReceipt.previousBalance.toLocaleString('en-IN')}</span>
                 </div>
-                <div className="flex justify-between font-bold text-emerald-400 text-sm">
+                <div className="flex justify-between font-bold text-emerald-700 text-sm">
                   <span>Amount Paid ({lastPaymentReceipt.paymentMode}):</span>
                   <span>₹{lastPaymentReceipt.amountPaid.toLocaleString('en-IN')}</span>
                 </div>
-                <div className="flex justify-between font-bold text-amber-300">
+                <div className="flex justify-between font-bold text-brand-600">
                   <span>Remaining Due:</span>
                   <span>₹{lastPaymentReceipt.remainingBalance.toLocaleString('en-IN')}</span>
                 </div>

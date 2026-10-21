@@ -114,7 +114,7 @@ export const CustomerContextCard = ({
               onChange={(e) => setCustomer({ ...customer, pan: e.target.value.toUpperCase() })}
               className={`input-field pl-8 ${
                 isPanMandatory && !customer.pan
-                  ? 'border-rose-500/80 ring-1 ring-rose-500/50 bg-rose-950/20'
+                  ? 'border-rose-500/80 ring-1 ring-rose-500/50 bg-rose-50'
                   : ''
               }`}
             />
@@ -124,8 +124,8 @@ export const CustomerContextCard = ({
 
       {/* Statutory Rule 114B Alert Banner */}
       {isPanMandatory && !customer.pan && (
-        <div className="p-2 rounded-lg bg-rose-950/40 border border-rose-800/40 text-[11px] text-rose-300 flex items-start gap-2">
-          <AlertTriangle className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
+        <div className="p-2 rounded-lg bg-rose-50 border border-rose-300 text-[11px] text-rose-800 flex items-start gap-2">
+          <AlertTriangle className="w-3.5 h-3.5 text-rose-600 shrink-0 mt-0.5" />
           <span>
             <strong>Income Tax Rule 114B Compliance:</strong> Quotation/Invoice total is ₹2,00,000 or higher. A valid 10-character PAN Card is legally required.
           </span>

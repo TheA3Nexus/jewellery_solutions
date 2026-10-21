@@ -227,9 +227,9 @@ export const KarigarLedgerTable = ({ karigars, transactions, onSettleLabor, onSe
                 <th className="px-4 py-3 text-right text-amber-400">Metal Issue (+)</th>
                 <th className="px-4 py-3 text-right text-emerald-400">Metal In Goods (-)</th>
                 <th className="px-4 py-3 text-right text-amber-200">Net Metal Bal</th>
-                <th className="px-4 py-3 text-right text-sky-400">Labour Earned (+)</th>
-                <th className="px-4 py-3 text-right text-purple-400">Labour Paid (-)</th>
-                <th className="px-4 py-3 text-right text-emerald-300">Labour Due</th>
+                <th className="px-4 py-3 text-right text-sky-700">Labour Earned (+)</th>
+                <th className="px-4 py-3 text-right text-purple-700">Labour Paid (-)</th>
+                <th className="px-4 py-3 text-right text-emerald-700">Labour Due</th>
                 <th className="px-4 py-3 text-center">Status</th>
               </tr>
             </thead>
@@ -267,17 +267,17 @@ export const KarigarLedgerTable = ({ karigars, transactions, onSettleLabor, onSe
                     <td className="px-4 py-3 text-right font-bold text-amber-200">
                       {tx.runningMetalBalance.toFixed(3)} g
                     </td>
-                    <td className="px-4 py-3 text-right text-sky-400">
+                    <td className="px-4 py-3 text-right text-sky-700">
                       {tx.labourEarned ? `₹${tx.labourEarned.toLocaleString('en-IN')}` : '-'}
                     </td>
-                    <td className="px-4 py-3 text-right text-purple-400">
+                    <td className="px-4 py-3 text-right text-purple-700">
                       {tx.labourPaid ? `₹${tx.labourPaid.toLocaleString('en-IN')}` : '-'}
                     </td>
-                    <td className="px-4 py-3 text-right font-bold text-emerald-300">
+                    <td className="px-4 py-3 text-right font-bold text-emerald-700">
                       ₹{tx.runningLabourBalance.toLocaleString('en-IN')}
                     </td>
                     <td className="px-4 py-3 text-center">
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-sans">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold uppercase bg-emerald-50 text-emerald-700 border border-emerald-300 font-sans">
                         <CheckCircle2 className="w-3 h-3" />
                         Verified
                       </span>

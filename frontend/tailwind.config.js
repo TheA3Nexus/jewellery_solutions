@@ -2,120 +2,161 @@
 export default {
   content: [
     "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    "./src/**/*.{js,ts,jsx,tsx,scss}",
   ],
-  darkMode: 'class',
+  darkMode: ['class', '[data-theme="dark"]'],
   theme: {
     extend: {
       colors: {
-        // Primary 22K/24K Bullion & Showroom Gold
-        brand: {
-          50: '#fffdf5',
-          100: '#fef8e2',
-          200: '#fcebb5',
-          300: '#f9d97b',
-          400: '#f5c242', // 22K Hallmarked Gold Highlight
-          500: '#e5a817', // 24K Pure Bullion Primary
-          600: '#bf810a',
-          700: '#965f0c',
-          800: '#7c4d11',
-          900: '#683f13',
-          950: '#3c2105',
+        // --- Semantic Dynamic Surface Tokens (Directly Bound to CSS Variables) ---
+        surface: {
+          canvas: 'var(--canvas-bg)',
+          card: 'var(--surface-card)',
+          hover: 'var(--surface-hover)',
+          subtle: 'var(--surface-subtle)',
+          border: 'var(--border-subtle)',
+          input: 'var(--border-medium)',
+          
+          // Full backward-compatible surface scale mapped dynamically to theme tokens
+          50: 'var(--text-primary)',
+          100: 'var(--text-primary)',
+          200: 'var(--text-secondary)',
+          300: 'var(--text-subtle)',
+          400: 'var(--text-muted)',
+          500: 'var(--text-disabled)',
+          600: 'var(--text-disabled)',
+          700: 'var(--border-medium)',
+          800: 'var(--border-subtle)',
+          850: 'var(--surface-hover)',
+          900: 'var(--surface-card)',
+          950: 'var(--canvas-bg)',
         },
-        // 18K Rose Gold (Copper-Blush)
+
+        // --- Dynamic Gold Bullion & Hallmark Brand Palette ---
+        brand: {
+          benchmark: 'var(--gold-primary)',
+          accent: 'var(--gold-accent)',
+          hover: 'var(--gold-hover)',
+          bg: 'var(--gold-bg)',
+          border: 'var(--gold-border)',
+          text: 'var(--gold-text)',
+          
+          50: '#fffdf5',
+          100: 'var(--gold-bg)',
+          200: '#fde68a',
+          300: 'var(--gold-accent)',
+          400: 'var(--gold-accent)',
+          500: 'var(--gold-primary)',
+          600: 'var(--gold-hover)',
+          700: '#78350f',
+          800: '#5a250b',
+          900: '#451a03',
+          950: 'var(--gold-bg)',
+        },
+
+        // --- 18K Rose Gold ---
         rosegold: {
-          50: '#fff1f2',
-          100: '#ffe4e6',
-          200: '#fecdd3',
+          accent: 'var(--rosegold-accent)',
+          bg: 'var(--rosegold-bg)',
+          border: 'var(--rosegold-border)',
+          text: 'var(--rosegold-text)',
           300: '#fda4af',
           400: '#fb7185',
-          500: '#f43f5e',
-          600: '#e11d48',
-          700: '#be123c',
-          800: '#9f1239',
-          900: '#881337',
-          950: '#4c0519',
+          500: 'var(--rosegold-accent)',
+          600: '#be123c',
         },
-        // 950 Platinum & 925 Sterling Silver
+
+        // --- 950 Platinum & 925 Silver ---
         platinum: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
-          950: '#020617',
+          accent: 'var(--platinum-accent)',
+          bg: 'var(--platinum-bg)',
+          border: 'var(--platinum-border)',
+          text: 'var(--platinum-text)',
+          100: 'var(--platinum-bg)',
+          300: 'var(--platinum-border)',
+          500: 'var(--platinum-accent)',
+          700: 'var(--platinum-text)',
         },
-        // Colombian Gemstone Emerald (Verified, Paid, Hallmarked)
+
+        // --- Gemstone Semantic Status Sets Bound to Theme Variables ---
         emerald: {
-          50: '#ecfdf5',
+          50: 'var(--emerald-bg)',
           100: '#d1fae5',
           200: '#a7f3d0',
-          300: '#6ee7b7',
-          400: '#34d399',
+          300: 'var(--emerald-border)',
+          400: 'var(--emerald-text)',
           500: '#10b981',
-          600: '#059669',
-          700: '#047857',
-          800: '#065f46',
-          900: '#064e3b',
-          950: '#022c22',
+          600: 'var(--emerald-text)',
+          700: 'var(--emerald-text)',
+          800: '#064e3b',
+          900: '#022c22',
+          950: 'var(--emerald-bg)',
         },
-        // Burmese Gemstone Ruby (Overdue, Auction, Meltdown alert)
+
         ruby: {
-          50: '#fff1f2',
+          50: 'var(--ruby-bg)',
           100: '#ffe4e6',
           200: '#fecdd3',
-          300: '#fda4af',
-          400: '#fb7185',
+          300: 'var(--ruby-border)',
+          400: 'var(--ruby-text)',
           500: '#f43f5e',
-          600: '#e11d48',
-          700: '#be123c',
-          800: '#9f1239',
-          900: '#881337',
-          950: '#4c0519',
+          600: 'var(--ruby-text)',
+          700: 'var(--ruby-text)',
+          800: '#881337',
+          900: '#4c0519',
+          950: 'var(--ruby-bg)',
         },
-        // Kashmir Gemstone Sapphire (RFID Scans, Secondary Display Sync)
+
+        rose: {
+          50: 'var(--ruby-bg)',
+          100: '#ffe4e6',
+          200: '#fecdd3',
+          300: 'var(--ruby-border)',
+          400: 'var(--ruby-text)',
+          500: '#f43f5e',
+          600: 'var(--ruby-text)',
+          700: 'var(--ruby-text)',
+          800: '#881337',
+          900: '#4c0519',
+          950: 'var(--ruby-bg)',
+        },
+
+        amber: {
+          50: 'var(--amber-bg)',
+          100: '#fef3c7',
+          200: '#fde68a',
+          300: 'var(--amber-border)',
+          400: 'var(--amber-text)',
+          500: '#f59e0b',
+          600: 'var(--amber-text)',
+          700: 'var(--amber-text)',
+          800: 'var(--amber-text)',
+          900: '#78350f',
+          950: 'var(--amber-bg)',
+        },
+
         sapphire: {
-          50: '#eff6ff',
+          50: 'var(--sapphire-bg)',
           100: '#dbeafe',
           200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
+          300: 'var(--sapphire-border)',
+          400: 'var(--sapphire-text)',
           500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
-          950: '#172554',
+          600: 'var(--sapphire-text)',
+          700: 'var(--sapphire-text)',
+          800: '#1e3a8a',
+          900: '#172554',
+          950: 'var(--sapphire-bg)',
         },
-        // Deep Obsidian & Velvet Showroom Surface Palette
-        surface: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          800: '#1e293b',
-          850: '#141c2e', // Deep velvet card interior
-          900: '#0d1322', // Card background
-          950: '#060a12', // Pure showroom display backdrop
-        }
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
       boxShadow: {
-        'gold-glow': '0 0 15px -3px rgba(245, 194, 66, 0.25)',
-        'emerald-glow': '0 0 15px -3px rgba(16, 185, 129, 0.25)',
-        'ruby-glow': '0 0 15px -3px rgba(244, 63, 94, 0.25)',
+        'card': 'var(--shadow-card)',
+        'dropdown': 'var(--shadow-dropdown)',
+        'gold-glow': 'var(--shadow-gold-glow)',
       }
     },
   },

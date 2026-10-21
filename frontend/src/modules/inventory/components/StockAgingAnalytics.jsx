@@ -75,24 +75,24 @@ export const StockAgingAnalytics = () => {
         </div>
 
         {/* Slow 90-180d */}
-        <div className="p-3.5 rounded-xl bg-amber-950/20 border border-amber-800/40 space-y-1">
-          <div className="flex items-center justify-between text-amber-400">
+        <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-300 space-y-1">
+          <div className="flex items-center justify-between text-amber-800">
             <span className="text-[10px] uppercase font-sans font-bold">Slow Moving (90-180d)</span>
             <AlertTriangle className="w-3.5 h-3.5" />
           </div>
-          <div className="text-xl font-bold text-amber-300">{agingBuckets.slow.length} Items</div>
+          <div className="text-xl font-bold text-amber-800">{agingBuckets.slow.length} Items</div>
           <div className="text-[11px] text-surface-400">
             ₹{calculateBucketValue(agingBuckets.slow).toLocaleString('en-IN')}
           </div>
         </div>
 
         {/* Dead Stock >180d */}
-        <div className="p-3.5 rounded-xl bg-rose-950/20 border border-rose-800/40 space-y-1">
-          <div className="flex items-center justify-between text-rose-400">
+        <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-300 space-y-1">
+          <div className="flex items-center justify-between text-rose-700">
             <span className="text-[10px] uppercase font-sans font-bold">Dead Stock (&gt;180d)</span>
             <Flame className="w-3.5 h-3.5" />
           </div>
-          <div className="text-xl font-bold text-rose-300">{agingBuckets.dead.length} Items</div>
+          <div className="text-xl font-bold text-rose-700">{agingBuckets.dead.length} Items</div>
           <div className="text-[11px] text-surface-400">
             ₹{calculateBucketValue(agingBuckets.dead).toLocaleString('en-IN')}
           </div>
