@@ -164,7 +164,7 @@ export const StockCatalogTable = ({ onOpenAddModal, onOpenTagStudio }) => {
                     <td className="py-2.5 px-3 text-right text-[10px] text-surface-400">
                       {item.makingChargeType === 'PER_GRAM' ? `₹${item.makingChargeRate}/g` : `${item.makingChargeRate}%`}
                     </td>
-                    <td className="py-2.5 px-3 text-right font-bold text-emerald-400 text-xs">
+                    <td className="py-2.5 px-3 text-right font-bold text-emerald-700 text-xs">
                       ₹{valuation.toLocaleString('en-IN')}
                     </td>
                     <td className="py-2.5 px-3 text-center text-surface-400 text-[10px]">
@@ -173,8 +173,8 @@ export const StockCatalogTable = ({ onOpenAddModal, onOpenTagStudio }) => {
                     <td className="py-2.5 px-3 text-center">
                       <span className={`px-2 py-0.5 rounded text-[10px] font-sans ${
                         item.status === 'IN_STOCK'
-                          ? 'bg-emerald-950/60 text-emerald-400 border border-emerald-800/40'
-                          : 'bg-rose-950/60 text-rose-400 border border-rose-800/40'
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-300'
+                          : 'bg-rose-50 text-rose-700 border border-rose-300'
                       }`}>
                         {item.status === 'IN_STOCK' ? 'In Stock' : 'Sold'}
                       </span>

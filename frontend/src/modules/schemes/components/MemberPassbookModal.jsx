@@ -100,7 +100,7 @@ export const MemberPassbookModal = ({ subscription, onClose, onPayInstallment })
                     </td>
                     <td className="p-2.5 text-center">
                       {isPaid ? (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-sans font-semibold bg-emerald-950/60 text-emerald-400 border border-emerald-800/40 inline-flex items-center gap-1">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-sans font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300 inline-flex items-center gap-1">
                           <CheckCircle2 className="w-3 h-3" />
                           <span>Paid</span>
                         </span>

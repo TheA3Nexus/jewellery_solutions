@@ -271,7 +271,7 @@ export const TabletLookbook = () => {
                     </div>
                     <div className="text-right text-white font-mono">
                       <span className="text-[10px] text-amber-400 block font-sans">Live Showroom Est:</span>
-                      <span className="text-base font-bold text-amber-300">
+                      <span className="text-base font-bold text-brand-300">
                         ₹{estimatedPrice.toLocaleString('en-IN')}
                       </span>
                     </div>
@@ -364,11 +364,11 @@ export const TabletLookbook = () => {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-surface-400">Making Charges:</span>
-                    <span className="text-emerald-400">{selectedItemForModal.makingChargePercent}% on metal value</span>
+                    <span className="text-emerald-700">{selectedItemForModal.makingChargePercent}% on metal value</span>
                   </div>
                   <div className="border-t border-surface-800 pt-2 flex justify-between font-bold text-sm">
                     <span className="text-surface-200 font-sans">Live Total (incl. 3% GST):</span>
-                    <span className="text-amber-300">
+                    <span className="text-brand-600">
                       ₹{calculateLivePrice(selectedItemForModal).toLocaleString('en-IN')}
                     </span>
                   </div>
@@ -380,7 +380,7 @@ export const TabletLookbook = () => {
                       handlePushToPos(selectedItemForModal);
                       setSelectedItemForModal(null);
                     }}
-                    className="w-full py-2.5 rounded-xl bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-sm"
+                    className="w-full btn-primary py-2.5 text-xs font-bold flex items-center justify-center gap-2"
                   >
                     <ShoppingBag className="w-4 h-4" />
                     Push to Billing Counter

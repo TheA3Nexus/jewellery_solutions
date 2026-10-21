@@ -268,25 +268,25 @@ export const WhatsAppAutomations = () => {
           </div>
 
           {/* Smartphone Mockup */}
-          <div className="w-72 bg-emerald-950/20 border-2 border-surface-700 rounded-3xl p-3 shadow-2xl relative">
+          <div className="w-72 bg-emerald-50/60 border-2 border-surface-700 rounded-3xl p-3 shadow-xl relative">
             {/* Top Speaker Pill */}
             <div className="w-20 h-3 bg-surface-800 rounded-full mx-auto mb-2" />
 
             {/* WhatsApp Chat Bubble */}
-            <div className="bg-emerald-900/60 border border-emerald-500/30 rounded-2xl p-3 text-xs text-surface-100 space-y-2 shadow-sm font-sans">
+            <div className="bg-[#E7FFDB] border border-emerald-300 rounded-2xl p-3 text-xs text-surface-100 space-y-2 shadow-sm font-sans">
               <div className="flex items-center gap-1.5 pb-1 border-b border-emerald-500/20">
                 <div className="w-5 h-5 rounded-full bg-brand-500 text-slate-950 font-black text-[9px] flex items-center justify-center">
                   A3
                 </div>
                 <span className="font-bold text-[11px] text-surface-100">{tenant.name}</span>
-                <CheckCircle2 className="w-3 h-3 text-emerald-400 ml-auto" />
+                <CheckCircle2 className="w-3 h-3 text-emerald-700 ml-auto" />
               </div>
 
               {selectedTemplate === 'INVOICE' && (
                 <div className="space-y-1.5 text-[11px] leading-relaxed">
                   <p>Namaste <strong>Mrs. Ananya Verma</strong> ji,</p>
                   <p>Thank you for choosing <strong>{tenant.name}</strong> for your fine jewellery! 💍</p>
-                  <div className="bg-black/40 p-2 rounded-lg border border-emerald-500/20 font-mono text-[10px]">
+                  <div className="bg-white/80 p-2 rounded-lg border border-emerald-300 font-mono text-[10px]">
                     <div>Invoice: <strong>INV-2026-0891</strong></div>
                     <div>Item: 22K Peacock Choker (31.85g)</div>
                     <div>Total Paid: <strong>₹2,59,044</strong></div>
@@ -305,7 +305,7 @@ export const WhatsAppAutomations = () => {
                 <div className="space-y-1.5 text-[11px] leading-relaxed">
                   <p>Namaste <strong>Kavita</strong> ji,</p>
                   <p>Gentle reminder: Your monthly installment for <strong>Dhan-Varsha 11+1 Scheme</strong> is due on <strong>25th Oct</strong>.</p>
-                  <div className="bg-black/40 p-2 rounded-lg border border-emerald-500/20 font-mono text-[10px]">
+                  <div className="bg-white/80 p-2 rounded-lg border border-emerald-300 font-mono text-[10px]">
                     <div>Passbook: <strong>SCH-2026-8820</strong></div>
                     <div>Installment: Month 6 of 11</div>
                     <div>Amount: <strong>₹5,000</strong></div>
@@ -320,11 +320,11 @@ export const WhatsAppAutomations = () => {
 
               {selectedTemplate === 'BIRTHDAY' && (
                 <div className="space-y-1.5 text-[11px] leading-relaxed">
-                  <p>Warmest Greetings from <strong>{tenant.name}</strong>! ✨</p>
+                  <p>Warmest Greetings from <strong>{tenant.name}</strong>!</p>
                   <p>Wishing you a very Happy Wedding Anniversary! May your bond sparkle brighter than gold forever.</p>
-                  <div className="bg-black/40 p-2 rounded-lg border border-emerald-500/20 text-[10px]">
+                  <div className="bg-white/80 p-2 rounded-lg border border-emerald-300 text-[10px]">
                     <div>Exclusive Gift Voucher Code:</div>
-                    <div className="text-amber-400 font-mono font-bold text-xs">ANNIV-GOLD-15</div>
+                    <div className="text-brand-600 font-mono font-bold text-xs">ANNIV-GOLD-15</div>
                     <div className="text-surface-300">Enjoy <strong>15% OFF on Making Charges</strong> valid for 15 days.</div>
                   </div>
                 </div>

@@ -104,14 +104,14 @@ export const LoyaltyClub = () => {
         </div>
 
         {/* Gold Sovereign */}
-        <div className="bg-surface-900 border border-amber-500/30 rounded-xl p-4 flex flex-col justify-between bg-amber-950/5">
+        <div className="bg-surface-900 border border-brand-500/30 rounded-xl p-4 flex flex-col justify-between bg-brand-50/40">
           <div>
             <div className="flex justify-between items-center mb-2">
-              <span className="text-xs font-bold text-amber-400 uppercase flex items-center gap-1.5">
-                <Award className="w-4 h-4 text-amber-400" />
+              <span className="text-xs font-bold text-brand-600 uppercase flex items-center gap-1.5">
+                <Award className="w-4 h-4 text-brand-500" />
                 Gold Sovereign Club
               </span>
-              <span className="text-[10px] text-amber-400 font-mono">Spend &gt; ₹2 Lakh</span>
+              <span className="text-[10px] text-brand-600 font-mono">Spend &gt; ₹2 Lakh</span>
             </div>
             <ul className="text-xs text-surface-300 space-y-1">
               <li>&bull; 1.5 Loyalty Points per ₹1,000 spent</li>
@@ -234,11 +234,11 @@ export const LoyaltyClub = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in">
           <div className="bg-surface-900 border border-surface-700 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl text-center">
             {/* VIP Card Representation */}
-            <div className="w-full aspect-[1.58/1] rounded-2xl p-5 bg-gradient-to-tr from-slate-950 via-slate-900 to-amber-950/40 border border-amber-500/40 shadow-xl flex flex-col justify-between text-left relative overflow-hidden">
+            <div className="w-full aspect-[1.58/1] rounded-2xl p-5 bg-gradient-to-tr from-slate-950 via-slate-900 to-brand-900/60 border border-brand-500/40 shadow-xl flex flex-col justify-between text-left relative overflow-hidden">
               <div className="flex justify-between items-start">
                 <div>
                   <span className="text-[10px] tracking-widest uppercase text-amber-400 font-bold font-mono">
-                    ✦ VIP Privilege Pass ✦
+                    VIP Privilege Pass
                   </span>
                   <h4 className="font-black text-sm uppercase text-surface-100 mt-0.5">
                     {tenant.name}
@@ -252,7 +252,7 @@ export const LoyaltyClub = () => {
                 <div className="text-base font-bold text-surface-100 tracking-wide font-sans">
                   {selectedCustomerForCard.name}
                 </div>
-                <div className="text-xs font-mono text-amber-300 font-bold">
+                <div className="text-xs font-mono text-brand-300 font-bold">
                   {selectedCustomerForCard.tier.replace('_', ' ')}
                 </div>
               </div>

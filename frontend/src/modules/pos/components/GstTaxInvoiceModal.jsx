@@ -11,11 +11,11 @@ export const GstTaxInvoiceModal = ({ invoice, onClose, onWhatsAppShare }) => {
         {/* Top Control Bar */}
         <div className="flex justify-between items-center border-b border-surface-800 pb-3">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="w-5 h-5 text-emerald-400" />
+            <ShieldCheck className="w-5 h-5 text-emerald-600" />
             <h3 className="text-sm font-bold text-surface-100 uppercase tracking-wider">
               Official GST Tax Invoice Preview
             </h3>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-300">
               Rule 46 Compliant
             </span>
           </div>
@@ -24,7 +24,7 @@ export const GstTaxInvoiceModal = ({ invoice, onClose, onWhatsAppShare }) => {
               onClick={() => onWhatsAppShare(invoice)}
               className="btn-secondary py-1.5 px-3 text-xs"
             >
-              <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
+              <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
               <span>WhatsApp PDF</span>
             </button>
             <button

@@ -472,7 +472,7 @@ export const KarigarWorkspace = () => {
                 <span>Due Date: {wo.dueDate}</span>
                 <button
                   onClick={() => setIsReceiveModalOpen(true)}
-                  className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold flex items-center gap-1"
+                  className="text-xs text-emerald-700 hover:text-emerald-800 font-semibold flex items-center gap-1"
                 >
                   Receive Finished <ArrowDownLeft className="w-3.5 h-3.5" />
                 </button>

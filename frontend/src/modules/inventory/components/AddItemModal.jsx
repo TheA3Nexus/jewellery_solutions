@@ -223,13 +223,13 @@ export const AddItemModal = ({ isOpen, onClose, onAddItem, bullionRates }) => {
           <div className="p-3.5 rounded-xl bg-surface-950 border border-surface-800 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold text-surface-300 uppercase tracking-wider font-sans flex items-center gap-2">
-                <Scale className="w-4 h-4 text-emerald-400" />
+                <Scale className="w-4 h-4 text-emerald-600" />
                 <span>Weight Matrix &bull; 4-Decimal Precision</span>
               </span>
               <button
                 type="button"
                 onClick={handleFetchScaleWeight}
-                className="btn-secondary py-1 px-2.5 text-[11px] font-sans text-emerald-400 hover:text-emerald-300"
+                className="btn-secondary py-1 px-2.5 text-[11px] font-sans text-emerald-700 hover:text-emerald-800"
                 title="Fetch live weight from physical electronic scale"
               >
                 <Scale className="w-3.5 h-3.5" />
