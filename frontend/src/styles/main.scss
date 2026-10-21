@@ -11,7 +11,7 @@
 @tailwind components;
 @tailwind utilities;
 
-// --- Global Body & Scrollbars ---
+// --- Global Body ---
 body {
   background-color: var(--canvas-bg);
   color: var(--text-secondary);
@@ -21,9 +21,24 @@ body {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+// --- Suppress All Ugly Horizontal Header Scrollbars ---
+.no-scrollbar,
+header [class*="overflow-x"],
+nav[class*="overflow-x"],
+.nav-scroll {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  &::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+}
+
+// --- Clean Vertical Page Scrollbars ---
 ::-webkit-scrollbar {
   width: 6px;
-  height: 6px;
+  height: 0px;
 }
 
 ::-webkit-scrollbar-track {

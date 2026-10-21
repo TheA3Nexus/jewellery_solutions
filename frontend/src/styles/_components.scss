@@ -246,3 +246,14 @@
   background-image: linear-gradient(90deg, var(--gold-hover) 0%, var(--gold-accent) 50%, var(--gold-primary) 100%);
   font-weight: 700;
 }
+
+// --- Scrollbar Utilities ---
+.no-scrollbar {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  &::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+}
