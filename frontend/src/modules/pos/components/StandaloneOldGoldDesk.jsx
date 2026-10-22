@@ -938,7 +938,7 @@ export const StandaloneOldGoldDesk = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setPrintableVoucher(null)}
+                  data-testid="close-modal-btn" onClick={() => setPrintableVoucher(null)}
                   className="px-3 py-1 rounded-md bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold transition"
                 >
                   Close

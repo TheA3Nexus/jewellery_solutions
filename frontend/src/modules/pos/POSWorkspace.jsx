@@ -9,7 +9,9 @@ import { SplitPaymentModal } from './components/SplitPaymentModal';
 import { ThermalEstimateReceipt } from './components/ThermalEstimateReceipt';
 import { GstTaxInvoiceModal } from './components/GstTaxInvoiceModal';
 import { MemoApprovalModal } from './components/MemoApprovalModal';
+import { MemoDeliveryChallanModal } from './components/MemoDeliveryChallanModal';
 import { AdvanceGoldBookingModal } from './components/AdvanceGoldBookingModal';
+import { AdvanceBookingReceiptModal } from './components/AdvanceBookingReceiptModal';
 import { 
   CreditCard, 
   ArrowRight, 
@@ -32,7 +34,7 @@ export const POSWorkspace = () => {
   const { tenant, bullionRates, markProductSold, recordInvoice, invoices } = useTenant();
   const { scaleWeight } = useHardware();
 
-  // Subcategory Level 2 Tab: 'DIRECT_BILLING' | 'OLD_GOLD_DESK' | 'INVOICE_HISTORY'
+  // Subcategory Level 2 Tab: 'DIRECT_BILLING' | 'OLD_GOLD_DESK' | 'MEMO_APPROVALS' | 'ADVANCE_BOOKING' | 'INVOICE_HISTORY'
   const [activeSubcategory, setActiveSubcategory] = useState('DIRECT_BILLING');
 
   // Customer Profile State
@@ -61,6 +63,8 @@ export const POSWorkspace = () => {
   const [isAdvanceBookingOpen, setIsAdvanceBookingOpen] = useState(false);
   const [activeEstimateInvoice, setActiveEstimateInvoice] = useState(null);
   const [activeTaxInvoice, setActiveTaxInvoice] = useState(null);
+  const [activeMemoChallan, setActiveMemoChallan] = useState(null);
+  const [activeBookingReceipt, setActiveBookingReceipt] = useState(null);
   const [invoiceSuccess, setInvoiceSuccess] = useState(null);
 
   // Memos & Advance Gold Bookings Register State
@@ -69,11 +73,12 @@ export const POSWorkspace = () => {
       id: 'MEMO-8801',
       customer: { name: 'Mrs. Sunita Khandelwal', phone: '+91 98200 44551', address: 'Pedder Road, Mumbai' },
       items: [
-        { name: '22K Handcrafted Calcutta Kada Bangles', grossWeight: 45.2, approxValue: 366000 }
+        { name: '22K Handcrafted Calcutta Kada Bangles', grossWeight: 45.2, approxValue: 366000, purity: '22K (91.6%)', barcode: '101004' }
       ],
       returnDueDate: '2026-10-24',
       totalApproxValue: 366000,
-      status: 'PENDING_DECISION'
+      status: 'PENDING_DECISION',
+      createdAt: '2026-10-21'
     }
   ]);
 
@@ -88,6 +93,7 @@ export const POSWorkspace = () => {
       advanceDeposit: 100000,
       deliveryDate: '2026-12-15',
       bookingDate: '2026-10-21',
+      paymentMode: 'BANK_NEFT',
       status: 'ACTIVE_LOCKED'
     }
   ]);
@@ -114,6 +120,57 @@ export const POSWorkspace = () => {
 
   const isPanMandatory = grandTotal >= 200000;
 
+  // Direct 1-Click Kaccha Bill / Estimate Generation
+  const handleGenerateQuickEstimate = () => {
+    if (cart.length === 0) {
+      alert('Please add at least one article to the counter before generating an estimate quotation.');
+      return;
+    }
+
+    const estimateCounter = (invoices?.length || 0) + 101;
+    const estId = `EST-${new Date().getFullYear()}-${estimateCounter}`;
+
+    const estimateDoc = {
+      id: estId,
+      invoiceNo: estId,
+      shopName: tenant?.name || 'A3 LUXURY JEWELLERS',
+      shopAddress: tenant?.address || 'Showroom Address',
+      shopPhone: tenant?.phone || '+91 98200 12345',
+      shopGstin: tenant?.gstin || '27AAACP0123M1Z5',
+      shopBisNo: tenant?.bisLicenseNo || 'HM/C-7890123',
+      createdAt: new Date().toISOString(),
+      customer,
+      items: cart.map(item => ({
+        ...item,
+        productId: item.productId || item.id,
+        itemName: item.name,
+        grossWeight: item.grossWeight,
+        netWeight: item.netWeight,
+        purity: item.purity,
+        goldRate: item.ratePerGram || item.rate || bullionRates.gold22k,
+        ratePerGram: item.ratePerGram || item.rate || bullionRates.gold22k,
+        makingCharges: item.makingChargeTotal ?? item.makingCharges ?? 0,
+        makingChargeTotal: item.makingChargeTotal ?? item.makingCharges ?? 0,
+        stoneCharges: item.diamondPrice ?? item.stoneCharges ?? 0,
+        rowTotal: item.rowTotal ?? item.finalPrice ?? 0,
+        totalAmount: item.rowTotal ?? item.finalPrice ?? 0
+      })),
+      grossTotal,
+      subtotal: grossTotal,
+      exchangeCredit,
+      hasExchange: exchange.active,
+      exchangeDetails: exchange.active ? exchange : null,
+      taxableAmount,
+      gstAmount,
+      cgst: gstAmount / 2,
+      sgst: gstAmount / 2,
+      grandTotal,
+      invoiceType: 'ESTIMATE'
+    };
+
+    setActiveEstimateInvoice(estimateDoc);
+  };
+
   // Finalize Sale from Split Payment Modal
   const handleFinalizeSale = async ({ paymentBreakdown, cardDetails, chequeDetails, invoiceType }) => {
     const invoiceCounter = invoices.length + 101;
@@ -136,10 +193,13 @@ export const POSWorkspace = () => {
         grossWeight: item.grossWeight,
         netWeight: item.netWeight,
         purity: item.purity,
-        goldRate: item.rate || bullionRates.gold22k,
-        makingCharges: item.makingCharges || 0,
-        stoneCharges: item.stoneCharges || 0,
-        totalAmount: item.rowTotal || item.finalPrice
+        goldRate: item.ratePerGram || item.rate || bullionRates.gold22k,
+        ratePerGram: item.ratePerGram || item.rate || bullionRates.gold22k,
+        makingCharges: item.makingChargeTotal ?? item.makingCharges ?? 0,
+        makingChargeTotal: item.makingChargeTotal ?? item.makingCharges ?? 0,
+        stoneCharges: item.diamondPrice ?? item.stoneCharges ?? 0,
+        rowTotal: item.rowTotal ?? item.finalPrice ?? 0,
+        totalAmount: item.rowTotal ?? item.finalPrice ?? 0
       })),
       grossTotal,
       subtotal: grossTotal,
@@ -312,13 +372,24 @@ export const POSWorkspace = () => {
 
               {/* Statutory PAN warning indicator */}
               {isPanMandatory && !customer.pan && (
-                <div className="p-2 rounded bg-amber-50 border border-amber-300 text-[10px] text-amber-800 font-sans">
-                  Rule 114B: Invoice &gt;= ₹2 Lakh requires Customer PAN before finalizing.
+                <div className="p-2 rounded bg-amber-500/10 border border-amber-500/30 text-[10px] text-amber-300 font-sans">
+                  Rule 114B: Invoice &gt;= ₹2 Lakh requires Customer PAN before finalizing sale.
                 </div>
               )}
 
               {/* Main Checkout Buttons */}
               <div className="space-y-2 pt-2">
+                {/* 1-Click Quick Estimate / Kaccha Bill */}
+                <button
+                  type="button"
+                  onClick={handleGenerateQuickEstimate}
+                  disabled={cart.length === 0}
+                  className="w-full btn-secondary py-2.5 text-xs uppercase tracking-wider font-bold flex items-center justify-center gap-2 border-brand-500/40 text-brand-300 hover:text-brand-200"
+                >
+                  <Printer className="w-4 h-4 text-brand-400" />
+                  <span>Quick Estimate (Kaccha Bill)</span>
+                </button>
+
                 <button
                   type="button"
                   onClick={() => setIsSplitModalOpen(true)}
@@ -333,7 +404,7 @@ export const POSWorkspace = () => {
                   <button
                     type="button"
                     onClick={handleClearBill}
-                    className="w-full btn-secondary py-2 text-xs text-rose-700 hover:text-rose-800 hover:bg-rose-50"
+                    className="w-full btn-secondary py-2 text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-950/30"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                     <span>Clear Active Counter</span>
@@ -405,19 +476,19 @@ export const POSWorkspace = () => {
                   invoices.map((inv) => (
                     <tr key={inv.id} className="hover:bg-surface-850/40 transition">
                       <td className="p-2.5 font-bold text-brand-400">{inv.id}</td>
-                      <td className="p-2.5 text-surface-400">{new Date(inv.createdAt).toLocaleDateString()}</td>
+                      <td className="p-2.5 text-surface-400">{inv.createdAt ? new Date(inv.createdAt).toLocaleDateString() : 'Today'}</td>
                       <td className="p-2.5 font-sans font-semibold text-surface-200">{inv.customer?.name || 'Walk-in'}</td>
                       <td className="p-2.5">
                         <span className={`px-1.5 py-0.5 rounded text-[10px] font-sans ${
                           inv.invoiceType === 'TAX_INVOICE' 
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-300' 
+                            ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' 
                             : 'bg-surface-800 text-surface-300'
                         }`}>
                           {inv.invoiceType}
                         </span>
                       </td>
                       <td className="p-2.5 text-right">{inv.items?.length || 0}</td>
-                      <td className="p-2.5 text-right font-bold text-surface-100">₹{inv.grandTotal.toLocaleString('en-IN')}</td>
+                      <td className="p-2.5 text-right font-bold text-surface-100">₹{(inv.grandTotal || 0).toLocaleString('en-IN')}</td>
                       <td className="p-2.5 text-center space-x-1.5">
                         <button
                           onClick={() => {
@@ -468,6 +539,7 @@ export const POSWorkspace = () => {
                 <th className="p-2.5 text-right">Approx Value (₹)</th>
                 <th className="p-2.5 text-center">Return Due Date</th>
                 <th className="p-2.5 text-center">Status</th>
+                <th className="p-2.5 text-center">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-surface-800/60 font-mono">
@@ -479,16 +551,26 @@ export const POSWorkspace = () => {
                     <div className="text-[11px] text-surface-500 font-mono">{memo.customer.phone}</div>
                   </td>
                   <td className="p-2.5 font-sans text-surface-200">
-                    {memo.items.map((i) => `${i.name} (${i.grossWeight}g)`).join(', ')}
+                    {memo.items.map((i) => `${i.name} (${parseFloat(i.grossWeight || 0).toFixed(3)}g)`).join(', ')}
                   </td>
                   <td className="p-2.5 text-right font-bold text-surface-100">
-                    ₹{memo.totalApproxValue.toLocaleString('en-IN')}
+                    ₹{Math.round(memo.totalApproxValue).toLocaleString('en-IN')}
                   </td>
                   <td className="p-2.5 text-center">{memo.returnDueDate}</td>
                   <td className="p-2.5 text-center font-sans">
                     <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-amber-500/10 text-amber-400 border border-amber-500/20">
                       On Approval
                     </span>
+                  </td>
+                  <td className="p-2.5 text-center">
+                    <button
+                      type="button"
+                      onClick={() => setActiveMemoChallan(memo)}
+                      className="btn-secondary py-1 px-2.5 text-[10px] flex items-center gap-1 mx-auto"
+                    >
+                      <Printer className="w-3 h-3 text-brand-400" />
+                      <span>View Challan</span>
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -528,6 +610,7 @@ export const POSWorkspace = () => {
                 <th className="p-2.5 text-right">Advance Deposited</th>
                 <th className="p-2.5 text-center">Delivery Target</th>
                 <th className="p-2.5 text-center">Status</th>
+                <th className="p-2.5 text-center">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-surface-800/60 font-mono">
@@ -538,16 +621,26 @@ export const POSWorkspace = () => {
                     <div className="font-semibold text-surface-100">{bkg.customer.name}</div>
                     <div className="text-[11px] text-surface-500 font-mono">{bkg.customer.phone}</div>
                   </td>
-                  <td className="p-2.5 text-right text-amber-400 font-bold">₹{bkg.lockedRate} /g</td>
-                  <td className="p-2.5 text-right">{bkg.targetGrams.toFixed(3)} g</td>
+                  <td className="p-2.5 text-right text-amber-400 font-bold">₹{bkg.lockedRate.toLocaleString('en-IN')} /g</td>
+                  <td className="p-2.5 text-right">{parseFloat(bkg.targetGrams || 0).toFixed(3)} g</td>
                   <td className="p-2.5 text-right text-emerald-400 font-bold">
-                    ₹{bkg.advanceDeposit.toLocaleString('en-IN')}
+                    ₹{parseFloat(bkg.advanceDeposit || 0).toLocaleString('en-IN')}
                   </td>
                   <td className="p-2.5 text-center">{bkg.deliveryDate}</td>
                   <td className="p-2.5 text-center font-sans">
                     <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                       Rate Locked
                     </span>
+                  </td>
+                  <td className="p-2.5 text-center">
+                    <button
+                      type="button"
+                      onClick={() => setActiveBookingReceipt(bkg)}
+                      className="btn-secondary py-1 px-2.5 text-[10px] flex items-center gap-1 mx-auto"
+                    >
+                      <Printer className="w-3 h-3 text-amber-400" />
+                      <span>View Receipt</span>
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -569,14 +662,20 @@ export const POSWorkspace = () => {
       <MemoApprovalModal
         isOpen={isMemoModalOpen}
         onClose={() => setIsMemoModalOpen(false)}
-        onSaveMemo={(memo) => setMemos([memo, ...memos])}
+        onSaveMemo={(memo) => {
+          setMemos([memo, ...memos]);
+          setActiveMemoChallan(memo);
+        }}
       />
 
       {/* Advance Gold Rate Booking Modal */}
       <AdvanceGoldBookingModal
         isOpen={isAdvanceBookingOpen}
         onClose={() => setIsAdvanceBookingOpen(false)}
-        onSaveBooking={(bkg) => setAdvanceBookings([bkg, ...advanceBookings])}
+        onSaveBooking={(bkg) => {
+          setAdvanceBookings([bkg, ...advanceBookings]);
+          setActiveBookingReceipt(bkg);
+        }}
       />
 
       {/* Thermal Estimate Receipt Modal */}
@@ -593,6 +692,22 @@ export const POSWorkspace = () => {
           invoice={activeTaxInvoice}
           onClose={() => setActiveTaxInvoice(null)}
           onWhatsAppShare={(inv) => alert(`WhatsApp PDF dispatched to ${inv.customer?.phone || '+91 98200 12345'}`)}
+        />
+      )}
+
+      {/* Memo Delivery Challan Printable Modal */}
+      {activeMemoChallan && (
+        <MemoDeliveryChallanModal
+          memo={activeMemoChallan}
+          onClose={() => setActiveMemoChallan(null)}
+        />
+      )}
+
+      {/* Advance Booking Rate Lock Certificate & Receipt Modal */}
+      {activeBookingReceipt && (
+        <AdvanceBookingReceiptModal
+          booking={activeBookingReceipt}
+          onClose={() => setActiveBookingReceipt(null)}
         />
       )}
 

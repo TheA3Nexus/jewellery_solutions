@@ -8,7 +8,7 @@ import {
   Scale, 
   Layers, 
   Check, 
-  Search,
+  Search, 
   Tag
 } from 'lucide-react';
 
@@ -89,11 +89,11 @@ export const ProductIngestionTable = ({ cart, setCart }) => {
 
     const term = scanInput.trim().toLowerCase();
     const found = products.find(p => 
-      p.status === 'IN_STOCK' && (
-        p.id.toLowerCase() === term ||
-        p.barcode.toLowerCase() === term ||
-        (p.huid && p.huid.toLowerCase() === term) ||
-        (p.rfidTag && p.rfidTag.toLowerCase() === term)
+      (p.status === 'IN_STOCK' || !p.status) && (
+        String(p.id || '').toLowerCase() === term ||
+        String(p.barcode || '').toLowerCase() === term ||
+        (p.huid && String(p.huid).toLowerCase() === term) ||
+        (p.rfidTag && String(p.rfidTag).toLowerCase() === term)
       )
     );
 
@@ -124,6 +124,7 @@ export const ProductIngestionTable = ({ cart, setCart }) => {
         </form>
 
         <button
+          id="toggle-stock-catalog-btn"
           type="button"
           onClick={() => setIsStockDrawerOpen(!isStockDrawerOpen)}
           className="btn-secondary text-xs"
@@ -135,18 +136,22 @@ export const ProductIngestionTable = ({ cart, setCart }) => {
 
       {/* Quick In-Stock Drawer */}
       {isStockDrawerOpen && (
-        <div className="bg-surface-950 border border-surface-800 rounded-xl p-3 animate-in fade-in duration-150">
+        <div id="pos-stock-drawer" className="bg-surface-950 border border-surface-800 rounded-xl p-3 animate-in fade-in duration-150">
           <div className="text-[11px] font-medium text-surface-400 mb-2 flex justify-between items-center">
             <span>Available Ready-to-Sell Inventory:</span>
             <span className="text-[10px] text-brand-400 font-mono">Click item to add</span>
           </div>
           <div className="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto pr-1">
-            {products.filter(p => p.status === 'IN_STOCK').map(p => {
+            {(products.filter(p => p.status === 'IN_STOCK' || !p.status).length > 0
+                ? products.filter(p => p.status === 'IN_STOCK' || !p.status)
+                : products
+            ).map(p => {
               const inCart = Boolean(cart.find(c => c.id === p.id));
               return (
                 <button
                   key={p.id}
                   type="button"
+                  data-testid="stock-item-btn"
                   onClick={() => handleAddItemToCart(p)}
                   disabled={inCart}
                   className={`px-2.5 py-1.5 rounded-lg border text-left text-xs transition flex items-center gap-2 ${
@@ -159,7 +164,7 @@ export const ProductIngestionTable = ({ cart, setCart }) => {
                   <div>
                     <div className="font-semibold text-surface-100 leading-tight">{p.name}</div>
                     <div className="text-[10px] text-surface-400 font-mono">
-                      {p.netWeight.toFixed(3)}g &bull; {p.purity} &bull; {p.huid || p.barcode}
+                      {(parseFloat(p.netWeight) || 0).toFixed(3)}g &bull; {p.purity} &bull; {p.huid || p.barcode}
                     </div>
                   </div>
                 </button>
@@ -208,12 +213,12 @@ export const ProductIngestionTable = ({ cart, setCart }) => {
                       {item.huid || 'N/A'}
                     </span>
                   </td>
-                  <td className="py-2.5 px-3 text-right">{item.grossWeight.toFixed(3)}</td>
-                  <td className="py-2.5 px-3 text-right font-bold text-surface-100">{item.netWeight.toFixed(3)}</td>
-                  <td className="py-2.5 px-3 text-right text-surface-300">₹{item.ratePerGram.toFixed(2)}</td>
-                  <td className="py-2.5 px-3 text-right text-surface-300">₹{item.makingChargeTotal.toLocaleString('en-IN')}</td>
+                  <td className="py-2.5 px-3 text-right">{(parseFloat(item.grossWeight) || 0).toFixed(3)}</td>
+                  <td className="py-2.5 px-3 text-right font-bold text-surface-100">{(parseFloat(item.netWeight) || 0).toFixed(3)}</td>
+                  <td className="py-2.5 px-3 text-right text-surface-300">₹{(parseFloat(item.ratePerGram) || 0).toFixed(2)}</td>
+                  <td className="py-2.5 px-3 text-right text-surface-300">₹{(item.makingChargeTotal || 0).toLocaleString('en-IN')}</td>
                   <td className="py-2.5 px-3 text-right font-bold text-brand-300 text-sm">
-                    ₹{item.rowTotal.toLocaleString('en-IN')}
+                    ₹{(item.rowTotal || 0).toLocaleString('en-IN')}
                   </td>
                   <td className="py-2.5 px-3 text-center">
                     <button

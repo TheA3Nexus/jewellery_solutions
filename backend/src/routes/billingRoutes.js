@@ -216,12 +216,12 @@ router.post('/invoices', async (req, res) => {
           cashierName,
           items: {
             create: items.map(item => ({
-              productId: item.productId || item.id || null,
-              itemName: item.itemName || item.name,
+              productId: null,
+              itemName: item.itemName || item.name || 'Jewellery Item',
               huid: item.huid || null,
-              grossWeight: parseFloat(item.grossWeight),
-              netWeight: parseFloat(item.netWeight),
-              purity: item.purity,
+              grossWeight: parseFloat(item.grossWeight || 0),
+              netWeight: parseFloat(item.netWeight || item.grossWeight || 0),
+              purity: item.purity || '22K',
               goldRate: parseFloat(item.goldRate || item.rate || 0),
               makingCharges: parseFloat(item.makingCharges || 0),
               stoneCharges: parseFloat(item.stoneCharges || 0),

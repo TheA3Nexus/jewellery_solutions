@@ -22,20 +22,20 @@ export const GstTaxInvoiceModal = ({ invoice, onClose, onWhatsAppShare }) => {
           </div>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => onWhatsAppShare(invoice)}
-              className="btn-secondary py-1.5 px-3 text-xs"
+              onClick={() => onWhatsAppShare?.(invoice)}
+              className="btn-secondary py-1.5 px-3 text-xs flex items-center gap-1.5"
             >
               <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
               <span>WhatsApp PDF</span>
             </button>
             <button
               onClick={() => printA4('printable-tax-invoice', `Tax_Invoice_${invoice.id || 'INV'}`)}
-              className="btn-primary py-1.5 px-3 text-xs"
+              className="btn-primary py-1.5 px-3 text-xs flex items-center gap-1.5"
             >
               <Printer className="w-3.5 h-3.5" />
               <span>Print A4 Invoice</span>
             </button>
-            <button onClick={onClose} className="text-surface-400 hover:text-surface-100 p-1">
+            <button data-testid="close-modal-btn" onClick={onClose} className="text-surface-400 hover:text-surface-100 p-1 rounded-lg">
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -48,20 +48,23 @@ export const GstTaxInvoiceModal = ({ invoice, onClose, onWhatsAppShare }) => {
           <div className="flex justify-between items-start border-b-2 border-slate-900 pb-4">
             <div>
               <h2 className="text-xl font-bold tracking-tight text-slate-900 uppercase">
-                {invoice.shopName}
+                {invoice.shopName || 'A3 LUXURY JEWELLERS'}
               </h2>
-              <p className="text-[11px] text-slate-600 font-mono mt-0.5">{invoice.shopAddress}</p>
+              <p className="text-[11px] text-slate-600 font-mono mt-0.5">{invoice.shopAddress || 'Main Showroom Address'}</p>
               <p className="text-[11px] text-slate-600">
-                <strong>GSTIN:</strong> {invoice.shopGstin} &bull; <strong>BIS Lic:</strong> {invoice.shopBisNo}
+                <strong>GSTIN:</strong> {invoice.shopGstin || '27AAACP0123M1Z5'} &bull; <strong>BIS Lic:</strong> {invoice.shopBisNo || 'HM/C-7890123'}
               </p>
-              <p className="text-[11px] text-slate-600"><strong>Phone:</strong> {invoice.shopPhone}</p>
+              <p className="text-[11px] text-slate-600"><strong>Phone:</strong> {invoice.shopPhone || '+91 98200 12345'}</p>
             </div>
             <div className="text-right space-y-1 font-mono">
               <div className="inline-block px-2.5 py-1 bg-slate-900 text-white font-bold text-xs uppercase tracking-wider rounded">
                 TAX INVOICE
               </div>
+              <div className="text-[10px] text-slate-500 font-sans font-semibold">
+                (Rule 46 of CGST Rules, 2017)
+              </div>
               <div className="text-[11px]"><strong>Invoice No:</strong> {invoice.id}</div>
-              <div className="text-[11px]"><strong>Date:</strong> {new Date(invoice.createdAt).toLocaleDateString()}</div>
+              <div className="text-[11px]"><strong>Date:</strong> {invoice.createdAt ? new Date(invoice.createdAt).toLocaleDateString() : new Date().toLocaleDateString()}</div>
               <div className="text-[11px]"><strong>Place of Supply:</strong> Maharashtra (Code: 27)</div>
             </div>
           </div>
@@ -103,21 +106,21 @@ export const GstTaxInvoiceModal = ({ invoice, onClose, onWhatsAppShare }) => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200">
-                {invoice.items?.map((item, idx) => (
+                {(invoice.items || []).map((item, idx) => (
                   <tr key={idx}>
                     <td className="p-2">{idx + 1}</td>
                     <td className="p-2">
-                      <strong className="text-slate-900">{item.name}</strong>
-                      <div className="text-[10px] text-slate-500">{item.purity} &bull; {item.category}</div>
+                      <strong className="text-slate-900">{item.name || item.itemName}</strong>
+                      <div className="text-[10px] text-slate-500">{item.purity || '22K'} &bull; {item.category || item.metal || 'Gold'}</div>
                     </td>
                     <td className="p-2">711319</td>
                     <td className="p-2 font-bold">{item.huid || 'N/A'}</td>
-                    <td className="p-2 text-right">{item.grossWeight.toFixed(3)}</td>
-                    <td className="p-2 text-right font-bold">{item.netWeight.toFixed(3)}</td>
-                    <td className="p-2 text-right">₹{item.ratePerGram.toFixed(2)}</td>
-                    <td className="p-2 text-right">₹{item.makingChargeTotal.toLocaleString('en-IN')}</td>
+                    <td className="p-2 text-right">{(parseFloat(item.grossWeight) || 0).toFixed(3)}</td>
+                    <td className="p-2 text-right font-bold">{(parseFloat(item.netWeight) || 0).toFixed(3)}</td>
+                    <td className="p-2 text-right">₹{(parseFloat(item.ratePerGram || item.goldRate || item.rate || 0)).toFixed(2)}</td>
+                    <td className="p-2 text-right">₹{(item.makingChargeTotal ?? item.makingCharges ?? 0).toLocaleString('en-IN')}</td>
                     <td className="p-2 text-right font-bold text-slate-900">
-                      ₹{item.rowTotal.toLocaleString('en-IN')}
+                      ₹{(item.rowTotal ?? item.totalAmount ?? 0).toLocaleString('en-IN')}
                     </td>
                   </tr>
                 ))}
@@ -149,16 +152,16 @@ export const GstTaxInvoiceModal = ({ invoice, onClose, onWhatsAppShare }) => {
                 <span>Cheque / RTGS:</span>
                 <span>₹{(invoice.paymentBreakdown?.cheque || 0).toLocaleString('en-IN')}</span>
               </div>
-              {invoice.exchangeCredit > 0 && (
+              {(invoice.exchangeCredit || 0) > 0 && (
                 <div className="flex justify-between font-bold text-slate-700 border-t border-slate-200 pt-1">
                   <span>Old Metal Received:</span>
-                  <span>-₹{invoice.exchangeCredit.toLocaleString('en-IN')}</span>
+                  <span>-₹{(invoice.exchangeCredit || 0).toLocaleString('en-IN')}</span>
                 </div>
               )}
-              {invoice.paymentBreakdown?.udhaar > 0 && (
+              {(invoice.paymentBreakdown?.udhaar || 0) > 0 && (
                 <div className="flex justify-between font-bold text-rose-600 border-t border-slate-200 pt-1">
                   <span>Carried to Khata (Udhaar):</span>
-                  <span>₹{invoice.paymentBreakdown.udhaar.toLocaleString('en-IN')}</span>
+                  <span>₹{(invoice.paymentBreakdown?.udhaar || 0).toLocaleString('en-IN')}</span>
                 </div>
               )}
             </div>
@@ -167,29 +170,29 @@ export const GstTaxInvoiceModal = ({ invoice, onClose, onWhatsAppShare }) => {
             <div className="border border-slate-200 rounded p-3 space-y-1">
               <div className="flex justify-between">
                 <span>Gross Jewellery Value:</span>
-                <span>₹{invoice.grossTotal.toLocaleString('en-IN')}</span>
+                <span>₹{(invoice.grossTotal || 0).toLocaleString('en-IN')}</span>
               </div>
-              {invoice.exchangeCredit > 0 && (
+              {(invoice.exchangeCredit || 0) > 0 && (
                 <div className="flex justify-between text-slate-600">
                   <span>Less Exchange Credit:</span>
-                  <span>-₹{invoice.exchangeCredit.toLocaleString('en-IN')}</span>
+                  <span>-₹{(invoice.exchangeCredit || 0).toLocaleString('en-IN')}</span>
                 </div>
               )}
               <div className="flex justify-between font-bold">
                 <span>Taxable Value:</span>
-                <span>₹{invoice.taxableAmount.toLocaleString('en-IN')}</span>
+                <span>₹{(invoice.taxableAmount || 0).toLocaleString('en-IN')}</span>
               </div>
               <div className="flex justify-between">
                 <span>CGST (1.5%):</span>
-                <span>₹{(invoice.gstAmount / 2).toFixed(2)}</span>
+                <span>₹{((invoice.gstAmount || 0) / 2).toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span>SGST (1.5%):</span>
-                <span>₹{(invoice.gstAmount / 2).toFixed(2)}</span>
+                <span>₹{((invoice.gstAmount || 0) / 2).toFixed(2)}</span>
               </div>
               <div className="flex justify-between border-t border-slate-900 pt-1.5 font-bold text-sm text-slate-900">
                 <span>Total Invoice Value:</span>
-                <span>₹{invoice.grandTotal.toLocaleString('en-IN')}</span>
+                <span>₹{(invoice.grandTotal || 0).toLocaleString('en-IN')}</span>
               </div>
             </div>
 
@@ -208,7 +211,7 @@ export const GstTaxInvoiceModal = ({ invoice, onClose, onWhatsAppShare }) => {
             <div className="text-right flex flex-col justify-end">
               <div className="h-10"></div>
               <div className="border-t border-slate-400 pt-1 inline-block font-bold">
-                For {invoice.shopName} (Authorized Signatory)
+                For {invoice.shopName || 'A3 LUXURY JEWELLERS'} (Authorized Signatory)
               </div>
             </div>
           </div>
