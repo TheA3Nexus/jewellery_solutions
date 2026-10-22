@@ -1,3 +1,4 @@
+import { printA4 } from '../../../utils/printService';
 import React, { useState } from 'react';
 import { 
   Building2, 
@@ -151,7 +152,7 @@ export const FinancialStatements = () => {
           </div>
 
           <button
-            onClick={() => window.print()}
+            onClick={() => printA4('printable-financial-statements', `Financial_Statements`)}
             className="px-3 py-1.5 rounded-lg border border-surface-700 bg-surface-800 hover:bg-surface-700 text-surface-300 text-xs font-medium flex items-center gap-1.5 transition-colors"
           >
             <Printer className="w-3.5 h-3.5" />

@@ -1,3 +1,4 @@
+import { printA4 } from '../../../utils/printService';
 import React from 'react';
 import { Printer, X, ShieldCheck } from 'lucide-react';
 import { useTenant } from '../../../context/TenantContext';
@@ -22,7 +23,7 @@ export const PawnTicketFormGModal = ({ loan, onClose }) => {
           </div>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => window.print()}
+              onClick={() => printA4('printable-pawn-ticket', `Pawn_Ticket_${loan.id || 'Form_G'}`)}
               className="btn-primary py-1.5 px-3 text-xs font-sans font-bold"
             >
               <Printer className="w-3.5 h-3.5" />
@@ -35,7 +36,7 @@ export const PawnTicketFormGModal = ({ loan, onClose }) => {
         </div>
 
         {/* Form G Layout (Paper Style) */}
-        <div className="bg-white text-black p-6 rounded-xl font-mono text-[11px] space-y-3 border border-slate-300">
+        <div id="printable-pawn-ticket" className="bg-white text-black p-6 rounded-xl font-mono text-[11px] space-y-3 border border-slate-300 printable-document printable-a4">
           
           <div className="text-center space-y-1 border-b-2 border-black pb-2">
             <div className="text-xs font-bold uppercase tracking-widest text-slate-800">SHUBH LABH</div>

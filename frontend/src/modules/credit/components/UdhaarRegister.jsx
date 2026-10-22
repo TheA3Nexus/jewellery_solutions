@@ -1,3 +1,4 @@
+import { printA4 } from '../../../utils/printService';
 import React, { useState } from 'react';
 import { 
   Users, 
@@ -174,7 +175,7 @@ export const UdhaarRegister = ({ accounts, onCollectPayment, onViewStatement }) 
               />
             </div>
             <button
-              onClick={() => window.print()}
+              onClick={() => printA4('printable-udhaar-register', `Udhaar_Khaata_Register`)}
               className="px-3 py-1.5 rounded-lg border border-surface-700 bg-surface-800 hover:bg-surface-700 text-surface-300 text-xs font-medium flex items-center gap-1.5 transition-colors"
             >
               <Printer className="w-3.5 h-3.5" />
@@ -184,7 +185,7 @@ export const UdhaarRegister = ({ accounts, onCollectPayment, onViewStatement }) 
         </div>
 
         {/* Table */}
-        <div className="overflow-x-auto">
+        <div id="printable-udhaar-register" className="overflow-x-auto printable-document printable-a4">
           <table className="w-full text-left text-xs text-surface-300">
             <thead className="bg-surface-950 text-surface-400 font-semibold uppercase tracking-wider text-[11px] border-b border-surface-800 font-sans">
               <tr>

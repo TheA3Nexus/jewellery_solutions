@@ -1,3 +1,4 @@
+import { printA4 } from '../../../utils/printService';
 import React from 'react';
 import { 
   BookOpen, 
@@ -41,6 +42,7 @@ export const MemberPassbookModal = ({ subscription, onClose, onPayInstallment })
           </button>
         </div>
 
+        <div id="printable-passbook-modal" className="space-y-4 printable-document printable-a4 bg-white text-slate-900 p-6 rounded-xl border border-slate-300 font-sans">
         {/* Member Summary Banner */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-3 rounded-xl bg-surface-950 border border-surface-800 text-xs font-mono">
           <div>
@@ -160,11 +162,13 @@ export const MemberPassbookModal = ({ subscription, onClose, onPayInstallment })
           </span>
         </div>
 
+        </div>
+
         {/* Action Buttons */}
         <div className="flex gap-2.5 pt-2 border-t border-surface-800">
           <button
             type="button"
-            onClick={() => window.print()}
+            onClick={() => printA4('printable-passbook-modal', `Passbook_${subscription.tokenNo || 'SCHEME'}`)}
             className="btn-secondary flex-1 py-2 text-xs font-sans"
           >
             <Printer className="w-4 h-4" />

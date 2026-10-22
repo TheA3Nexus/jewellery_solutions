@@ -1,3 +1,4 @@
+import { printA4 } from '../../../utils/printService';
 import React, { useState } from 'react';
 import { useTenant } from '../../../context/TenantContext';
 import { useHardware } from '../../../context/HardwareContext';
@@ -929,7 +930,7 @@ export const StandaloneOldGoldDesk = () => {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => window.print()}
+                  onClick={() => printA4('printable-urd-slip', printableVoucher.id || 'URD_Voucher')}
                   className="px-3 py-1 rounded-md bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition"
                 >
                   <Printer className="w-3.5 h-3.5" />
@@ -946,7 +947,7 @@ export const StandaloneOldGoldDesk = () => {
             </div>
 
             {/* Printable Document Body */}
-            <div className="p-6 overflow-y-auto space-y-4 text-xs font-sans text-slate-900 leading-normal" id="printable-urd-slip">
+            <div id="printable-urd-slip" className="printable-document printable-a4 p-6 overflow-y-auto space-y-4 text-xs font-sans text-slate-900 leading-normal">
               
               {/* Document Header */}
               <div className="text-center border-b-2 border-slate-800 pb-3">

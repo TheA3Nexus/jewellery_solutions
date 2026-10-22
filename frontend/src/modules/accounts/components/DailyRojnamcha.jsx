@@ -1,3 +1,4 @@
+import { printA4Landscape } from '../../../utils/printService';
 import React, { useState } from 'react';
 import { 
   BookOpen, 
@@ -202,7 +203,7 @@ export const DailyRojnamcha = () => {
           </div>
 
           <button
-            onClick={() => window.print()}
+            onClick={() => printA4Landscape('printable-rojnamcha-report', `Daily_Rojnamcha_${selectedDate}`)}
             className="px-3 py-1.5 rounded-lg border border-surface-700 bg-surface-800 hover:bg-surface-700 text-surface-300 text-xs font-medium flex items-center gap-1.5 transition-colors"
           >
             <Printer className="w-3.5 h-3.5" />
@@ -229,6 +230,7 @@ export const DailyRojnamcha = () => {
         </div>
       </div>
 
+      <div id="printable-rojnamcha-report" className="space-y-4 printable-document printable-a4">
       {/* KPI Tally Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {/* Cash in Hand (System Calculated) */}
@@ -465,6 +467,7 @@ export const DailyRojnamcha = () => {
             </tfoot>
           </table>
         </div>
+      </div>
       </div>
     </div>
   );

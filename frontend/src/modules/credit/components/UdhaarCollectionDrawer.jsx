@@ -1,3 +1,4 @@
+import { printThermal } from '../../../utils/printService';
 import React, { useState } from 'react';
 import { 
   X, 
@@ -58,7 +59,7 @@ export const UdhaarCollectionDrawer = ({ isOpen, onClose, account, onPaymentReco
   };
 
   const handlePrint = () => {
-    window.print();
+    printThermal('printable-udhaar-slip', `Udhaar_Receipt_${lastPaymentReceipt?.receiptNo || 'RCPT'}`);
   };
 
   return (
@@ -191,7 +192,7 @@ export const UdhaarCollectionDrawer = ({ isOpen, onClose, account, onPaymentReco
         ) : (
           /* Festival Themed Receipt Slip Preview */
           <div className="space-y-4">
-            <div className="bg-surface-950 border-2 border-brand-500/40 rounded-xl p-5 text-xs text-surface-200 space-y-3 font-mono">
+            <div id="printable-udhaar-slip" className="bg-white text-black border-2 border-slate-400 rounded-xl p-5 text-xs space-y-3 font-mono printable-document printable-thermal">
               <div className="text-center border-b border-surface-800 pb-2">
                 <div className="text-amber-400 font-sans font-bold text-[11px] tracking-widest uppercase">
                   Shubh Deepawali &bull; Shubh Labh

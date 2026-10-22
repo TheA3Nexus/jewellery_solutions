@@ -6,6 +6,7 @@
 @use './variables' as *;
 @use './tokens' as *;
 @use './components' as *;
+@use './print' as *;
 
 @tailwind base;
 @tailwind components;

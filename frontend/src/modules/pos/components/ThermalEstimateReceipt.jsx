@@ -1,3 +1,4 @@
+import { printThermal } from '../../../utils/printService';
 import React from 'react';
 import { Printer, X, MessageCircle } from 'lucide-react';
 
@@ -15,7 +16,7 @@ export const ThermalEstimateReceipt = ({ invoice, onClose }) => {
         </div>
 
         {/* 80mm Thermal Receipt Simulation Container */}
-        <div className="bg-white text-black p-4 rounded shadow font-mono text-[11px] space-y-2 border border-slate-300">
+        <div id="printable-thermal-receipt" className="bg-white text-black p-4 rounded shadow font-mono text-[11px] space-y-2 border border-slate-300 printable-document printable-thermal">
           <div className="text-center space-y-0.5 border-b border-dashed border-black pb-2">
             <h4 className="font-bold text-sm tracking-tight">{invoice.shopName}</h4>
             <p className="text-[10px]">{invoice.shopPhone || '+91 98200 12345'}</p>
@@ -83,7 +84,7 @@ export const ThermalEstimateReceipt = ({ invoice, onClose }) => {
         {/* Action Buttons */}
         <div className="flex gap-2">
           <button
-            onClick={() => window.print()}
+            onClick={() => printThermal('printable-thermal-receipt', `Estimate_${invoice.id || 'EST'}`)}
             className="btn-primary flex-1 py-2 text-xs"
           >
             <Printer className="w-4 h-4" />

@@ -1,3 +1,4 @@
+import { printA4 } from '../../../utils/printService';
 import React from 'react';
 import { Printer, MessageCircle, X, ShieldCheck, Download } from 'lucide-react';
 
@@ -28,7 +29,7 @@ export const GstTaxInvoiceModal = ({ invoice, onClose, onWhatsAppShare }) => {
               <span>WhatsApp PDF</span>
             </button>
             <button
-              onClick={() => window.print()}
+              onClick={() => printA4('printable-tax-invoice', `Tax_Invoice_${invoice.id || 'INV'}`)}
               className="btn-primary py-1.5 px-3 text-xs"
             >
               <Printer className="w-3.5 h-3.5" />
@@ -41,7 +42,7 @@ export const GstTaxInvoiceModal = ({ invoice, onClose, onWhatsAppShare }) => {
         </div>
 
         {/* Paper A4 Formatted Layout Container */}
-        <div className="bg-white text-black p-8 rounded-xl shadow font-sans text-xs space-y-4 border border-slate-300">
+        <div id="printable-tax-invoice" className="bg-white text-black p-8 rounded-xl shadow font-sans text-xs space-y-4 border border-slate-300 printable-document printable-a4">
           
           {/* Header */}
           <div className="flex justify-between items-start border-b-2 border-slate-900 pb-4">

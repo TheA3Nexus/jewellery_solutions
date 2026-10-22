@@ -1,0 +1,201 @@
+// ==============================================================================
+// LUXURY JEWELLERY ERP - GLOBAL PRINT STYLESHEET
+// Enforces pure-paper layout, eliminates web app shell, sidebars, modal backdrops
+// ==============================================================================
+
+@media print {
+  // 1. Root & Viewport Paper Normalization
+  *,
+  *::before,
+  *::after {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  html,
+  body,
+  #root {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 11pt !important;
+    line-height: 1.35 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  // 2. Unconstrain Application Screen Bounds
+  .h-screen,
+  div[class*="h-screen"],
+  div[class*="overflow-hidden"],
+  div[class*="overflow-y-auto"],
+  div[class*="overflow-x-auto"],
+  div[class*="flex-1"] {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    display: block !important;
+    min-height: 0 !important;
+  }
+
+  // 3. Hide Web App Chrome (Sidebar, TopHeader, Navigation, Footers, Buttons)
+  header,
+  #top-header,
+  aside,
+  #sidebar,
+  nav,
+  footer,
+  button,
+  input,
+  select,
+  textarea,
+  .no-print,
+  .print\:hidden,
+  [data-print-ignore="true"] {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  // 4. Modal Backdrop & Stacking Context Neutralization
+  .fixed.inset-0,
+  div[class*="fixed inset-0"] {
+    position: static !important;
+    inset: auto !important;
+    top: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    border: none !important;
+    z-index: auto !important;
+  }
+
+  // Inner modal card wrapper
+  .fixed.inset-0 > div,
+  div[class*="fixed inset-0"] > div {
+    background: transparent !important;
+    color: #000000 !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    max-height: none !important;
+    overflow: visible !important;
+    border-radius: 0 !important;
+  }
+
+  // Hide modal top toolbar / close buttons
+  .fixed.inset-0 > div > div:first-child:has(button) {
+    display: none !important;
+  }
+
+  // 5. High-Resolution Paper Formatting
+  .printable-document,
+  .printable-a4,
+  .printable-thermal,
+  #printable-tax-invoice,
+  #printable-thermal-receipt,
+  #printable-urd-slip,
+  #printable-pawn-ticket,
+  #printable-passbook-modal,
+  #printable-udhaar-slip,
+  #printable-rojnamcha-report,
+  #printable-financial-statements,
+  #printable-profit-loss-table,
+  #printable-udhaar-register,
+  #printable-karigar-ledger {
+    display: block !important;
+    visibility: visible !important;
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+
+  // Thermal receipts on paper
+  .printable-thermal,
+  #printable-thermal-receipt,
+  #printable-udhaar-slip {
+    max-width: 74mm !important;
+    margin: 0 auto !important;
+    font-family: monospace !important;
+  }
+
+  // 6. Tables & Pagination Formatting
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    page-break-inside: auto;
+  }
+
+  tr {
+    page-break-inside: avoid !important;
+    page-break-after: auto;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tfoot {
+    display: table-footer-group;
+  }
+
+  th,
+  td {
+    border-color: #cbd5e1 !important;
+  }
+
+  // Force pure high contrast for dark theme surfaces when printing
+  .bg-surface-900,
+  .bg-surface-950,
+  .bg-surface-card,
+  .bg-surface-canvas,
+  .bg-surface-subtle {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .text-surface-100,
+  .text-surface-200,
+  .text-surface-300,
+  .text-surface-secondary {
+    color: #000000 !important;
+  }
+
+  .text-surface-400,
+  .text-surface-500,
+  .text-surface-600 {
+    color: #374151 !important;
+  }
+
+  .border-surface-700,
+  .border-surface-800,
+  .border-surface-border {
+    border-color: #cbd5e1 !important;
+  }
+}
