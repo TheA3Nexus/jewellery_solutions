@@ -85,7 +85,7 @@
   // --- Borders & Dividing Lines (Sculpted Matte Bevels) ---
   --border-subtle: #242424;           // Hairline matte dividing line
   --border-medium: #303030;           // Tactile input & button perimeter
-  --border-focus: #d97706;            // Rich matte bullion gold focus
+  --border-focus: #ca8a04;            // Royal bullion gold focus
 
   // --- Text Contrast Hierarchy (Strictly High Contrast WCAG 2.1 AAA Compliant) ---
   --text-primary: #f5f5f5;            // Crisp matte off-white for titles & amounts
@@ -94,13 +94,13 @@
   --text-muted: #737373;              // Muted labels & column headers
   --text-disabled: #4a4a4a;           // Placeholder text
 
-  // --- Precious Metals (Matte Velvet Gold - No Neon Glare) ---
-  --gold-primary: #b45309;            // 24K pure bullion matte CTA button
-  --gold-accent: #d97706;             // 22K hallmarked gold rate tickers & accent text
-  --gold-hover: #92400e;              // Deep antique matte gold
-  --gold-bg: rgba(217, 119, 6, 0.1);  // Matte soft gold wash
-  --gold-border: rgba(217, 119, 6, 0.28);
-  --gold-text: #fbbf24;
+  // --- Precious Metals (Authentic 24K Bullion & 22K Royal Gold - No Burnt Orange) ---
+  --gold-primary: #ca8a04;            // 24K royal bullion matte CTA button
+  --gold-accent: #eab308;             // 22K hallmarked gold rate tickers & accent text
+  --gold-hover: #a16207;              // Deep antique matte gold
+  --gold-bg: rgba(234, 179, 8, 0.1);  // Translucent champagne gold wash
+  --gold-border: rgba(234, 179, 8, 0.28);
+  --gold-text: #fde047;
 
   --rosegold-accent: #f43f5e;
   --rosegold-bg: rgba(244, 63, 94, 0.1);

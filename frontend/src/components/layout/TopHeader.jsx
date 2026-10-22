@@ -51,7 +51,7 @@ export const TopHeader = () => {
 
   return (
     <header className="sticky top-0 z-40 bg-surface-card border-b border-surface-border shadow-xs shrink-0 select-none">
-      <div className="px-3.5 py-2 flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div className="px-3.5 py-2 flex items-center justify-between gap-3 text-xs">
         
         {/* Left: Brand Identity, Showroom Credentials & GST */}
         <div className="flex items-center gap-2.5 shrink-0">
