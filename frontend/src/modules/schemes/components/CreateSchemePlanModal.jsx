@@ -55,7 +55,7 @@ export const CreateSchemePlanModal = ({ isOpen, onClose, onCreatePlan }) => {
           <div className="flex items-center gap-2">
             <Coins className="w-5 h-5 text-brand-400" />
             <div>
-              <h3 className="text-sm font-bold text-surface-100 uppercase tracking-wider">
+              <h3 className="text-sm font-bold text-surface-100 uppercase tracking-wider font-sans">
                 Create New Jewellery Savings Plan
               </h3>
               <p className="text-[11px] text-surface-400 font-mono">
@@ -63,7 +63,11 @@ export const CreateSchemePlanModal = ({ isOpen, onClose, onCreatePlan }) => {
               </p>
             </div>
           </div>
-          <button onClick={onClose} className="text-surface-400 hover:text-surface-100 p-1">
+          <button
+            data-testid="close-modal-btn"
+            onClick={onClose}
+            className="text-surface-400 hover:text-surface-100 p-1 rounded-lg"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -75,6 +79,7 @@ export const CreateSchemePlanModal = ({ isOpen, onClose, onCreatePlan }) => {
             <input
               type="text"
               required
+              id="input-plan-name"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               className="input-field font-sans"
@@ -85,6 +90,7 @@ export const CreateSchemePlanModal = ({ isOpen, onClose, onCreatePlan }) => {
             <div>
               <label className="text-[10px] text-surface-400 font-sans block mb-1">Plan Structure Type</label>
               <select
+                id="select-plan-type"
                 value={form.type}
                 onChange={(e) => setForm({ ...form, type: e.target.value })}
                 className="select-field font-sans text-xs"
@@ -113,6 +119,7 @@ export const CreateSchemePlanModal = ({ isOpen, onClose, onCreatePlan }) => {
               <input
                 type="number"
                 required
+                id="input-plan-emi"
                 value={form.monthlyEmi}
                 onChange={(e) => {
                   const emi = e.target.value;
@@ -128,6 +135,7 @@ export const CreateSchemePlanModal = ({ isOpen, onClose, onCreatePlan }) => {
               </label>
               <input
                 type="number"
+                id="input-plan-bonus"
                 value={form.bonusAmount}
                 onChange={(e) => setForm({ ...form, bonusAmount: e.target.value })}
                 className="input-field font-bold text-emerald-400"
@@ -146,6 +154,7 @@ export const CreateSchemePlanModal = ({ isOpen, onClose, onCreatePlan }) => {
                 <label className="text-[10px] text-surface-400 font-sans block mb-1">Free Joining Gift Item</label>
                 <input
                   type="text"
+                  id="input-plan-gift"
                   value={form.joiningGift}
                   onChange={(e) => setForm({ ...form, joiningGift: e.target.value })}
                   className="input-field font-sans"
@@ -158,6 +167,7 @@ export const CreateSchemePlanModal = ({ isOpen, onClose, onCreatePlan }) => {
                 </label>
                 <input
                   type="number"
+                  id="input-plan-making-discount"
                   value={form.makingDiscountPercent}
                   onChange={(e) => setForm({ ...form, makingDiscountPercent: e.target.value })}
                   className="input-field"
@@ -185,7 +195,8 @@ export const CreateSchemePlanModal = ({ isOpen, onClose, onCreatePlan }) => {
             </button>
             <button
               type="submit"
-              className="btn-primary flex-1 py-2 text-xs font-bold font-sans"
+              id="btn-submit-create-plan"
+              className="btn-primary flex-1 py-2 text-xs font-bold font-sans flex items-center justify-center gap-1.5 shadow-sm"
             >
               <Check className="w-4 h-4" />
               <span>Launch Scheme Plan</span>
