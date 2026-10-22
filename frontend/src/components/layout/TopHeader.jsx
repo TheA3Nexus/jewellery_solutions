@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 
 export const TopHeader = () => {
-  const { bullionRates, updateRates } = useTenant();
+  const { tenant, bullionRates, updateRates } = useTenant();
 
   const { 
     scaleStatus, 
@@ -93,8 +93,12 @@ export const TopHeader = () => {
           </button>
         </div>
 
-        {/* Center: Statutory Compliance Pill */}
-        <div className="hidden xl:flex items-center gap-2 font-mono text-xs">
+        {/* Center: Showroom GST & Statutory Compliance */}
+        <div className="hidden lg:flex items-center gap-2 font-mono text-xs">
+          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-surface-canvas border border-surface-border text-surface-300 text-[10px]">
+            <span className="text-surface-400 font-sans">GST:</span>
+            <span className="font-bold text-surface-200">{tenant?.gstin}</span>
+          </div>
           <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-300 text-emerald-700 text-[10px] font-sans font-semibold">
             <CheckCircle2 className="w-3 h-3 text-emerald-600" />
             <span>Sec 269ST &amp; Rule 114B Active</span>
