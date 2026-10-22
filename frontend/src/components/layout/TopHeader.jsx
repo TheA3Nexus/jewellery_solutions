@@ -87,30 +87,39 @@ export const TopHeader = () => {
 
           <div className="flex items-center gap-1">
             <span className="text-surface-400 font-sans">24K:</span>
-            <strong className="text-brand-benchmark font-bold">₹{bullionRates.gold24k.toFixed(2)}/g</strong>
+            <strong className="text-brand-benchmark font-bold">₹{Number(bullionRates.gold24k || 0).toFixed(2)}/g</strong>
           </div>
           <span className="text-surface-700/60">&bull;</span>
 
           <div className="flex items-center gap-1">
             <span className="text-surface-400 font-sans">22K:</span>
-            <strong className="text-brand-accent font-bold">₹{bullionRates.gold22k.toFixed(2)}/g</strong>
+            <strong className="text-brand-accent font-bold">₹{Number(bullionRates.gold22k || 0).toFixed(2)}/g</strong>
           </div>
           <span className="text-surface-700/60">&bull;</span>
 
           <div className="flex items-center gap-1">
             <span className="text-surface-400 font-sans">18K:</span>
-            <strong className="text-brand-accent font-semibold">₹{bullionRates.gold18k.toFixed(2)}/g</strong>
+            <strong className="text-brand-accent font-semibold">₹{Number(bullionRates.gold18k || 0).toFixed(2)}/g</strong>
           </div>
           <span className="text-surface-700/60">&bull;</span>
 
           <div className="flex items-center gap-1">
             <span className="text-surface-400 font-sans">Silver:</span>
-            <strong className="text-surface-200 font-semibold">₹{bullionRates.silver.toFixed(2)}/g</strong>
+            <strong className="text-surface-200 font-semibold">₹{Number(bullionRates.silver || bullionRates.silver999 || 0).toFixed(2)}/g</strong>
           </div>
 
           <button
             type="button"
-            onClick={() => setIsRateModalOpen(true)}
+            onClick={() => {
+              setTempRates({
+                gold24k: bullionRates.gold24k,
+                gold22k: bullionRates.gold22k,
+                gold18k: bullionRates.gold18k,
+                gold14k: bullionRates.gold14k,
+                silver: bullionRates.silver || bullionRates.silver999 || 229.90,
+              });
+              setIsRateModalOpen(true);
+            }}
             className="p-1 text-surface-400 hover:text-brand-accent hover:bg-surface-hover rounded-md transition cursor-pointer"
             title="Modify Daily Rates & Premium"
           >

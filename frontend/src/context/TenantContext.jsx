@@ -19,14 +19,14 @@ const DEFAULT_TENANT = {
 };
 
 const DEFAULT_RATES = {
-  gold24k: 7850.00, // Per gram (₹78,500 / 10g)
-  gold22k: 7196.00, // 91.6% purity
-  gold18k: 5888.00, // 75.0% purity
-  gold14k: 4579.00, // 58.33% purity
-  silver: 96.50,    // 99.9% fine silver per gram
-  silver925: 89.26, // 92.5% sterling silver per gram
-  mcxGold: 78240.00,
-  mcxSilver: 96150.00,
+  gold24k: 14607.00, // Per gram (₹14,607 / 1g)
+  gold22k: 13389.00, // 91.6% purity
+  gold18k: 10955.00, // 75.0% purity
+  gold14k: 8520.00,  // 58.33% purity
+  silver: 229.90,    // 99.9% fine silver per gram
+  silver925: 212.66, // 92.5% sterling silver per gram
+  mcxGold: 146070.00,
+  mcxSilver: 229900.00,
   lastUpdated: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
   source: 'MCX Spot Benchmark + Showroom Premium'
 };
