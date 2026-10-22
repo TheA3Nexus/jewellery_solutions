@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useTenant } from '../../context/TenantContext';
 import { useHardware } from '../../context/HardwareContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -22,15 +22,15 @@ import {
   BookOpen,
   TrendingUp,
   MessageSquare,
-  ChevronLeft,
-  ChevronRight
+  ShieldCheck,
+  CheckCircle2
 } from 'lucide-react';
 
 const CATEGORIES = [
   { id: 'POS', label: 'POS & Sales', icon: CreditCard },
   { id: 'INVENTORY', label: 'Inventory & RFID', icon: Boxes },
-  { id: 'SHOWROOM', label: 'Lookbook', icon: Layers },
-  { id: 'GIRVI', label: 'Girvi Loans', icon: Coins },
+  { id: 'SHOWROOM', label: 'Showroom Lookbook', icon: Layers },
+  { id: 'GIRVI', label: 'Girvi / Gold Loan', icon: Coins },
   { id: 'SCHEMES', label: 'Savings Schemes', icon: CalendarCheck },
   { id: 'KARIGAR', label: 'Karigar Desk', icon: Hammer },
   { id: 'UDHAAR', label: 'Customer Udhaar', icon: BookOpen },
@@ -42,7 +42,6 @@ const CATEGORIES = [
 export const TopHeader = ({ activeCategory, setActiveCategory }) => {
   const { tenant, currentUser, bullionRates, updateRates } = useTenant();
   const { theme, toggleTheme } = useTheme();
-  const navScrollRef = useRef(null);
 
   const { 
     scaleStatus, 
@@ -66,15 +65,6 @@ export const TopHeader = ({ activeCategory, setActiveCategory }) => {
     silver: bullionRates.silver,
   });
 
-  const scrollNav = (direction) => {
-    if (navScrollRef.current) {
-      navScrollRef.current.scrollBy({
-        left: direction === 'left' ? -180 : 180,
-        behavior: 'smooth'
-      });
-    }
-  };
-
   const handleRateSubmit = (e) => {
     e.preventDefault();
     updateRates({
@@ -89,8 +79,8 @@ export const TopHeader = ({ activeCategory, setActiveCategory }) => {
 
   return (
     <header className="sticky top-0 z-40 bg-surface-card border-b border-surface-border shadow-sm">
-      {/* Upper Utility Strip: Bullion Ticker & Peripheral Status */}
-      <div className="px-4 py-1.5 border-b border-surface-border/80 bg-surface-canvas/60 flex flex-wrap items-center justify-between gap-3 text-xs">
+      {/* 1. Upper Utility Strip: Bullion Ticker & Peripheral Status */}
+      <div className="px-4 py-1.5 border-b border-surface-border/70 bg-surface-canvas/50 flex flex-wrap items-center justify-between gap-3 text-xs">
         
         {/* Live Rates Ticker */}
         <div className="flex items-center gap-3 overflow-x-auto no-scrollbar py-0.5 font-mono text-[11px]">
@@ -132,7 +122,7 @@ export const TopHeader = ({ activeCategory, setActiveCategory }) => {
           </button>
         </div>
 
-        {/* Hardware Status Strip */}
+        {/* Hardware Status Strip & User Controls */}
         <div className="flex items-center gap-2 font-mono text-xs">
           {/* Weighing Scale Pill */}
           <div 
@@ -174,7 +164,7 @@ export const TopHeader = ({ activeCategory, setActiveCategory }) => {
           <button
             type="button"
             onClick={toggleTheme}
-            className="flex items-center gap-1.5 px-2 py-1 bg-surface-card hover:bg-surface-hover border border-surface-border rounded-lg text-[10px] text-surface-200 font-sans transition-all shadow-card cursor-pointer"
+            className="flex items-center gap-1.5 px-2.5 py-1 bg-surface-card hover:bg-surface-hover border border-surface-border rounded-lg text-[10px] text-surface-200 font-sans transition-all shadow-card cursor-pointer"
             title={`Active Theme: ${theme === 'light' ? 'Boutique Light' : 'Velvet Dark'}. Click to toggle.`}
           >
             {theme === 'light' ? (
@@ -192,75 +182,64 @@ export const TopHeader = ({ activeCategory, setActiveCategory }) => {
         </div>
       </div>
 
-      {/* Main Brand & Category Navigation Bar */}
-      <div className="px-4 py-2.5 flex items-center justify-between gap-6">
-        
+      {/* 2. Middle Brand Bar */}
+      <div className="px-5 py-2.5 flex items-center justify-between border-b border-surface-border/60 bg-surface-card">
         {/* Brand Identity & Metadata */}
-        <div className="flex items-center gap-3 shrink-0">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-white font-black text-sm shadow-sm ring-1 ring-brand-400/30">
+        <div className="flex items-center gap-3.5">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-white font-black text-base shadow-sm ring-1 ring-brand-400/30 shrink-0">
             A3
           </div>
-          <div className="space-y-0.5">
-            <h1 className="font-bold text-sm tracking-wide text-surface-100 uppercase font-sans leading-none">
+          <div>
+            <h1 className="font-bold text-base tracking-wide text-surface-100 uppercase font-sans leading-tight">
               {tenant.name}
             </h1>
-            <div className="flex items-center gap-2 font-mono text-[10px] text-surface-400 whitespace-nowrap mt-0.5">
-              <span className="font-medium text-surface-300">{tenant.branch}</span>
+            <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] text-surface-400 whitespace-nowrap mt-0.5">
+              <span className="font-semibold text-surface-300">{tenant.branch}</span>
               <span className="text-surface-700/60">&bull;</span>
               <span className="px-1.5 py-0.2 rounded bg-surface-hover text-surface-200 border border-surface-border font-semibold">
                 GSTIN: {tenant.gstin}
               </span>
               <span className="text-surface-700/60">&bull;</span>
-              <span>BIS HUID: {tenant.bisLicenseNo}</span>
+              <span>BIS HUID Lic: {tenant.bisLicenseNo}</span>
             </div>
           </div>
         </div>
 
-        {/* Category Navigation Bar (Clean Scrollable without any horizontal scrollbars) */}
-        <div className="relative flex items-center min-w-0 flex-1 justify-end">
-          <button
-            type="button"
-            onClick={() => scrollNav('left')}
-            className="hidden 2xl:hidden lg:flex items-center justify-center p-1.5 text-surface-400 hover:text-surface-100 hover:bg-surface-hover rounded-md shrink-0 mr-1 cursor-pointer transition"
-            aria-label="Scroll navigation left"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-
-          <nav 
-            ref={navScrollRef}
-            className="flex items-center gap-1.5 overflow-x-auto no-scrollbar scroll-smooth py-1"
-          >
-            {CATEGORIES.map((cat) => {
-              const Icon = cat.icon;
-              const isActive = activeCategory === cat.id;
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setActiveCategory(cat.id)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap shrink-0 transition-all cursor-pointer ${
-                    isActive
-                      ? 'bg-brand-500 text-white font-semibold shadow-sm'
-                      : 'text-surface-400 hover:text-surface-100 hover:bg-surface-hover font-medium'
-                  }`}
-                >
-                  <Icon className="w-3.5 h-3.5" />
-                  <span>{cat.label}</span>
-                </button>
-              );
-            })}
-          </nav>
-
-          <button
-            type="button"
-            onClick={() => scrollNav('right')}
-            className="hidden 2xl:hidden lg:flex items-center justify-center p-1.5 text-surface-400 hover:text-surface-100 hover:bg-surface-hover rounded-md shrink-0 ml-1 cursor-pointer transition"
-            aria-label="Scroll navigation right"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
+        {/* Showroom Safeguards & Status Badges */}
+        <div className="hidden lg:flex items-center gap-3 font-mono text-xs">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-300 text-emerald-700 text-[11px] font-sans font-semibold">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Sec 269ST &amp; Rule 114B Enforced</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-hover border border-surface-border text-surface-300 text-[11px] font-sans">
+            <ShieldCheck className="w-3.5 h-3.5 text-brand-accent" />
+            <span>BIS Hallmarking Verified</span>
+          </div>
         </div>
+      </div>
 
+      {/* 3. Lower Dedicated Workspace Navigation Line (Full-width, zero horizontal scrollbar) */}
+      <div className="px-4 py-1.5 bg-surface-card border-b border-surface-border/80">
+        <nav className="flex items-center gap-1.5 overflow-x-auto no-scrollbar justify-start xl:justify-between w-full py-0.5">
+          {CATEGORIES.map((cat) => {
+            const Icon = cat.icon;
+            const isActive = activeCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.id)}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap shrink-0 transition-all cursor-pointer ${
+                  isActive
+                    ? 'bg-brand-500 text-white font-bold shadow-sm'
+                    : 'text-surface-400 hover:text-surface-100 hover:bg-surface-hover font-medium'
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5 shrink-0" />
+                <span>{cat.label}</span>
+              </button>
+            );
+          })}
+        </nav>
       </div>
 
       {/* Daily Rates Modal */}
