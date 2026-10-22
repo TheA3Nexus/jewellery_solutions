@@ -9,12 +9,10 @@ import {
   SlidersHorizontal,
   X,
   CheckCircle2,
-  PanelLeftClose,
-  PanelLeftOpen,
   UserCheck
 } from 'lucide-react';
 
-export const TopHeader = ({ isSidebarCollapsed, setIsSidebarCollapsed }) => {
+export const TopHeader = () => {
   const { tenant, currentUser, bullionRates, updateRates } = useTenant();
 
   const { 
@@ -55,25 +53,8 @@ export const TopHeader = ({ isSidebarCollapsed, setIsSidebarCollapsed }) => {
     <header className="sticky top-0 z-40 bg-surface-card border-b border-surface-border shadow-xs shrink-0 select-none">
       <div className="px-3.5 py-2 flex flex-wrap items-center justify-between gap-3 text-xs">
         
-        {/* Left: Brand Identity, Showroom Credentials & Navigation Drawer Toggle */}
+        {/* Left: Brand Identity, Showroom Credentials & GST */}
         <div className="flex items-center gap-2.5 shrink-0">
-          {/* Drawer Toggle Button */}
-          {setIsSidebarCollapsed && (
-            <button
-              type="button"
-              onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-              className="p-1.5 text-surface-400 hover:text-surface-100 hover:bg-surface-hover rounded-lg transition-colors cursor-pointer shrink-0"
-              title={isSidebarCollapsed ? "Expand Navigation Panel" : "Collapse Navigation Panel"}
-              aria-label="Toggle Side Panel"
-            >
-              {isSidebarCollapsed ? (
-                <PanelLeftOpen className="w-4 h-4 text-brand-accent" />
-              ) : (
-                <PanelLeftClose className="w-4 h-4" />
-              )}
-            </button>
-          )}
-
           {/* Showroom Logo Badge */}
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-white font-black text-xs shadow-xs ring-1 ring-brand-400/30 shrink-0">
             A3

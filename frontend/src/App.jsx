@@ -73,10 +73,7 @@ function AppContent() {
   return (
     <div className="h-screen flex flex-col bg-surface-canvas text-surface-secondary font-sans transition-colors duration-200 overflow-hidden">
       {/* 1. Top Edge-to-Edge Showroom App Bar (Outside and Above Side Panel) */}
-      <TopHeader 
-        isSidebarCollapsed={isSidebarCollapsed}
-        setIsSidebarCollapsed={setIsSidebarCollapsed}
-      />
+      <TopHeader />
 
       {/* 2. Main Workspace Body: Left Sidebar + Center Viewport */}
       <div className="flex-1 flex min-h-0 overflow-hidden">
