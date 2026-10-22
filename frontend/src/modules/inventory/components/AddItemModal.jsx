@@ -115,7 +115,7 @@ export const AddItemModal = ({ isOpen, onClose, onAddItem, bullionRates }) => {
               </p>
             </div>
           </div>
-          <button onClick={onClose} className="text-surface-400 hover:text-surface-100 p-1">
+          <button data-testid="close-modal-btn" onClick={onClose} className="text-surface-400 hover:text-surface-100 p-1">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -131,7 +131,7 @@ export const AddItemModal = ({ isOpen, onClose, onAddItem, bullionRates }) => {
               <input
                 type="text"
                 required
-                placeholder="e.g. 22K Traditional Peacock Necklace"
+                id="input-article-name" placeholder="e.g. 22K Traditional Peacock Necklace"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 className="input-field font-sans"
@@ -197,7 +197,7 @@ export const AddItemModal = ({ isOpen, onClose, onAddItem, bullionRates }) => {
               <input
                 type="text"
                 maxLength={6}
-                placeholder="e.g. HD7891"
+                id="input-article-huid" placeholder="e.g. HD7891"
                 value={form.huid}
                 onChange={(e) => setForm({ ...form, huid: e.target.value.toUpperCase() })}
                 className="input-field uppercase font-bold text-brand-300"
@@ -210,7 +210,7 @@ export const AddItemModal = ({ isOpen, onClose, onAddItem, bullionRates }) => {
               </label>
               <input
                 type="text"
-                placeholder="Tray-A04"
+                id="input-tray-no" placeholder="Tray-A04"
                 value={form.trayNo}
                 onChange={(e) => setForm({ ...form, trayNo: e.target.value })}
                 className="input-field"
@@ -246,7 +246,7 @@ export const AddItemModal = ({ isOpen, onClose, onAddItem, bullionRates }) => {
                   step="0.001"
                   required
                   placeholder="0.000"
-                  value={form.grossWeight}
+                  id="input-gross-weight" value={form.grossWeight}
                   onChange={(e) => setForm({ ...form, grossWeight: e.target.value })}
                   className="input-field font-bold text-surface-100"
                 />
@@ -260,7 +260,7 @@ export const AddItemModal = ({ isOpen, onClose, onAddItem, bullionRates }) => {
                   type="number"
                   step="0.001"
                   placeholder="0.000"
-                  value={form.stoneWeight}
+                  id="input-stone-weight" value={form.stoneWeight}
                   onChange={(e) => setForm({ ...form, stoneWeight: e.target.value })}
                   className="input-field"
                 />
@@ -386,7 +386,7 @@ export const AddItemModal = ({ isOpen, onClose, onAddItem, bullionRates }) => {
               Cancel
             </button>
             <button
-              type="submit"
+              id="btn-register-article" type="submit"
               className="btn-primary flex-1 py-2.5 text-xs font-bold font-sans"
             >
               <Check className="w-4 h-4" />

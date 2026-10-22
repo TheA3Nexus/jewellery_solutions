@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTenant } from '../../../context/TenantContext';
+import { TrayAuditCertificateModal } from './TrayAuditCertificateModal';
 import { 
   Radio, 
   CheckCircle2, 
@@ -9,21 +10,25 @@ import {
   FileSpreadsheet, 
   Layers, 
   Scan,
+  Printer
 } from 'lucide-react';
 
 export const RfidTrayAudit = () => {
-  const { products } = useTenant();
+  const { products, tenant } = useTenant();
+  const [isCertModalOpen, setIsCertModalOpen] = useState(false);
 
   // Selected tray for auditing
-  const [selectedTray, setSelectedTray] = useState('Tray-A04');
+  const availableTrays = Array.from(new Set(products.map(p => p.trayNo).filter(Boolean)));
+  const [selectedTray, setSelectedTray] = useState(() => {
+    const withItems = availableTrays.find(t => products.some(p => p.trayNo === t && (p.status === 'IN_STOCK' || !p.status)));
+    return withItems || availableTrays[0] || 'Tray-A04';
+  });
   const [isScanning, setIsScanning] = useState(false);
   const [auditComplete, setAuditComplete] = useState(false);
 
   // Simulated scan results
   const [scannedRfidTags, setScannedRfidTags] = useState([]);
 
-  // Get list of unique trays
-  const availableTrays = Array.from(new Set(products.map(p => p.trayNo).filter(Boolean)));
 
   // Expected items in the selected tray (In Stock only)
   const expectedItems = products.filter(p => p.trayNo === selectedTray && p.status === 'IN_STOCK');
@@ -109,6 +114,17 @@ export const RfidTrayAudit = () => {
           >
             <span>Simulate Missing</span>
           </button>
+          {auditComplete && (
+            <button
+              id="btn-open-audit-cert"
+              type="button"
+              onClick={() => setIsCertModalOpen(true)}
+              className="btn-secondary py-2 px-3 text-xs font-sans whitespace-nowrap flex items-center gap-1.5"
+            >
+              <Printer className="w-3.5 h-3.5 text-brand-400" />
+              <span>Audit Certificate</span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -202,7 +218,7 @@ export const RfidTrayAudit = () => {
                     <td className="p-2.5 font-sans font-medium text-surface-100">{item.name}</td>
                     <td className="p-2.5 text-[11px] text-surface-400">{item.rfidTag}</td>
                     <td className="p-2.5 font-bold text-surface-200">{item.huid || 'N/A'}</td>
-                    <td className="p-2.5 text-right font-bold text-surface-100">{item.netWeight.toFixed(3)}g</td>
+                    <td className="p-2.5 text-right font-bold text-surface-100">{(parseFloat(item.netWeight) || 0).toFixed(3)}g</td>
                     <td className="p-2.5 text-center">
                       {!auditComplete ? (
                         <span className="text-[10px] text-surface-500 font-sans">Pending Scan</span>
@@ -225,6 +241,15 @@ export const RfidTrayAudit = () => {
           </tbody>
         </table>
       </div>
+
+      <TrayAuditCertificateModal
+        isOpen={isCertModalOpen}
+        onClose={() => setIsCertModalOpen(false)}
+        trayNo={selectedTray}
+        expectedItems={expectedItems}
+        scannedRfidTags={scannedRfidTags}
+        tenant={tenant}
+      />
 
     </div>
   );

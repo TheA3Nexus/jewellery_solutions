@@ -52,13 +52,13 @@ export const StockCatalogTable = ({ onOpenAddModal, onOpenTagStudio }) => {
       rate = item.purity === '925' ? bullionRates.silver925 : bullionRates.silver;
     }
 
-    const metalValue = item.netWeight * rate;
+    const metalValue = (parseFloat(item.netWeight) || 0) * rate;
     const diamondValue = item.diamondPrice || 0;
     return Math.round(metalValue + diamondValue);
   };
 
-  const totalGrossWeight = filteredProducts.reduce((sum, item) => sum + (item.grossWeight || 0), 0);
-  const totalNetWeight = filteredProducts.reduce((sum, item) => sum + (item.netWeight || 0), 0);
+  const totalGrossWeight = filteredProducts.reduce((sum, item) => sum + (parseFloat(item.grossWeight) || 0), 0);
+  const totalNetWeight = filteredProducts.reduce((sum, item) => sum + (parseFloat(item.netWeight) || 0), 0);
   const totalInventoryValuation = filteredProducts.reduce((sum, item) => sum + getItemValuation(item), 0);
 
   return (
@@ -183,10 +183,10 @@ export const StockCatalogTable = ({ onOpenAddModal, onOpenTagStudio }) => {
                     </td>
 
                     {/* 5. Gross Weight */}
-                    <td className="py-2.5 px-3 text-right text-surface-300">{item.grossWeight.toFixed(3)}</td>
+                    <td className="py-2.5 px-3 text-right text-surface-300">{(parseFloat(item.grossWeight) || 0).toFixed(3)}</td>
 
                     {/* 6. Net Weight */}
-                    <td className="py-2.5 px-3 text-right font-bold text-surface-100">{item.netWeight.toFixed(3)}</td>
+                    <td className="py-2.5 px-3 text-right font-bold text-surface-100">{(parseFloat(item.netWeight) || 0).toFixed(3)}</td>
 
                     {/* 7. Making Charge */}
                     <td className="py-2.5 px-3 text-right text-[10px] text-surface-400">

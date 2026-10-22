@@ -125,7 +125,9 @@
   #printable-financial-statements,
   #printable-profit-loss-table,
   #printable-udhaar-register,
-  #printable-karigar-ledger {
+  #printable-karigar-ledger,
+  #printable-jewellery-tag,
+  #printable-tray-audit-sheet {
     display: block !important;
     visibility: visible !important;
     background-color: #ffffff !important;
@@ -136,10 +138,11 @@
     border-radius: 0 !important;
   }
 
-  // Thermal receipts on paper
+  // Thermal receipts & jewellery dumbbell labels on paper
   .printable-thermal,
   #printable-thermal-receipt,
-  #printable-udhaar-slip {
+  #printable-udhaar-slip,
+  #printable-jewellery-tag {
     max-width: 74mm !important;
     margin: 0 auto !important;
     font-family: monospace !important;

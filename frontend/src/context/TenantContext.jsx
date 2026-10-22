@@ -374,8 +374,18 @@ export const TenantProvider = ({ children }) => {
       });
       const json = await res.json();
       if (json.success && json.data) {
-        setProducts(prev => [json.data, ...prev]);
-        return { success: true, data: json.data };
+        const normalized = {
+          ...json.data,
+          grossWeight: parseFloat(json.data.grossWeight || 0),
+          netWeight: parseFloat(json.data.netWeight || 0),
+          stoneWeight: parseFloat(json.data.stoneWeight || 0),
+          purityPercent: parseFloat(json.data.purityPercent || 91.67),
+          makingChargeRate: parseFloat(json.data.makingChargeRate || 0),
+          hallmarkCharge: parseFloat(json.data.hallmarkCharge || 0),
+          wastagePercent: parseFloat(json.data.wastagePercent || 0)
+        };
+        setProducts(prev => [normalized, ...prev]);
+        return { success: true, data: normalized };
       }
       return { success: false, message: json.message };
     } catch (err) {

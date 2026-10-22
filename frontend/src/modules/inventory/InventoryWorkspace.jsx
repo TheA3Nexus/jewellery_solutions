@@ -31,9 +31,9 @@ export const InventoryWorkspace = () => {
   const handleAddNewItem = async (newItem) => {
     const res = await addProduct(newItem);
     if (res.success) {
-      alert(`Article "${newItem.name}" registered successfully in inventory & GoDaddy MySQL.`);
+      console.info(`Article "${newItem.name}" registered successfully in inventory & GoDaddy MySQL.`);
     } else {
-      alert(`Note: ${res.message || 'Saved locally'}`);
+      console.warn(`Note: ${res.message || 'Saved locally'}`);
     }
   };
 
