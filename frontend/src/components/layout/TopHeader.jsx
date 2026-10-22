@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTenant } from '../../context/TenantContext';
 import { useHardware } from '../../context/HardwareContext';
+import { useTheme } from '../../context/ThemeContext';
 import { 
   Scale, 
   Printer, 
@@ -9,11 +10,16 @@ import {
   SlidersHorizontal,
   X,
   CheckCircle2,
-  ShieldCheck
+  PanelLeftClose,
+  PanelLeftOpen,
+  Sun,
+  Moon,
+  UserCheck
 } from 'lucide-react';
 
-export const TopHeader = () => {
-  const { tenant, bullionRates, updateRates } = useTenant();
+export const TopHeader = ({ isSidebarCollapsed, setIsSidebarCollapsed }) => {
+  const { tenant, currentUser, bullionRates, updateRates } = useTenant();
+  const { theme, toggleTheme } = useTheme();
 
   const { 
     scaleStatus, 
@@ -50,35 +56,77 @@ export const TopHeader = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-surface-card border-b border-surface-border shadow-xs">
-      <div className="px-5 py-2 flex flex-wrap items-center justify-between gap-4 text-xs">
+    <header className="sticky top-0 z-40 bg-surface-card border-b border-surface-border shadow-xs shrink-0 select-none">
+      <div className="px-3.5 py-2 flex flex-wrap items-center justify-between gap-3 text-xs">
         
-        {/* Left: Live Bullion Rate Ticker */}
-        <div className="flex items-center gap-3 overflow-x-auto no-scrollbar py-0.5 font-mono text-[11px]">
+        {/* Left: Brand Identity, Showroom Credentials & Navigation Drawer Toggle */}
+        <div className="flex items-center gap-2.5 shrink-0">
+          {/* Drawer Toggle Button */}
+          {setIsSidebarCollapsed && (
+            <button
+              type="button"
+              onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+              className="p-1.5 text-surface-400 hover:text-surface-100 hover:bg-surface-hover rounded-lg transition-colors cursor-pointer shrink-0"
+              title={isSidebarCollapsed ? "Expand Navigation Panel" : "Collapse Navigation Panel"}
+              aria-label="Toggle Side Panel"
+            >
+              {isSidebarCollapsed ? (
+                <PanelLeftOpen className="w-4 h-4 text-brand-accent" />
+              ) : (
+                <PanelLeftClose className="w-4 h-4" />
+              )}
+            </button>
+          )}
+
+          {/* Showroom Logo Badge */}
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-white font-black text-xs shadow-xs ring-1 ring-brand-400/30 shrink-0">
+            A3
+          </div>
+
+          {/* Showroom Name, Branch, GST & HUID Active Badge */}
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <h1 className="font-bold text-xs tracking-wide text-surface-100 uppercase leading-none truncate max-w-[190px] sm:max-w-none">
+                {tenant?.name}
+              </h1>
+              <span className="text-[9px] px-1.5 py-0.2 rounded bg-surface-canvas text-surface-300 border border-surface-border font-mono font-semibold shrink-0">
+                HUID Active
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5 font-mono text-[10px] text-surface-400 mt-0.5">
+              <span className="truncate">{tenant?.branch}</span>
+              <span className="text-surface-600">&bull;</span>
+              <span className="text-surface-300 font-semibold shrink-0">GST: {tenant?.gstin}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Center: Live Bullion Rate Ticker */}
+        <div className="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-0.5 font-mono text-[11px]">
           <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-300 text-[10px] font-sans font-bold text-emerald-700 shrink-0">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
             <span className="uppercase tracking-wider">Live Bullion</span>
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1">
             <span className="text-surface-400 font-sans">24K:</span>
             <strong className="text-brand-benchmark font-bold">₹{bullionRates.gold24k.toFixed(2)}/g</strong>
           </div>
           <span className="text-surface-700/60">&bull;</span>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1">
             <span className="text-surface-400 font-sans">22K:</span>
             <strong className="text-brand-accent font-bold">₹{bullionRates.gold22k.toFixed(2)}/g</strong>
           </div>
           <span className="text-surface-700/60">&bull;</span>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1">
             <span className="text-surface-400 font-sans">18K:</span>
             <strong className="text-brand-accent font-semibold">₹{bullionRates.gold18k.toFixed(2)}/g</strong>
           </div>
           <span className="text-surface-700/60">&bull;</span>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1">
             <span className="text-surface-400 font-sans">Silver:</span>
             <strong className="text-surface-200 font-semibold">₹{bullionRates.silver.toFixed(2)}/g</strong>
           </div>
@@ -93,20 +141,14 @@ export const TopHeader = () => {
           </button>
         </div>
 
-        {/* Center: Showroom GST & Statutory Compliance */}
-        <div className="hidden lg:flex items-center gap-2 font-mono text-xs">
-          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-surface-canvas border border-surface-border text-surface-300 text-[10px]">
-            <span className="text-surface-400 font-sans">GST:</span>
-            <span className="font-bold text-surface-200">{tenant?.gstin}</span>
-          </div>
-          <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-300 text-emerald-700 text-[10px] font-sans font-semibold">
+        {/* Right: Electronic Scale, Hardware Peripherals, Cashier & Theme */}
+        <div className="flex items-center gap-2 font-mono text-xs shrink-0">
+          {/* Statutory Compliance Indicator */}
+          <div className="hidden xl:flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-300 text-emerald-700 text-[10px] font-sans font-semibold">
             <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-            <span>Sec 269ST &amp; Rule 114B Active</span>
+            <span>Rule 114B Active</span>
           </div>
-        </div>
 
-        {/* Right: Electronic Scale & Hardware Peripherals */}
-        <div className="flex items-center gap-2.5 font-mono text-xs">
           {/* Weighing Scale Pill */}
           <div 
             onClick={() => setIsScaleSimulatorOpen(true)}
@@ -136,6 +178,27 @@ export const TopHeader = () => {
             <Radio className="w-3.5 h-3.5 text-sky-600" />
             <span>UHF RFID</span>
           </div>
+
+          {/* Cashier Badge */}
+          <div className="hidden lg:flex items-center gap-1.5 px-2 py-1 bg-surface-canvas border border-surface-border rounded-lg text-[10px] text-surface-300">
+            <UserCheck className="w-3.5 h-3.5 text-brand-accent shrink-0" />
+            <span className="font-semibold text-surface-200 truncate max-w-[90px]">{currentUser?.name}</span>
+            <span className="text-surface-500 font-mono text-[9px]">(C01)</span>
+          </div>
+
+          {/* Theme Toggle Button */}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="p-1.5 rounded-lg border border-surface-border bg-surface-card hover:bg-surface-hover text-surface-200 transition-all shadow-2xs cursor-pointer flex items-center justify-center shrink-0"
+            title={`Active Theme: ${theme === 'light' ? 'Boutique Light' : 'Velvet Dark'}. Click to toggle.`}
+          >
+            {theme === 'light' ? (
+              <Sun className="w-4 h-4 text-brand-benchmark" />
+            ) : (
+              <Moon className="w-4 h-4 text-brand-accent" />
+            )}
+          </button>
         </div>
 
       </div>

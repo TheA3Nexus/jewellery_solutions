@@ -71,36 +71,43 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-surface-canvas text-surface-secondary flex font-sans transition-colors duration-200">
-      {/* 1. Left Vertical Side Panel */}
-      <Sidebar 
-        activeCategory={activeCategory} 
-        setActiveCategory={setActiveCategory} 
-        isCollapsed={isSidebarCollapsed}
-        setIsCollapsed={setIsSidebarCollapsed}
+    <div className="h-screen flex flex-col bg-surface-canvas text-surface-secondary font-sans transition-colors duration-200 overflow-hidden">
+      {/* 1. Top Edge-to-Edge Showroom App Bar (Outside and Above Side Panel) */}
+      <TopHeader 
+        isSidebarCollapsed={isSidebarCollapsed}
+        setIsSidebarCollapsed={setIsSidebarCollapsed}
       />
 
-      {/* 2. Main Content Viewport */}
-      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto">
-        <TopHeader />
-        
-        <main className="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-5">
-          {renderActiveCategory()}
-        </main>
+      {/* 2. Main Workspace Body: Left Sidebar + Center Viewport */}
+      <div className="flex-1 flex min-h-0 overflow-hidden">
+        {/* Left Vertical Side Panel (Navigation Only) */}
+        <Sidebar 
+          activeCategory={activeCategory} 
+          setActiveCategory={setActiveCategory} 
+          isCollapsed={isSidebarCollapsed}
+          setIsCollapsed={setIsSidebarCollapsed}
+        />
 
-        <footer className="border-t border-surface-border bg-surface-card py-3 px-4 text-center text-xs text-surface-400 shrink-0">
-          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2 font-mono text-[11px]">
-            <span className="font-semibold text-surface-300">A3 Jewellery Solution &bull; Luxury Showroom ERP</span>
-            <div className="flex items-center gap-3">
-              <span className="text-emerald-700 font-semibold flex items-center gap-1">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Section 269ST &amp; Rule 114B Enforced</span>
-              </span>
-              <span className="text-surface-700">&bull;</span>
-              <span className="text-surface-400 font-medium">BIS HUID Active</span>
+        {/* Center / Right Main Content Viewport */}
+        <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+          <main className="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-5">
+            {renderActiveCategory()}
+          </main>
+
+          <footer className="border-t border-surface-border bg-surface-card py-3 px-4 text-center text-xs text-surface-400 shrink-0">
+            <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2 font-mono text-[11px]">
+              <span className="font-semibold text-surface-300">A3 Jewellery Solution &bull; Luxury Showroom ERP</span>
+              <div className="flex items-center gap-3">
+                <span className="text-emerald-700 font-semibold flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Section 269ST &amp; Rule 114B Enforced</span>
+                </span>
+                <span className="text-surface-700">&bull;</span>
+                <span className="text-surface-400 font-medium">BIS HUID Active</span>
+              </div>
             </div>
-          </div>
-        </footer>
+          </footer>
+        </div>
       </div>
     </div>
   );
