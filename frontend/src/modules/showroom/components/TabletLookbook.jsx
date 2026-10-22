@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTenant } from '../../../context/TenantContext';
 import { 
-  Sparkles, 
+  BookOpen, 
   Search, 
   Filter, 
   Coins, 
@@ -164,7 +164,7 @@ export const TabletLookbook = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-surface-900 border border-surface-800 p-4 rounded-xl">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-            <Sparkles className="w-5 h-5" />
+            <BookOpen className="w-5 h-5" />
           </div>
           <div>
             <h2 className="text-base font-bold text-surface-100 flex items-center gap-2">

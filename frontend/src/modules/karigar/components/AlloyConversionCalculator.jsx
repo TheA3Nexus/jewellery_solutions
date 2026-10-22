@@ -6,7 +6,6 @@ import {
   CheckCircle2, 
   HelpCircle, 
   ArrowRight,
-  Sparkles
 } from 'lucide-react';
 
 export const AlloyConversionCalculator = () => {
@@ -165,7 +164,7 @@ export const AlloyConversionCalculator = () => {
         {/* Right Output Recipe Card */}
         <div className="bg-surface-950 border border-surface-800 rounded-xl p-4 font-mono space-y-3">
           <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider block font-sans">
-            ✦ Melting Crucible Batch Recipe ✦
+            Melting Crucible Batch Recipe
           </span>
 
           <div className="space-y-2 text-xs">

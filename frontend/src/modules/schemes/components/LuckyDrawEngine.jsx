@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { 
   Trophy, 
-  Sparkles, 
   Gift, 
   RotateCw, 
   CheckCircle2, 

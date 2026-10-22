@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  Sparkles, 
+  BookOpen, 
   Tv, 
   Eye, 
   ShoppingBag, 
@@ -24,7 +24,7 @@ export const ShowroomWorkspace = () => {
               : 'border-transparent text-surface-400 hover:text-surface-200'
           }`}
         >
-          <Sparkles className="w-4 h-4" />
+          <BookOpen className="w-4 h-4" />
           In-Store Digital Lookbook &amp; Assisted Selling
         </button>
         <button

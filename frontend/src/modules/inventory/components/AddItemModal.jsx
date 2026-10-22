@@ -9,7 +9,6 @@ import {
   ShieldCheck, 
   Layers, 
   Coins, 
-  Sparkles,
   Camera,
   Check
 } from 'lucide-react';

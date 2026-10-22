@@ -9,7 +9,6 @@ import {
   MessageCircle,
   Building2,
   Calendar,
-  Sparkles
 } from 'lucide-react';
 import { useTenant } from '../../../context/TenantContext';
 
@@ -195,7 +194,7 @@ export const UdhaarCollectionDrawer = ({ isOpen, onClose, account, onPaymentReco
             <div className="bg-surface-950 border-2 border-brand-500/40 rounded-xl p-5 text-xs text-surface-200 space-y-3 font-mono">
               <div className="text-center border-b border-surface-800 pb-2">
                 <div className="text-amber-400 font-sans font-bold text-[11px] tracking-widest uppercase">
-                  ✦ Shubh Deepawali &bull; Shubh Labh ✦
+                  Shubh Deepawali &bull; Shubh Labh
                 </div>
                 <h4 className="font-sans font-black text-sm uppercase text-surface-100 mt-0.5">
                   {tenant.name}

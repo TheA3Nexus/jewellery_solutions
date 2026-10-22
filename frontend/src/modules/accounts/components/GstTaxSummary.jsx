@@ -8,7 +8,6 @@ import {
   ArrowUpRight, 
   ArrowDownLeft, 
   Layers, 
-  Sparkles,
   Building2,
   FileSpreadsheet
 } from 'lucide-react';

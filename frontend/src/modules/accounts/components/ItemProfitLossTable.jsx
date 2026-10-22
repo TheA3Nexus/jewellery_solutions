@@ -9,7 +9,6 @@ import {
   IndianRupee, 
   Printer, 
   AlertTriangle,
-  Sparkles,
   HelpCircle
 } from 'lucide-react';
 

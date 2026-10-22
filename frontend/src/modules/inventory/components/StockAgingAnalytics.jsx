@@ -8,7 +8,6 @@ import {
   AlertTriangle, 
   CheckCircle2, 
   RefreshCcw,
-  Sparkles
 } from 'lucide-react';
 
 export const StockAgingAnalytics = () => {

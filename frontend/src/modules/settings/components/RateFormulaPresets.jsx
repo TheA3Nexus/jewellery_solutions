@@ -9,7 +9,6 @@ import {
   RefreshCw, 
   SlidersHorizontal,
   Wifi,
-  Sparkles
 } from 'lucide-react';
 
 export const RateFormulaPresets = () => {

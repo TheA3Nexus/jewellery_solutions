@@ -4,7 +4,6 @@ import {
   Search, 
   Gift, 
   CreditCard, 
-  Sparkles, 
   CheckCircle2, 
   Star, 
   IndianRupee, 

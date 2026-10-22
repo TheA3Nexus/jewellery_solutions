@@ -9,7 +9,6 @@ import {
   FileSpreadsheet, 
   Layers, 
   Scan,
-  Sparkles
 } from 'lucide-react';
 
 export const RfidTrayAudit = () => {

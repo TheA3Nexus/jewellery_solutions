@@ -11,7 +11,6 @@ import {
   FileText, 
   Coins, 
   Smartphone,
-  Sparkles,
   ToggleLeft,
   ToggleRight
 } from 'lucide-react';

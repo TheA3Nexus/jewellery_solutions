@@ -6,7 +6,6 @@ import {
   Plus, 
   Trash2, 
   Scale, 
-  Sparkles, 
   Layers, 
   Check, 
   Search,
