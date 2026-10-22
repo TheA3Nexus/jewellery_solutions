@@ -78,36 +78,42 @@ export const TopHeader = () => {
           </div>
         </div>
 
-        {/* Center: Live Bullion Rate Ticker */}
-        <div className="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-0.5 font-mono text-[11px]">
-          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-300 text-[10px] font-sans font-bold text-emerald-700 shrink-0">
+        {/* Center: Live Bullion Rates 2x2 Grid */}
+        <div className="flex items-center gap-2 bg-surface-canvas/60 border border-surface-border rounded-lg px-2.5 py-1 shrink-0 shadow-2xs">
+          {/* Live Indicator Badge */}
+          <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-emerald-50 border border-emerald-300 text-[10px] font-sans font-bold text-emerald-700 shrink-0">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-            <span className="uppercase tracking-wider">Live Bullion</span>
+            <span className="uppercase tracking-wider">Live</span>
           </div>
 
-          <div className="flex items-center gap-1">
-            <span className="text-surface-400 font-sans">24K:</span>
-            <strong className="text-brand-benchmark font-bold">₹{Number(bullionRates.gold24k || 0).toFixed(2)}/g</strong>
-          </div>
-          <span className="text-surface-700/60">&bull;</span>
+          {/* 2x2 Grid */}
+          <div className="grid grid-cols-2 gap-x-3.5 gap-y-0.5 font-mono text-[11px] leading-tight">
+            {/* Row 1, Col 1: 24K */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-surface-400 font-sans text-[10px] font-semibold">24K:</span>
+              <strong className="text-brand-benchmark font-bold">₹{Number(bullionRates.gold24k || 0).toFixed(2)}/g</strong>
+            </div>
 
-          <div className="flex items-center gap-1">
-            <span className="text-surface-400 font-sans">22K:</span>
-            <strong className="text-brand-accent font-bold">₹{Number(bullionRates.gold22k || 0).toFixed(2)}/g</strong>
-          </div>
-          <span className="text-surface-700/60">&bull;</span>
+            {/* Row 1, Col 2: 22K */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-surface-400 font-sans text-[10px] font-semibold">22K:</span>
+              <strong className="text-brand-accent font-bold">₹{Number(bullionRates.gold22k || 0).toFixed(2)}/g</strong>
+            </div>
 
-          <div className="flex items-center gap-1">
-            <span className="text-surface-400 font-sans">18K:</span>
-            <strong className="text-brand-accent font-semibold">₹{Number(bullionRates.gold18k || 0).toFixed(2)}/g</strong>
-          </div>
-          <span className="text-surface-700/60">&bull;</span>
+            {/* Row 2, Col 1: 18K */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-surface-400 font-sans text-[10px] font-semibold">18K:</span>
+              <strong className="text-brand-accent font-semibold">₹{Number(bullionRates.gold18k || 0).toFixed(2)}/g</strong>
+            </div>
 
-          <div className="flex items-center gap-1">
-            <span className="text-surface-400 font-sans">Silver:</span>
-            <strong className="text-surface-200 font-semibold">₹{Number(bullionRates.silver || bullionRates.silver999 || 0).toFixed(2)}/g</strong>
+            {/* Row 2, Col 2: Silver */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-surface-400 font-sans text-[10px] font-semibold">Silver:</span>
+              <strong className="text-surface-200 font-semibold">₹{Number(bullionRates.silver || bullionRates.silver999 || 0).toFixed(2)}/g</strong>
+            </div>
           </div>
 
+          {/* Quick Edit Rate Button */}
           <button
             type="button"
             onClick={() => {
@@ -120,7 +126,7 @@ export const TopHeader = () => {
               });
               setIsRateModalOpen(true);
             }}
-            className="p-1 text-surface-400 hover:text-brand-accent hover:bg-surface-hover rounded-md transition cursor-pointer"
+            className="p-1 text-surface-400 hover:text-brand-accent hover:bg-surface-hover rounded-md transition cursor-pointer shrink-0 ml-0.5"
             title="Modify Daily Rates & Premium"
           >
             <Edit3 className="w-3.5 h-3.5" />
