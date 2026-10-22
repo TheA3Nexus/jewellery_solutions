@@ -47,6 +47,7 @@ export const Sidebar = ({ activeCategory, setActiveCategory, isCollapsed, setIsC
           return (
             <button
               key={item.id}
+              id={`nav-item-${item.id.toLowerCase()}`}
               onClick={() => setActiveCategory(item.id)}
               className={`w-full h-10 rounded-xl flex items-center px-1 transition-all cursor-pointer relative overflow-hidden ${
                 isActive

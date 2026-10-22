@@ -45,7 +45,8 @@ export const UdhaarRegister = ({ accounts, onCollectPayment, onViewStatement }) 
 
   const handleSendWhatsAppReminder = (account) => {
     const text = `Respected ${account.customerName}, gentle reminder from A3 Jewellery regarding your pending balance of Rs. ${account.balanceDue.toLocaleString('en-IN')} against bill ${account.invoiceNo} dated ${account.invoiceDate}. Kindly clear at your earliest convenience or pay via UPI. Thank you.`;
-    const url = `https://wa.me/91${account.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(text)}`;
+    const cleanPhone = account.phone.replace(/[^0-9]/g, '');
+    const url = `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank');
   };
 
@@ -59,7 +60,7 @@ export const UdhaarRegister = ({ accounts, onCollectPayment, onViewStatement }) 
             <IndianRupee className="w-3.5 h-3.5 text-brand-400" />
             Total Udhaar Outstanding
           </span>
-          <div className="text-2xl font-mono font-bold text-brand-400 mt-1">
+          <div id="stat-total-udhaar" className="text-2xl font-mono font-bold text-brand-400 mt-1">
             ₹{totalOutstanding.toLocaleString('en-IN')}
           </div>
           <div className="mt-2 text-[11px] text-surface-400 font-mono">
@@ -73,7 +74,7 @@ export const UdhaarRegister = ({ accounts, onCollectPayment, onViewStatement }) 
             <Clock className="w-3.5 h-3.5 text-emerald-400" />
             Current (0 - 30 Days)
           </span>
-          <div className="text-2xl font-mono font-bold text-emerald-400 mt-1">
+          <div id="stat-aging-0-30" className="text-2xl font-mono font-bold text-emerald-400 mt-1">
             ₹{current0to30.toLocaleString('en-IN')}
           </div>
           <div className="mt-2 text-[11px] text-emerald-400 font-mono">
@@ -87,7 +88,7 @@ export const UdhaarRegister = ({ accounts, onCollectPayment, onViewStatement }) 
             <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
             Overdue (31 - 60 Days)
           </span>
-          <div className="text-2xl font-mono font-bold text-amber-400 mt-1">
+          <div id="stat-aging-31-60" className="text-2xl font-mono font-bold text-amber-400 mt-1">
             ₹{overdue31to60.toLocaleString('en-IN')}
           </div>
           <div className="mt-2 text-[11px] text-amber-400 font-mono">
@@ -101,7 +102,7 @@ export const UdhaarRegister = ({ accounts, onCollectPayment, onViewStatement }) 
             <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
             Critical (&gt; 60 Days)
           </span>
-          <div className="text-2xl font-mono font-bold text-rose-400 mt-1">
+          <div id="stat-aging-over-60" className="text-2xl font-mono font-bold text-rose-400 mt-1">
             ₹{criticalOver60.toLocaleString('en-IN')}
           </div>
           <div className="mt-2 text-[11px] text-rose-400 font-mono">
@@ -121,6 +122,7 @@ export const UdhaarRegister = ({ accounts, onCollectPayment, onViewStatement }) 
             </h3>
             <div className="flex bg-surface-950 p-0.5 rounded-lg border border-surface-800 text-xs font-semibold">
               <button
+                id="btn-aging-bucket-all"
                 onClick={() => setSelectedAgingBucket('ALL')}
                 className={`px-3 py-1 rounded-md transition-colors ${
                   selectedAgingBucket === 'ALL'
@@ -131,6 +133,7 @@ export const UdhaarRegister = ({ accounts, onCollectPayment, onViewStatement }) 
                 All Accounts ({accounts.length})
               </button>
               <button
+                id="btn-aging-bucket-0-30"
                 onClick={() => setSelectedAgingBucket('0_30')}
                 className={`px-3 py-1 rounded-md transition-colors ${
                   selectedAgingBucket === '0_30'
@@ -141,6 +144,7 @@ export const UdhaarRegister = ({ accounts, onCollectPayment, onViewStatement }) 
                 0 - 30 Days
               </button>
               <button
+                id="btn-aging-bucket-31-60"
                 onClick={() => setSelectedAgingBucket('31_60')}
                 className={`px-3 py-1 rounded-md transition-colors ${
                   selectedAgingBucket === '31_60'
@@ -151,6 +155,7 @@ export const UdhaarRegister = ({ accounts, onCollectPayment, onViewStatement }) 
                 31 - 60 Days
               </button>
               <button
+                id="btn-aging-bucket-over-60"
                 onClick={() => setSelectedAgingBucket('OVER_60')}
                 className={`px-3 py-1 rounded-md transition-colors ${
                   selectedAgingBucket === 'OVER_60'
@@ -167,6 +172,7 @@ export const UdhaarRegister = ({ accounts, onCollectPayment, onViewStatement }) 
             <div className="relative">
               <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-surface-500" />
               <input
+                id="input-search-udhaar"
                 type="text"
                 placeholder="Search Name, Phone, Bill #..."
                 value={searchTerm}
@@ -175,6 +181,7 @@ export const UdhaarRegister = ({ accounts, onCollectPayment, onViewStatement }) 
               />
             </div>
             <button
+              id="btn-print-udhaar-roster"
               onClick={() => printA4('printable-udhaar-register', `Udhaar_Khaata_Register`)}
               className="px-3 py-1.5 rounded-lg border border-surface-700 bg-surface-800 hover:bg-surface-700 text-surface-300 text-xs font-medium flex items-center gap-1.5 transition-colors"
             >
@@ -203,7 +210,7 @@ export const UdhaarRegister = ({ accounts, onCollectPayment, onViewStatement }) 
               {filteredAccounts.map((acc) => {
                 const limitUtilization = acc.creditLimit > 0 ? Math.round((acc.balanceDue / acc.creditLimit) * 100) : 0;
                 return (
-                  <tr key={acc.id} className="hover:bg-surface-800/40 transition-colors">
+                  <tr key={acc.id} id={`row-udhaar-${acc.id}`} className="hover:bg-surface-800/40 transition-colors">
                     <td className="px-4 py-3 font-sans">
                       <div className="font-semibold text-surface-100">{acc.customerName}</div>
                       <div className="text-[11px] text-surface-400 flex items-center gap-2 mt-0.5 font-mono">
@@ -263,6 +270,7 @@ export const UdhaarRegister = ({ accounts, onCollectPayment, onViewStatement }) 
                     <td className="px-4 py-3 text-right font-sans whitespace-nowrap">
                       <div className="flex items-center justify-end gap-1.5">
                         <button
+                          id={`btn-collect-${acc.id}`}
                           onClick={() => onCollectPayment(acc)}
                           className="px-2.5 py-1 rounded bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-xs flex items-center gap-1 transition-colors"
                         >
@@ -270,6 +278,7 @@ export const UdhaarRegister = ({ accounts, onCollectPayment, onViewStatement }) 
                           Collect
                         </button>
                         <button
+                          id={`btn-whatsapp-${acc.id}`}
                           onClick={() => handleSendWhatsAppReminder(acc)}
                           className="p-1 rounded bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition-colors"
                           title="Send WhatsApp Reminder"
@@ -277,6 +286,7 @@ export const UdhaarRegister = ({ accounts, onCollectPayment, onViewStatement }) 
                           <MessageCircle className="w-3.5 h-3.5" />
                         </button>
                         <button
+                          id={`btn-view-statement-${acc.id}`}
                           onClick={() => onViewStatement(acc)}
                           className="p-1 rounded bg-surface-800 hover:bg-surface-700 text-surface-300 border border-surface-700 transition-colors"
                           title="View Khaata Statement"

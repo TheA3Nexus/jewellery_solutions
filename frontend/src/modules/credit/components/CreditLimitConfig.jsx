@@ -58,6 +58,7 @@ export const CreditLimitConfig = ({ accounts, onUpdateLimit, onToggleBlock }) =>
           <div className="relative">
             <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-surface-500" />
             <input
+              id="input-search-limits"
               type="text"
               placeholder="Filter customer limits..."
               value={searchTerm}
@@ -83,7 +84,7 @@ export const CreditLimitConfig = ({ accounts, onUpdateLimit, onToggleBlock }) =>
           </thead>
           <tbody className="divide-y divide-surface-800/60 font-mono">
             {filtered.map((acc) => (
-              <tr key={acc.id} className="hover:bg-surface-800/40">
+              <tr key={acc.id} id={`row-limit-${acc.id}`} className="hover:bg-surface-800/40">
                 <td className="px-4 py-3 font-sans">
                   <div className="font-semibold text-surface-100">{acc.customerName}</div>
                   <div className="text-[11px] text-surface-400 font-mono mt-0.5">
@@ -97,12 +98,14 @@ export const CreditLimitConfig = ({ accounts, onUpdateLimit, onToggleBlock }) =>
                   {editingId === acc.id ? (
                     <div className="flex items-center justify-end gap-1">
                       <input
+                        id={`input-limit-${acc.id}`}
                         type="number"
                         value={tempLimit}
                         onChange={(e) => setTempLimit(e.target.value)}
                         className="w-24 bg-surface-950 border border-surface-600 rounded px-2 py-0.5 text-surface-100 text-right font-bold"
                       />
                       <button
+                        id={`btn-save-limit-${acc.id}`}
                         onClick={() => handleSaveEdit(acc.id)}
                         className="px-2 py-0.5 rounded bg-brand-500 text-slate-950 text-[10px] font-bold"
                       >
@@ -110,18 +113,18 @@ export const CreditLimitConfig = ({ accounts, onUpdateLimit, onToggleBlock }) =>
                       </button>
                     </div>
                   ) : (
-                    <span className="font-bold text-surface-200">
+                    <span id={`span-limit-${acc.id}`} className="font-bold text-surface-200">
                       ₹{acc.creditLimit.toLocaleString('en-IN')}
                     </span>
                   )}
                 </td>
                 <td className="px-4 py-3 text-center font-sans">
                   {acc.isBlocked ? (
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                    <span id={`badge-block-status-${acc.id}`} className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-rose-500/10 text-rose-400 border border-rose-500/20">
                       <Lock className="w-3 h-3" /> Credit Blocked
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <span id={`badge-block-status-${acc.id}`} className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                       <Unlock className="w-3 h-3" /> Active
                     </span>
                   )}
@@ -142,17 +145,19 @@ export const CreditLimitConfig = ({ accounts, onUpdateLimit, onToggleBlock }) =>
                 <td className="px-4 py-3 text-right font-sans whitespace-nowrap">
                   <div className="flex items-center justify-end gap-1.5">
                     <button
+                      id={`btn-edit-limit-${acc.id}`}
                       onClick={() => handleStartEdit(acc)}
-                      className="px-2 py-1 rounded bg-surface-800 hover:bg-surface-700 text-surface-300 text-xs font-semibold flex items-center gap-1 border border-surface-700"
+                      className="px-2 py-1 rounded bg-surface-800 hover:bg-surface-700 text-surface-300 text-xs font-semibold flex items-center gap-1 border border-surface-700 transition-colors"
                     >
                       <Edit3 className="w-3 h-3" /> Edit Limit
                     </button>
                     <button
+                      id={`btn-toggle-block-${acc.id}`}
                       onClick={() => onToggleBlock(acc.id)}
-                      className={`px-2 py-1 rounded text-xs font-semibold border ${
+                      className={`px-2 py-1 rounded text-xs font-semibold border transition-colors ${
                         acc.isBlocked
-                          ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                          : 'bg-rose-500/10 text-rose-400 border-rose-500/30'
+                          ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20'
+                          : 'bg-rose-500/10 text-rose-400 border-rose-500/30 hover:bg-rose-500/20'
                       }`}
                     >
                       {acc.isBlocked ? 'Unblock' : 'Block'}
