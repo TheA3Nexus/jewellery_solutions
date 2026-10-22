@@ -5,73 +5,71 @@
 
 :root,
 [data-theme="light"] {
-  // --- Surfaces & Backdrops ---
-  --canvas-bg: #f8f6f0;               // Warm ivory pearl boutique showroom backdrop
-  --surface-card: #ffffff;            // Crisp porcelain white for cards, trays, modals, tables
-  --surface-hover: #f4f0e6;           // Soft alabaster for hover states & subtle strips
-  --surface-subtle: #ede7d9;          // Subtle nested container background
-  --surface-elevated: #ffffff;        // Modals & dropdown flyouts
+  // --- Surfaces & Backdrops (Soft Matte Porcelain & Alabaster - Reduced Glare, Tactile Warmth) ---
+  --canvas-bg: #f5f3ec;               // Calming matte showroom stone backdrop (reduced glare)
+  --surface-card: #fdfcf9;            // Matte fine porcelain card trays
+  --surface-hover: #ece7dc;           // Soft tactile hover
+  --surface-subtle: #e7e2d5;          // Recessed debossed panel background
+  --surface-elevated: #ffffff;        // Modals & elevated dropdowns
 
   // --- Borders & Dividing Lines ---
-  --border-subtle: #e8e2d2;           // Warm champagne hairline card borders & table dividers
-  --border-medium: #d5ccb6;           // Input field borders & active button borders
-  --border-focus: #b45309;            // Focused input gold border ring
+  --border-subtle: #ded8ca;           // Soft hairline stone divider
+  --border-medium: #c8c0b0;           // Bevel input & button border
+  --border-focus: #a16207;            // 24K pure bullion focus ring
 
   // --- Text Contrast Hierarchy (Strictly WCAG 2.1 AAA Compliant) ---
-  --text-primary: #12100c;            // Deep rich obsidian for primary titles, weights, amounts
-  --text-secondary: #231f18;          // Rich dark body text for descriptions and labels
-  --text-subtle: #4a4337;             // Sub-headings and muted indicators
-  --text-muted: #575043;              // Table column headers, helper notes
-  --text-disabled: #8c826f;           // Input placeholders, disabled controls
+  --text-primary: #171410;            // Deep carbon obsidian for crisp readability
+  --text-secondary: #2b261f;          // Rich dark body text
+  --text-subtle: #4a4237;             // Clear sub-headers
+  --text-muted: #61594b;              // Muted labels & column headers
+  --text-disabled: #8a8070;           // Placeholder text
 
-  // --- Precious Metals Core Hues ---
-  --gold-primary: #b45309;            // 24K pure bullion primary button & CTAs
-  --gold-accent: #d97706;             // 22K hallmarked gold rate tickers & accent text
-  --gold-hover: #92400e;              // Burnished antique gold hover
-  --gold-bg: #fffbeb;                 // Soft champagne tint for gold badges & highlights
-  --gold-border: #fde68a;             // Champagne gold border
-  --gold-text: #92400e;               // High-contrast gold badge text
+  // --- Precious Metals (High-Contrast Antique Bullion & Hallmark Gold) ---
+  --gold-primary: #a16207;            // 24K royal bullion primary CTA
+  --gold-accent: #854d0e;             // Deep burnished 22K hallmark gold text (High Contrast 7.5:1+)
+  --gold-hover: #713f12;              // Rich antique deep gold
+  --gold-bg: #fef3c7;                 // Warm champagne silk background
+  --gold-border: #fcd34d;             // Defined gold border
+  --gold-text: #78350f;               // Ultra-sharp readable gold badge text (8.5:1 ratio)
 
-  --rosegold-accent: #e11d48;         // 18K rose gold
-  --rosegold-bg: #fff1f2;
+  --rosegold-accent: #be123c;
+  --rosegold-bg: #ffe4e6;
   --rosegold-border: #fecdd3;
-  --rosegold-text: #be123c;
+  --rosegold-text: #9f1239;
 
-  --platinum-accent: #475569;         // 950 platinum & silver
+  --platinum-accent: #334155;
   --platinum-bg: #f1f5f9;
   --platinum-border: #cbd5e1;
-  --platinum-text: #334155;
+  --platinum-text: #1e293b;
 
   // --- Gemstone Semantic Accents ---
-  // Colombian Emerald (Paid bills, verified hallmark, in-stock articles)
-  --emerald-bg: #ecfdf5;
+  --emerald-bg: #d1fae5;
   --emerald-border: #a7f3d0;
-  --emerald-text: #047857;
+  --emerald-text: #065f46;
 
-  // Burmese Ruby (Missing RFID, overdue Girvi, high-risk flags)
-  --ruby-bg: #fff1f2;
+  --ruby-bg: #ffe4e6;
   --ruby-border: #fecdd3;
-  --ruby-text: #be123c;
+  --ruby-text: #9f1239;
 
   // Kashmir Sapphire (RFID scanned transponder, secondary customer display)
-  --sapphire-bg: #eff6ff;
+  --sapphire-bg: #dbeafe;
   --sapphire-border: #bfdbfe;
-  --sapphire-text: #1d4ed8;
+  --sapphire-text: #1e40af;
 
   // Topaz Amber (Statutory Rule 114B PAN alert, pending approvals)
-  --amber-bg: #fffbeb;
-  --amber-border: #fde68a;
-  --amber-text: #b45309;
+  --amber-bg: #fef3c7;
+  --amber-border: #fcd34d;
+  --amber-text: #78350f;
 
-  // --- Elevation & Shadows ---
-  --shadow-card: 0 1px 3px 0 rgba(90, 37, 11, 0.05), 0 1px 2px -1px rgba(90, 37, 11, 0.03);
-  --shadow-dropdown: 0 10px 15px -3px rgba(90, 37, 11, 0.08), 0 4px 6px -4px rgba(90, 37, 11, 0.04);
-  --shadow-gold-glow: 0 0 15px -3px rgba(217, 119, 6, 0.35);
+  // --- Embossed Sculpted Depth & Tactile Shadows ---
+  --shadow-card: 2px 3px 6px rgba(180, 160, 130, 0.2), inset 1px 1px 0 rgba(255, 255, 255, 0.9), inset -1px -1px 0 rgba(190, 175, 150, 0.3);
+  --shadow-dropdown: 4px 10px 24px rgba(150, 130, 100, 0.2), inset 1px 1px 0 #ffffff;
+  --shadow-gold-glow: 2px 3px 6px rgba(160, 90, 20, 0.22), inset 1px 1px 0 rgba(255, 255, 255, 0.5);
 
   // --- Scrollbars ---
-  --scrollbar-track: #f4f0e6;
-  --scrollbar-thumb: #d5ccb6;
-  --scrollbar-thumb-hover: #b3a88f;
+  --scrollbar-track: #ede7dc;
+  --scrollbar-thumb: #cfc7b6;
+  --scrollbar-thumb-hover: #b5ac99;
 }
 
 [data-theme="dark"] {

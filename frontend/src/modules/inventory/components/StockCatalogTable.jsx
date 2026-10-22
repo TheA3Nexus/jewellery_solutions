@@ -160,23 +160,23 @@ export const StockCatalogTable = ({ onOpenAddModal, onOpenTagStudio }) => {
 
                     {/* 3. HUID Badge */}
                     <td className="py-2.5 px-3 font-mono">
-                      <span className="px-1.5 py-0.5 rounded bg-brand-500/10 border border-brand-500/25 text-brand-300 font-bold text-[10px]">
+                      <span className="px-1.5 py-0.5 rounded bg-brand-500/10 border border-brand-500/25 text-brand-text font-bold text-[10px]">
                         {item.huid || 'N/A'}
                       </span>
                     </td>
 
-                    {/* 4. Precious Metal Purity with Authentic Jewelry Distinction */}
+                    {/* 4. Precious Metal Purity with Authentic High-Contrast Jewelry Distinction */}
                     <td className="py-2.5 px-3 font-mono text-[11px]">
                       {item.metal === 'Silver' ? (
-                        <span className="px-1.5 py-0.5 rounded bg-slate-500/10 border border-slate-500/25 text-slate-300 font-semibold">
+                        <span className="px-1.5 py-0.5 rounded bg-slate-500/10 border border-slate-500/25 text-slate-700 dark:text-slate-300 font-semibold">
                           925 Silver
                         </span>
                       ) : item.diamondCarat ? (
-                        <span className="px-1.5 py-0.5 rounded bg-indigo-500/10 border border-indigo-500/25 text-indigo-300 font-semibold">
+                        <span className="px-1.5 py-0.5 rounded bg-indigo-500/10 border border-indigo-500/25 text-indigo-700 dark:text-indigo-300 font-semibold">
                           {item.purity} Diamond
                         </span>
                       ) : (
-                        <span className="px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/25 text-amber-300 font-semibold">
+                        <span className="px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/25 text-amber-800 dark:text-amber-300 font-semibold">
                           {item.purity} ({item.purityPercent}%)
                         </span>
                       )}
@@ -207,10 +207,10 @@ export const StockCatalogTable = ({ onOpenAddModal, onOpenTagStudio }) => {
                     <td className="py-2.5 px-3 text-center">
                       <span className={`px-2 py-0.5 rounded-full text-[10px] font-sans font-medium inline-flex items-center gap-1.5 ${
                         item.status === 'IN_STOCK'
-                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/25'
-                          : 'bg-rose-500/10 text-rose-400 border border-rose-500/25'
+                          ? 'bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 border border-emerald-500/25'
+                          : 'bg-rose-500/10 text-rose-800 dark:text-rose-400 border border-rose-500/25'
                       }`}>
-                        <span className={`w-1.5 h-1.5 rounded-full ${item.status === 'IN_STOCK' ? 'bg-emerald-400' : 'bg-rose-400'}`} />
+                        <span className={`w-1.5 h-1.5 rounded-full ${item.status === 'IN_STOCK' ? 'bg-emerald-500 dark:bg-emerald-400' : 'bg-rose-500 dark:bg-rose-400'}`} />
                         <span>{item.status === 'IN_STOCK' ? 'In Stock' : 'Sold'}</span>
                       </span>
                     </td>
@@ -247,7 +247,7 @@ export const StockCatalogTable = ({ onOpenAddModal, onOpenTagStudio }) => {
         </div>
         <div>
           <span className="text-surface-400">Total Net Gold: </span>
-          <strong className="text-brand-300 font-bold">{totalNetWeight.toFixed(3)} GM</strong>
+          <strong className="text-brand-text font-bold">{totalNetWeight.toFixed(3)} GM</strong>
         </div>
         <div>
           <span className="text-surface-400">Live Inventory Valuation: </span>
