@@ -4,6 +4,7 @@ import { useHardware } from '../../context/HardwareContext';
 import { CustomerContextCard } from './components/CustomerContextCard';
 import { ProductIngestionTable } from './components/ProductIngestionTable';
 import { OldGoldExchangeDrawer } from './components/OldGoldExchangeDrawer';
+import { StandaloneOldGoldDesk } from './components/StandaloneOldGoldDesk';
 import { SplitPaymentModal } from './components/SplitPaymentModal';
 import { ThermalEstimateReceipt } from './components/ThermalEstimateReceipt';
 import { GstTaxInvoiceModal } from './components/GstTaxInvoiceModal';
@@ -360,18 +361,9 @@ export const POSWorkspace = () => {
         </div>
       )}
 
-      {/* View 2: Old Gold Exchange Desk */}
+      {/* View 2: Old Gold Exchange Desk (Enterprise Standalone URD Desk) */}
       {activeSubcategory === 'OLD_GOLD_DESK' && (
-        <div className="card-surface max-w-2xl mx-auto space-y-4">
-          <div className="flex items-center gap-2 border-b border-surface-800 pb-2">
-            <Coins className="w-5 h-5 text-brand-400" />
-            <div>
-              <h3 className="text-sm font-bold text-surface-100">Standalone Scrap Gold &amp; Tunch Desk</h3>
-              <p className="text-xs text-surface-400">Calculate melting loss, tunch purity, and cash payout without a purchase bill.</p>
-            </div>
-          </div>
-          <OldGoldExchangeDrawer exchange={exchange} setExchange={setExchange} />
-        </div>
+        <StandaloneOldGoldDesk />
       )}
 
       {/* View 3: Invoices History */}

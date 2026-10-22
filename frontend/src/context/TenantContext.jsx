@@ -159,6 +159,56 @@ export const TenantProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : [];
   });
 
+  const [oldGoldVouchers, setOldGoldVouchers] = useState(() => {
+    const saved = localStorage.getItem('A3_OLD_GOLD_VOUCHERS');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) {}
+    }
+    return [
+      {
+        id: 'URD-2026-0038',
+        date: new Date(Date.now() - 86400000 * 2).toLocaleDateString('en-IN'),
+        customerName: 'Smt. Kavita Sharma',
+        customerPhone: '+91 98201 54321',
+        customerPan: 'ABCPS4521E',
+        customerCity: 'Kalbadevi, Mumbai',
+        items: [
+          { id: 'item-1', name: 'Broken 22K Antique Bangle', metal: 'Gold', grossWeight: 14.250, lessWeight: 0.350, netWeight: 13.900, purityPercent: 88.5, fineWeight: 12.301, rate: 14315, amount: 176088 }
+        ],
+        totalGross: 14.250,
+        totalLess: 0.350,
+        totalNet: 13.900,
+        totalFine: 12.301,
+        totalAmount: 176088,
+        settlementMode: 'SHOWROOM_VOUCHER',
+        settlementRef: 'VCHR-KVT-8821',
+        status: 'REDEEMED',
+        remarks: 'Redeemed against Invoice INV-A3-2026-1048'
+      },
+      {
+        id: 'URD-2026-0039',
+        date: new Date(Date.now() - 86400000).toLocaleDateString('en-IN'),
+        customerName: 'Rajesh Verma',
+        customerPhone: '+91 98190 67890',
+        customerPan: 'BKRPV7712K',
+        customerCity: 'Zaveri Bazaar, Mumbai',
+        items: [
+          { id: 'item-1', name: 'Old Gold Chain (Broken Links)', metal: 'Gold', grossWeight: 8.400, lessWeight: 0.100, netWeight: 8.300, purityPercent: 75.0, fineWeight: 6.225, rate: 14315, amount: 89110 },
+          { id: 'item-2', name: 'Silver Puja Coins (2 pcs)', metal: 'Silver', grossWeight: 20.000, lessWeight: 0.000, netWeight: 20.000, purityPercent: 99.9, fineWeight: 19.980, rate: 229.90, amount: 4593 }
+        ],
+        totalGross: 28.400,
+        totalLess: 0.100,
+        totalNet: 28.300,
+        totalFine: 26.205,
+        totalAmount: 93703,
+        settlementMode: 'BANK_TRANSFER',
+        settlementRef: 'IMPS/HDFC/629104812',
+        status: 'PAID',
+        remarks: 'Direct IMPS payout credited to HDFC A/c'
+      }
+    ];
+  });
+
   const [isBackendOnline, setIsBackendOnline] = useState(false);
 
   const [currentUser] = useState({
@@ -184,6 +234,10 @@ export const TenantProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('A3_INVOICE_ARCHIVE', JSON.stringify(invoices));
   }, [invoices]);
+
+  useEffect(() => {
+    localStorage.setItem('A3_OLD_GOLD_VOUCHERS', JSON.stringify(oldGoldVouchers));
+  }, [oldGoldVouchers]);
 
   // Fetch Products Catalog from Live Backend
   const reloadCatalog = useCallback(async () => {
@@ -345,6 +399,15 @@ export const TenantProvider = ({ children }) => {
   };
 
   // Record completed sale invoice
+  const recordOldGoldVoucher = (voucher) => {
+    setOldGoldVouchers(prev => [voucher, ...prev]);
+    return { success: true, data: voucher };
+  };
+
+  const updateOldGoldVoucherStatus = (id, status) => {
+    setOldGoldVouchers(prev => prev.map(v => v.id === id ? { ...v, status } : v));
+  };
+
   const recordInvoice = async (newInvoice) => {
     try {
       const res = await fetch(`${API_BASE}/billing/invoices`, {
@@ -380,6 +443,9 @@ export const TenantProvider = ({ children }) => {
         markProductSold,
         invoices,
         recordInvoice,
+        oldGoldVouchers,
+        recordOldGoldVoucher,
+        updateOldGoldVoucherStatus,
         reloadCatalog,
         reloadInvoices,
         reloadTenant,
