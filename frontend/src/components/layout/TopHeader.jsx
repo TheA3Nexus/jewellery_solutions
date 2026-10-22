@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useTenant } from '../../context/TenantContext';
 import { useHardware } from '../../context/HardwareContext';
-import { useTheme } from '../../context/ThemeContext';
 import { 
   Scale, 
   Printer, 
@@ -12,14 +11,11 @@ import {
   CheckCircle2,
   PanelLeftClose,
   PanelLeftOpen,
-  Sun,
-  Moon,
   UserCheck
 } from 'lucide-react';
 
 export const TopHeader = ({ isSidebarCollapsed, setIsSidebarCollapsed }) => {
   const { tenant, currentUser, bullionRates, updateRates } = useTenant();
-  const { theme, toggleTheme } = useTheme();
 
   const { 
     scaleStatus, 
@@ -185,20 +181,6 @@ export const TopHeader = ({ isSidebarCollapsed, setIsSidebarCollapsed }) => {
             <span className="font-semibold text-surface-200 truncate max-w-[90px]">{currentUser?.name}</span>
             <span className="text-surface-500 font-mono text-[9px]">(C01)</span>
           </div>
-
-          {/* Theme Toggle Button */}
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="p-1.5 rounded-lg border border-surface-border bg-surface-card hover:bg-surface-hover text-surface-200 transition-all shadow-2xs cursor-pointer flex items-center justify-center shrink-0"
-            title={`Active Theme: ${theme === 'light' ? 'Boutique Light' : 'Velvet Dark'}. Click to toggle.`}
-          >
-            {theme === 'light' ? (
-              <Sun className="w-4 h-4 text-brand-benchmark" />
-            ) : (
-              <Moon className="w-4 h-4 text-brand-accent" />
-            )}
-          </button>
         </div>
 
       </div>

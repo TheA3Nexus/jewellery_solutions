@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTheme } from '../../context/ThemeContext';
 import { 
   CreditCard, 
   Boxes, 
@@ -11,7 +12,9 @@ import {
   MessageSquare, 
   SlidersHorizontal,
   PanelLeftClose,
-  PanelLeftOpen
+  PanelLeftOpen,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -28,6 +31,8 @@ const NAV_ITEMS = [
 ];
 
 export const Sidebar = ({ activeCategory, setActiveCategory, isCollapsed, setIsCollapsed }) => {
+  const { theme, toggleTheme } = useTheme();
+
   return (
     <aside 
       className={`h-full bg-surface-card border-r border-surface-border flex flex-col justify-between transition-all duration-300 ease-in-out z-30 shrink-0 select-none ${
@@ -75,9 +80,32 @@ export const Sidebar = ({ activeCategory, setActiveCategory, isCollapsed, setIsC
         })}
       </div>
 
-      {/* 2. Bottom Rail: Quick Drawer Collapse Button */}
-      {setIsCollapsed && (
-        <div className="p-2 border-t border-surface-border bg-surface-canvas/40 flex items-center justify-center shrink-0">
+      {/* 2. Bottom Rail: Theme Switcher & Quick Drawer Collapse Button */}
+      <div className="p-2 border-t border-surface-border bg-surface-canvas/40 space-y-1.5 shrink-0">
+        {/* Theme Switcher Button */}
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className="w-full h-9 rounded-xl border border-surface-border bg-surface-card hover:bg-surface-hover text-surface-200 text-xs font-sans transition-all shadow-2xs cursor-pointer flex items-center px-1"
+          title={`Active: ${theme === 'light' ? 'Light theme' : 'Dark theme'}. Click to switch.`}
+          aria-label={theme === 'light' ? 'Light theme' : 'Dark theme'}
+        >
+          <div className="w-10 h-9 flex items-center justify-center shrink-0">
+            {theme === 'light' ? (
+              <Sun className="w-4 h-4 text-brand-benchmark shrink-0" />
+            ) : (
+              <Moon className="w-4 h-4 text-brand-accent shrink-0" />
+            )}
+          </div>
+          {!isCollapsed && (
+            <span className="truncate text-xs font-medium text-surface-100 pl-1 pr-2">
+              {theme === 'light' ? 'Light theme' : 'Dark theme'}
+            </span>
+          )}
+        </button>
+
+        {/* Quick Drawer Collapse Button */}
+        {setIsCollapsed && (
           <button
             type="button"
             onClick={() => setIsCollapsed(!isCollapsed)}
@@ -94,8 +122,8 @@ export const Sidebar = ({ activeCategory, setActiveCategory, isCollapsed, setIsC
               </>
             )}
           </button>
-        </div>
-      )}
+        )}
+      </div>
     </aside>
   );
 };
