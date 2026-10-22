@@ -104,22 +104,29 @@ export const Sidebar = ({ activeCategory, setActiveCategory, isCollapsed, setIsC
           )}
         </button>
 
-        {/* Quick Drawer Collapse Button */}
+        {/* Quick Drawer Collapse / Expand Button: Zero Movement Anchored Icon */}
         {setIsCollapsed && (
           <button
             type="button"
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="w-full h-8 rounded-lg hover:bg-surface-hover text-surface-400 hover:text-surface-100 flex items-center justify-center gap-2 text-xs font-mono transition-colors cursor-pointer"
+            className="w-full h-8 rounded-lg hover:bg-surface-hover text-surface-400 hover:text-surface-100 flex items-center px-1 transition-all cursor-pointer relative overflow-hidden"
             title={isCollapsed ? 'Expand Navigation Rail' : 'Collapse Navigation Rail'}
             aria-label="Toggle Navigation Rail"
           >
-            {isCollapsed ? (
-              <PanelLeftOpen className="w-4 h-4 text-brand-accent" />
-            ) : (
-              <>
-                <PanelLeftClose className="w-4 h-4" />
-                <span className="text-[10px] text-surface-400 font-sans">Collapse Sidebar</span>
-              </>
+            {/* Anchored 40px Icon Slot: Exactly 12px from sidebar left edge in both states */}
+            <div className="w-10 h-8 flex items-center justify-center shrink-0">
+              {isCollapsed ? (
+                <PanelLeftOpen className="w-4 h-4 text-brand-accent shrink-0" />
+              ) : (
+                <PanelLeftClose className="w-4 h-4 shrink-0" />
+              )}
+            </div>
+
+            {/* Text Label: Only shown when open */}
+            {!isCollapsed && (
+              <span className="truncate text-xs font-sans text-surface-400 pl-1 pr-2">
+                Collapse Sidebar
+              </span>
             )}
           </button>
         )}
