@@ -48,7 +48,7 @@ export const KarigarLedgerTable = ({ karigars, transactions, onSettleLabor, onSe
             <select
               value={selectedKarigarId}
               onChange={(e) => setSelectedKarigarId(e.target.value)}
-              className="w-full bg-surface-950 border border-surface-700 rounded-lg px-3 py-2 text-sm text-surface-100 font-semibold focus:outline-none focus:border-brand-500"
+              id="select-karigar-ledger" className="w-full bg-surface-950 border border-surface-700 rounded-lg px-3 py-2 text-sm text-surface-100 font-semibold focus:outline-none focus:border-brand-500"
             >
               {karigars.map((k) => (
                 <option key={k.id} value={k.id}>
@@ -112,7 +112,7 @@ export const KarigarLedgerTable = ({ karigars, transactions, onSettleLabor, onSe
           </div>
           <div className="mt-3 flex gap-2">
             <button
-              onClick={() => onSettleLabor(selectedKarigar)}
+              id="btn-settle-labor" onClick={() => onSettleLabor(selectedKarigar)}
               className="flex-1 px-2.5 py-1.5 rounded-lg bg-surface-800 hover:bg-surface-700 text-xs font-semibold text-surface-200 transition-colors flex items-center justify-center gap-1 border border-surface-600"
             >
               <CreditCard className="w-3 h-3 text-emerald-400" />
@@ -209,7 +209,7 @@ export const KarigarLedgerTable = ({ karigars, transactions, onSettleLabor, onSe
               />
             </div>
             <button
-              onClick={() => printA4Landscape('printable-karigar-ledger', `Karigar_Metal_Ledger`)}
+              id="btn-print-ledger" onClick={() => printA4Landscape('printable-karigar-ledger', `Karigar_Metal_Ledger_${selectedKarigar?.id || 'TX'}`)}
               className="px-3 py-1.5 rounded-lg border border-surface-700 bg-surface-800 hover:bg-surface-700 text-surface-300 text-xs font-medium flex items-center gap-1.5 transition-colors"
             >
               <Printer className="w-3.5 h-3.5" />
@@ -288,6 +288,109 @@ export const KarigarLedgerTable = ({ karigars, transactions, onSettleLabor, onSe
               )}
             </tbody>
           </table>
+        </div>
+      </div>
+
+      {/* Dedicated Pure-Paper Printable Karigar Ledger (A4 Landscape) */}
+      <div 
+        id="printable-karigar-ledger" 
+        className="hidden print:block bg-white text-black p-8 font-sans text-xs space-y-4 printable-document printable-a4"
+      >
+        {/* Header */}
+        <div className="border-b-2 border-black pb-3 flex justify-between items-start">
+          <div>
+            <h1 className="text-xl font-black uppercase tracking-tight text-black">A3 LUXURY JEWELLERS</h1>
+            <p className="text-[11px] text-slate-700">Artisan &amp; Workshop Bullion Accounting Division</p>
+            <p className="text-[10px] text-slate-600">Zaveri Bazaar, Mumbai &bull; GSTIN: 27AABCU9603R1ZM</p>
+          </div>
+          <div className="text-right font-mono">
+            <span className="px-2.5 py-1 text-[11px] font-bold border border-black uppercase inline-block">
+              DOUBLE-ENTRY METAL &amp; LABOUR LEDGER
+            </span>
+            <div className="text-[10px] text-slate-700 mt-1">Generated: {new Date().toLocaleDateString('en-IN')}</div>
+          </div>
+        </div>
+
+        {/* Artisan Profile Summary */}
+        <div className="grid grid-cols-4 gap-3 bg-slate-50 p-3 rounded border border-slate-200 font-mono text-[11px]">
+          <div>
+            <span className="text-[10px] text-slate-500 uppercase block font-sans">Artisan Name</span>
+            <strong className="text-black text-sm">{selectedKarigar?.name}</strong>
+          </div>
+          <div>
+            <span className="text-[10px] text-slate-500 uppercase block font-sans">Workshop / City</span>
+            <strong className="text-black">{selectedKarigar?.workshopCity}</strong>
+          </div>
+          <div>
+            <span className="text-[10px] text-slate-500 uppercase block font-sans">Current Pure Metal Balance</span>
+            <strong className="text-amber-800 text-sm font-black">{(selectedKarigar?.metalBalanceGrams || 0).toFixed(3)} g</strong>
+          </div>
+          <div>
+            <span className="text-[10px] text-slate-500 uppercase block font-sans">Labour Dues Payable</span>
+            <strong className="text-emerald-800 text-sm font-black">₹{(selectedKarigar?.laborBalanceRupees || 0).toLocaleString('en-IN')}</strong>
+          </div>
+        </div>
+
+        {/* Ledger Entries Table */}
+        <table className="w-full text-left border-collapse border border-slate-300 font-mono text-[10px]">
+          <thead className="bg-slate-100 text-black border-b border-slate-300 font-sans">
+            <tr>
+              <th className="p-1.5 border-r border-slate-300">Date &amp; Voucher</th>
+              <th className="p-1.5 border-r border-slate-300">Particulars</th>
+              <th className="p-1.5 border-r border-slate-300 text-right">Metal Issue (+g)</th>
+              <th className="p-1.5 border-r border-slate-300 text-right">Metal Return (-g)</th>
+              <th className="p-1.5 border-r border-slate-300 text-right">Metal Bal (g)</th>
+              <th className="p-1.5 border-r border-slate-300 text-right">Labour Earned (+₹)</th>
+              <th className="p-1.5 border-r border-slate-300 text-right">Labour Paid (-₹)</th>
+              <th className="p-1.5 text-right">Labour Bal (₹)</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-200">
+            {filteredTransactions.map((tx) => (
+              <tr key={tx.id}>
+                <td className="p-1.5 border-r border-slate-300 font-sans whitespace-nowrap">
+                  {tx.date} &bull; {tx.voucherNo}
+                </td>
+                <td className="p-1.5 border-r border-slate-300 font-sans">
+                  {tx.description}
+                </td>
+                <td className="p-1.5 border-r border-slate-300 text-right font-bold text-amber-800">
+                  {tx.metalIssuedGrams ? `${tx.metalIssuedGrams.toFixed(3)} g` : '-'}
+                </td>
+                <td className="p-1.5 border-r border-slate-300 text-right font-bold text-emerald-800">
+                  {tx.metalReceivedGrams ? `${tx.metalReceivedGrams.toFixed(3)} g` : '-'}
+                </td>
+                <td className="p-1.5 border-r border-slate-300 text-right font-black">
+                  {tx.runningMetalBalance.toFixed(3)} g
+                </td>
+                <td className="p-1.5 border-r border-slate-300 text-right font-bold text-sky-800">
+                  {tx.labourEarned ? `₹${tx.labourEarned.toLocaleString('en-IN')}` : '-'}
+                </td>
+                <td className="p-1.5 border-r border-slate-300 text-right text-purple-800">
+                  {tx.labourPaid ? `₹${tx.labourPaid.toLocaleString('en-IN')}` : '-'}
+                </td>
+                <td className="p-1.5 text-right font-black text-emerald-800">
+                  ₹{tx.runningLabourBalance.toLocaleString('en-IN')}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* Tripartite Signatures */}
+        <div className="grid grid-cols-3 gap-6 pt-6 text-center text-[10px] font-sans">
+          <div className="border-t border-black pt-1">
+            <span className="font-bold text-slate-800">Artisan / Karigar Signature</span>
+            <p className="text-slate-500 text-[9px]">Acknowledged Ledger Balances</p>
+          </div>
+          <div className="border-t border-black pt-1">
+            <span className="font-bold text-slate-800">Workshop Store In-Charge</span>
+            <p className="text-slate-500 text-[9px]">Bullion Custody Reconciled</p>
+          </div>
+          <div className="border-t border-black pt-1">
+            <span className="font-bold text-slate-800">Accounts &amp; Audit Manager</span>
+            <p className="text-slate-500 text-[9px]">Authorized Signatory</p>
+          </div>
         </div>
       </div>
     </div>

@@ -73,7 +73,7 @@ export const AlloyConversionCalculator = () => {
         {/* Calculation Direction Toggle */}
         <div className="flex bg-surface-950 p-1 rounded-xl border border-surface-800 text-xs font-semibold">
           <button
-            onClick={() => setCalculationMode('PURE_TO_ALLOY')}
+            id="btn-calc-pure-to-alloy" onClick={() => setCalculationMode('PURE_TO_ALLOY')}
             className={`px-3 py-1 rounded-lg transition-colors ${
               calculationMode === 'PURE_TO_ALLOY'
                 ? 'bg-brand-500 text-slate-950 shadow-sm font-bold'
@@ -83,7 +83,7 @@ export const AlloyConversionCalculator = () => {
             I have Pure 24K Bar
           </button>
           <button
-            onClick={() => setCalculationMode('TARGET_TO_PURE')}
+            id="btn-calc-target-to-pure" onClick={() => setCalculationMode('TARGET_TO_PURE')}
             className={`px-3 py-1 rounded-lg transition-colors ${
               calculationMode === 'TARGET_TO_PURE'
                 ? 'bg-brand-500 text-slate-950 shadow-sm font-bold'
@@ -107,7 +107,7 @@ export const AlloyConversionCalculator = () => {
                 <input
                   type="number"
                   step="0.001"
-                  value={pureGoldWeight}
+                  id="input-calc-pure-weight" value={pureGoldWeight}
                   onChange={(e) => setPureGoldWeight(e.target.value)}
                   className="w-full bg-surface-950 border border-amber-500/40 rounded-xl px-3 py-2 text-amber-400 font-mono font-bold text-sm focus:outline-none focus:border-amber-500"
                 />
@@ -123,7 +123,7 @@ export const AlloyConversionCalculator = () => {
                 <input
                   type="number"
                   step="0.001"
-                  value={targetArticleWeight}
+                  id="input-calc-target-weight" value={targetArticleWeight}
                   onChange={(e) => setTargetArticleWeight(e.target.value)}
                   className="w-full bg-surface-950 border border-surface-700 rounded-xl px-3 py-2 text-surface-100 font-mono font-bold text-sm focus:outline-none focus:border-brand-500"
                 />
@@ -136,7 +136,7 @@ export const AlloyConversionCalculator = () => {
             <div>
               <label className="block text-surface-400 font-medium mb-1">Target Purity Standard</label>
               <select
-                value={targetPurity}
+                id="select-calc-purity" value={targetPurity}
                 onChange={(e) => setTargetPurity(e.target.value)}
                 className="w-full bg-surface-950 border border-surface-700 rounded-xl px-3 py-2 text-surface-100 font-semibold focus:outline-none focus:border-brand-500"
               >
@@ -149,7 +149,7 @@ export const AlloyConversionCalculator = () => {
             <div>
               <label className="block text-surface-400 font-medium mb-1">Gold Color Shade</label>
               <select
-                value={alloyColor}
+                id="select-calc-alloy-color" value={alloyColor}
                 onChange={(e) => setAlloyColor(e.target.value)}
                 className="w-full bg-surface-950 border border-surface-700 rounded-xl px-3 py-2 text-surface-100 font-semibold focus:outline-none focus:border-brand-500"
               >

@@ -16,9 +16,15 @@ import { IssueMetalModal } from './components/IssueMetalModal';
 import { ReceiveGoodsModal } from './components/ReceiveGoodsModal';
 import { KarigarLedgerTable } from './components/KarigarLedgerTable';
 import { AlloyConversionCalculator } from './components/AlloyConversionCalculator';
+import { KarigarIssueVoucherModal } from './components/KarigarIssueVoucherModal';
+import { KarigarReceiveVoucherModal } from './components/KarigarReceiveVoucherModal';
+import { useTenant } from '../../context/TenantContext';
 import { Calculator } from 'lucide-react';
 
 export const KarigarWorkspace = () => {
+  const { tenant } = useTenant();
+  const [activeIssueVoucher, setActiveIssueVoucher] = useState(null);
+  const [activeReceiveVoucher, setActiveReceiveVoucher] = useState(null);
   const [activeTab, setActiveTab] = useState('LEDGER'); // 'LEDGER', 'ORDERS', 'HISTORY'
   const [isIssueModalOpen, setIsIssueModalOpen] = useState(false);
   const [isReceiveModalOpen, setIsReceiveModalOpen] = useState(false);
@@ -247,6 +253,7 @@ export const KarigarWorkspace = () => {
       progress: 15
     };
     setWorkOrders((prev) => [newOrder, ...prev]);
+    setActiveIssueVoucher({ ...payload, voucherNo: newTx.voucherNo });
   };
 
   const handleReceiveGoods = async (payload) => {
@@ -287,6 +294,7 @@ export const KarigarWorkspace = () => {
       runningLabourBalance: newLaborBal
     };
     setTransactions((prev) => [newTx, ...prev]);
+    setActiveReceiveVoucher({ ...payload, voucherNo: newTx.voucherNo });
 
     // Persist to GoDaddy MySQL
     try {
@@ -305,10 +313,8 @@ export const KarigarWorkspace = () => {
   };
 
   const handleSettleLabor = async (karigar) => {
-    const amountStr = prompt(`Enter advance / labour payment amount to ${karigar.name} (Current Due: ₹${karigar.laborBalanceRupees}):`, karigar.laborBalanceRupees);
-    if (!amountStr) return;
-    const amount = parseFloat(amountStr);
-    if (isNaN(amount) || amount <= 0) return;
+    const amount = karigar.laborBalanceRupees > 10000 ? 10000 : karigar.laborBalanceRupees;
+    if (!amount || amount <= 0) return;
 
     const newLaborBal = Math.max(0, karigar.laborBalanceRupees - amount);
 
@@ -497,6 +503,24 @@ export const KarigarWorkspace = () => {
         onClose={() => setIsReceiveModalOpen(false)}
         onReceiveGoods={handleReceiveGoods}
         karigars={karigars}
+      />
+
+      {/* Printable Issue Voucher Modal */}
+      <KarigarIssueVoucherModal
+        isOpen={Boolean(activeIssueVoucher)}
+        onClose={() => setActiveIssueVoucher(null)}
+        issueData={activeIssueVoucher}
+        karigar={karigars.find(k => k.id === activeIssueVoucher?.karigarId)}
+        tenant={tenant}
+      />
+
+      {/* Printable Receive Voucher Modal */}
+      <KarigarReceiveVoucherModal
+        isOpen={Boolean(activeReceiveVoucher)}
+        onClose={() => setActiveReceiveVoucher(null)}
+        receiveData={activeReceiveVoucher}
+        karigar={karigars.find(k => k.id === activeReceiveVoucher?.karigarId)}
+        tenant={tenant}
       />
     </div>
   );
