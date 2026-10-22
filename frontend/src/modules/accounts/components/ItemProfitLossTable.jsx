@@ -1,5 +1,5 @@
-import { printA4Landscape } from '../../../utils/printService';
 import React, { useState } from 'react';
+import { printA4Landscape } from '../../../utils/printService';
 import { 
   TrendingUp, 
   Search, 
@@ -10,10 +10,14 @@ import {
   IndianRupee, 
   Printer, 
   AlertTriangle,
-  HelpCircle
+  HelpCircle,
+  Building2,
+  ShieldCheck
 } from 'lucide-react';
+import { useTenant } from '../../../context/TenantContext';
 
 export const ItemProfitLossTable = () => {
+  const { tenant } = useTenant();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
 
@@ -105,50 +109,49 @@ export const ItemProfitLossTable = () => {
     }
   ]);
 
+  // Filtering
   const filteredItems = soldItems.filter((item) => {
-    if (selectedCategory !== 'ALL' && item.category !== selectedCategory) return false;
-    if (searchTerm) {
-      const q = searchTerm.toLowerCase();
-      return (
-        item.itemName.toLowerCase().includes(q) ||
-        item.invoiceNo.toLowerCase().includes(q) ||
-        item.huid.toLowerCase().includes(q) ||
-        item.tagCode.toLowerCase().includes(q)
-      );
-    }
-    return true;
+    const matchesCat = selectedCategory === 'ALL' || item.category === selectedCategory;
+    const matchesSearch =
+      item.itemName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.huid.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.tagCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.invoiceNo.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCat && matchesSearch;
   });
 
-  const totalSalesRevenue = filteredItems.reduce((acc, i) => acc + i.totalRealizedSale, 0);
-  const totalCostBasis = filteredItems.reduce((acc, i) => acc + i.totalCost, 0);
-  const totalGrossProfit = totalSalesRevenue - totalCostBasis;
-  const overallMarginPercent = totalCostBasis > 0 ? ((totalGrossProfit / totalCostBasis) * 100).toFixed(1) : 0;
+  // Aggregates
+  const totalRealizedRevenue = filteredItems.reduce((sum, item) => sum + item.totalRealizedSale, 0);
+  const totalCostBasis = filteredItems.reduce((sum, item) => sum + item.totalCost, 0);
+  const totalGrossProfit = totalRealizedRevenue - totalCostBasis;
+  const overallMarginPercent =
+    totalCostBasis > 0 ? ((totalGrossProfit / totalCostBasis) * 100).toFixed(1) : 0;
 
   return (
     <div className="space-y-6">
-      {/* Top Analytics Cards */}
+      {/* Top Margin Analysis KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {/* Total Realized Sales Revenue */}
+        {/* Total Realized Sales */}
         <div className="bg-surface-900 border border-surface-700/60 rounded-xl p-4">
           <span className="text-xs font-medium uppercase text-surface-400 flex items-center gap-1">
             <IndianRupee className="w-3.5 h-3.5 text-brand-400" />
-            Realized Net Turnover
+            Total Realized Revenue
           </span>
-          <div className="text-2xl font-mono font-bold text-surface-100 mt-1">
-            ₹{Math.round(totalSalesRevenue).toLocaleString('en-IN')}
+          <div id="stat-realized-revenue" className="text-2xl font-mono font-bold text-surface-100 mt-1">
+            ₹{Math.round(totalRealizedRevenue).toLocaleString('en-IN')}
           </div>
-          <div className="mt-2 text-[11px] text-surface-400">
-            Excluding 3% GST tax liability
+          <div className="mt-2 text-[11px] text-surface-400 font-mono">
+            Across {filteredItems.length} audited sold pieces
           </div>
         </div>
 
-        {/* Purchase & Making Cost Basis */}
+        {/* Total Cost Basis (COGS) */}
         <div className="bg-surface-900 border border-surface-700/60 rounded-xl p-4">
           <span className="text-xs font-medium uppercase text-surface-400 flex items-center gap-1">
-            <Coins className="w-3.5 h-3.5 text-amber-400" />
-            Cost of Goods Sold (COGS)
+            <Coins className="w-3.5 h-3.5 text-surface-400" />
+            Cost Basis (COGS)
           </span>
-          <div className="text-2xl font-mono font-bold text-surface-200 mt-1">
+          <div id="stat-total-cogs" className="text-2xl font-mono font-bold text-surface-200 mt-1">
             ₹{Math.round(totalCostBasis).toLocaleString('en-IN')}
           </div>
           <div className="mt-2 text-[11px] text-surface-400">
@@ -162,7 +165,7 @@ export const ItemProfitLossTable = () => {
             <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
             Net Gross Profit
           </span>
-          <div className="text-2xl font-mono font-bold text-emerald-400 mt-1">
+          <div id="stat-gross-profit" className="text-2xl font-mono font-bold text-emerald-400 mt-1">
             ₹{Math.round(totalGrossProfit).toLocaleString('en-IN')}
           </div>
           <div className="mt-2 text-[11px] text-emerald-400 font-mono font-medium">
@@ -199,10 +202,11 @@ export const ItemProfitLossTable = () => {
               {['ALL', 'NECKLACE', 'RINGS', 'CHAINS', 'BANGLES'].map((cat) => (
                 <button
                   key={cat}
+                  id={`btn-filter-cat-${cat}`}
                   onClick={() => setSelectedCategory(cat)}
                   className={`px-3 py-1 rounded-md transition-colors ${
                     selectedCategory === cat
-                      ? 'bg-surface-800 text-surface-100 shadow-sm'
+                      ? 'bg-surface-800 text-surface-100 shadow-sm font-bold'
                       : 'text-surface-400 hover:text-surface-200'
                   }`}
                 >
@@ -217,6 +221,7 @@ export const ItemProfitLossTable = () => {
               <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-surface-500" />
               <input
                 type="text"
+                id="input-search-profit-loss"
                 placeholder="Search HUID, Tag, Item..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -224,8 +229,9 @@ export const ItemProfitLossTable = () => {
               />
             </div>
             <button
+              id="btn-print-profit-loss"
               onClick={() => printA4Landscape('printable-profit-loss-table', `Item_Profit_Loss_Audit`)}
-              className="px-3 py-1.5 rounded-lg border border-surface-700 bg-surface-800 hover:bg-surface-700 text-surface-300 text-xs font-medium flex items-center gap-1.5 transition-colors"
+              className="px-3.5 py-1.5 rounded-lg border border-surface-700 bg-surface-800 hover:bg-surface-700 text-surface-200 text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-sm"
             >
               <Printer className="w-3.5 h-3.5" />
               Export Report
@@ -233,13 +239,44 @@ export const ItemProfitLossTable = () => {
           </div>
         </div>
 
-        {/* Table */}
-        <div id="printable-profit-loss-table" className="overflow-x-auto printable-document printable-a4">
+        {/* Table UI & Print Container */}
+        <div id="printable-profit-loss-table" className="overflow-x-auto printable-document printable-a4 p-0 sm:p-2">
+          {/* Printable Pure-Paper Header (Only visible on paper print) */}
+          <div className="hidden print:block mb-4 border-b-2 border-slate-900 pb-3">
+            <div className="flex justify-between items-start">
+              <div>
+                <h1 className="text-xl font-black uppercase tracking-tight text-slate-950">
+                  {tenant?.businessName || 'A3 JEWELLERY & BULLION HOUSE'}
+                </h1>
+                <p className="text-[10px] text-slate-600 font-medium">
+                  {tenant?.address || 'Showroom 4, Bullion Exchange Plaza, Zaveri Bazaar, Mumbai - 400002'}
+                </p>
+                <p className="text-[10px] text-slate-600 font-mono mt-0.5">
+                  GSTIN: {tenant?.gstin || '27AAACA1234A1Z5'} &bull; Phone: {tenant?.phone || '+91 98200 12345'}
+                </p>
+              </div>
+              <div className="text-right">
+                <div className="inline-block px-3 py-1 bg-slate-900 text-white font-bold text-xs uppercase tracking-wider rounded">
+                  ITEM-WISE PROFIT &amp; LOSS AUDIT
+                </div>
+                <div className="text-[10px] font-mono text-slate-700 mt-1">
+                  Category: <strong>{selectedCategory}</strong> &bull; Total Items: <strong>{filteredItems.length}</strong>
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-cols-4 gap-3 bg-slate-50 p-2.5 rounded border border-slate-200 text-center font-mono mt-3 text-[11px]">
+              <div><span className="text-slate-500 block text-[9px] uppercase">Realized Revenue</span><strong>₹{Math.round(totalRealizedRevenue).toLocaleString('en-IN')}</strong></div>
+              <div><span className="text-slate-500 block text-[9px] uppercase">Cost of Goods (COGS)</span><strong>₹{Math.round(totalCostBasis).toLocaleString('en-IN')}</strong></div>
+              <div><span className="text-slate-500 block text-[9px] uppercase">Net Gross Profit</span><strong className="text-emerald-800">₹{Math.round(totalGrossProfit).toLocaleString('en-IN')}</strong></div>
+              <div><span className="text-slate-500 block text-[9px] uppercase">Average Margin</span><strong>{overallMarginPercent}%</strong></div>
+            </div>
+          </div>
+
           <table className="w-full text-left text-xs text-surface-300">
             <thead className="bg-surface-950 text-surface-400 font-semibold uppercase tracking-wider text-[11px] border-b border-surface-800 font-sans">
               <tr>
-                <th className="px-4 py-3">Sold Article & HUID</th>
-                <th className="px-4 py-3">Invoice & Date</th>
+                <th className="px-4 py-3">Sold Article &amp; HUID</th>
+                <th className="px-4 py-3">Invoice &amp; Date</th>
                 <th className="px-4 py-3 text-right">Net Weight</th>
                 <th className="px-4 py-3 text-right">Gold Cost vs Sale</th>
                 <th className="px-4 py-3 text-right">Artisan Mazdoori vs Charged</th>
@@ -311,7 +348,45 @@ export const ItemProfitLossTable = () => {
                 </tr>
               ))}
             </tbody>
+            {/* Table Footer Total */}
+            <tfoot className="bg-surface-950 font-bold border-t-2 border-surface-800 font-mono text-xs">
+              <tr>
+                <td colSpan="2" className="px-4 py-3 font-sans text-surface-200 uppercase tracking-wider">
+                  Summary Totals ({filteredItems.length} items)
+                </td>
+                <td className="px-4 py-3 text-right text-surface-200">
+                  {filteredItems.reduce((s, i) => s + i.netGoldWeight, 0).toFixed(3)} g
+                </td>
+                <td colSpan="3"></td>
+                <td className="px-4 py-3 text-right text-surface-200">
+                  ₹{Math.round(totalCostBasis).toLocaleString('en-IN')}
+                </td>
+                <td className="px-4 py-3 text-right text-surface-100">
+                  ₹{Math.round(totalRealizedRevenue).toLocaleString('en-IN')}
+                </td>
+                <td className="px-4 py-3 text-right text-emerald-400">
+                  +₹{Math.round(totalGrossProfit).toLocaleString('en-IN')}
+                </td>
+                <td className="px-4 py-3 text-center text-emerald-400">
+                  {overallMarginPercent}%
+                </td>
+              </tr>
+            </tfoot>
           </table>
+
+          {/* Printable Signatures */}
+          <div className="hidden print:grid grid-cols-2 gap-8 pt-8 border-t border-slate-200 text-center text-[10px]">
+            <div>
+              <div className="h-10 border-b border-dashed border-slate-400"></div>
+              <span className="font-bold text-slate-800 mt-1 block">Internal Inventory Auditor</span>
+              <span className="text-[9px] text-slate-500">Stock &amp; Cost Reconciliation</span>
+            </div>
+            <div>
+              <div className="h-10 border-b border-dashed border-slate-400"></div>
+              <span className="font-bold text-slate-800 mt-1 block">Managing Director / Partner</span>
+              <span className="text-[9px] text-slate-500">Margin Audit Approval</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

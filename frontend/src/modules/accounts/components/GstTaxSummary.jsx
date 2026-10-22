@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { printA4 } from '../../../utils/printService';
 import { 
   FileText, 
   Download, 
@@ -9,7 +10,9 @@ import {
   ArrowDownLeft, 
   Layers, 
   Building2,
-  FileSpreadsheet
+  FileSpreadsheet,
+  Printer,
+  ShieldCheck
 } from 'lucide-react';
 import { useTenant } from '../../../context/TenantContext';
 
@@ -112,7 +115,7 @@ export const GstTaxSummary = () => {
           </div>
           <div>
             <h2 className="text-base font-bold text-surface-100 flex items-center gap-2">
-              GST Return Filing & Tax Liability Radar
+              GST Return Filing &amp; Tax Liability Radar
               <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                 GSTIN: {tenant.gstin}
               </span>
@@ -123,11 +126,12 @@ export const GstTaxSummary = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <div className="flex items-center gap-1.5 bg-surface-950 border border-surface-700 px-3 py-1.5 rounded-lg text-xs text-surface-200">
             <Calendar className="w-3.5 h-3.5 text-surface-400" />
             <input
               type="month"
+              id="input-gst-period"
               value={returnPeriod}
               onChange={(e) => setReturnPeriod(e.target.value)}
               className="bg-transparent focus:outline-none font-mono text-xs"
@@ -135,6 +139,16 @@ export const GstTaxSummary = () => {
           </div>
 
           <button
+            id="btn-print-gst-summary"
+            onClick={() => printA4('printable-gst-summary', `GST_Tax_Statement_${returnPeriod}`)}
+            className="px-3 py-1.5 rounded-lg border border-surface-700 bg-surface-800 hover:bg-surface-700 text-surface-200 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+          >
+            <Printer className="w-3.5 h-3.5" />
+            Print GST Statement
+          </button>
+
+          <button
+            id="btn-export-gst-json"
             onClick={handleExportJson}
             className="px-3.5 py-1.5 rounded-lg bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition-colors shadow-sm"
           >
@@ -151,7 +165,7 @@ export const GstTaxSummary = () => {
           <span className="text-xs font-medium uppercase text-surface-400">
             Total Taxable Turnover
           </span>
-          <div className="text-2xl font-mono font-bold text-surface-100 mt-1">
+          <div id="stat-gst-taxable" className="text-2xl font-mono font-bold text-surface-100 mt-1">
             ₹{outwardTaxableValue.toLocaleString('en-IN')}
           </div>
           <div className="mt-2 text-[11px] text-surface-400 font-mono">
@@ -165,7 +179,7 @@ export const GstTaxSummary = () => {
             <span>Outward Tax (Liability)</span>
             <span className="text-[10px] text-rose-400 font-bold">3% GST</span>
           </span>
-          <div className="text-2xl font-mono font-bold text-rose-400 mt-1">
+          <div id="stat-gst-outward-tax" className="text-2xl font-mono font-bold text-rose-400 mt-1">
             ₹{totalGstOutward.toLocaleString('en-IN')}
           </div>
           <div className="mt-2 text-[11px] text-surface-400 font-mono flex justify-between">
@@ -180,7 +194,7 @@ export const GstTaxSummary = () => {
             <span>Eligible ITC (Bullion Inward)</span>
             <span className="text-[10px] text-emerald-400 font-bold">GSTR-2B</span>
           </span>
-          <div className="text-2xl font-mono font-bold text-emerald-400 mt-1">
+          <div id="stat-gst-itc" className="text-2xl font-mono font-bold text-emerald-400 mt-1">
             ₹{totalItcAvailable.toLocaleString('en-IN')}
           </div>
           <div className="mt-2 text-[11px] text-surface-400 font-mono flex justify-between">
@@ -195,7 +209,7 @@ export const GstTaxSummary = () => {
             <span>Net Tax to Pay (Cash Ledger)</span>
             <span className="text-[10px] text-brand-400 font-bold">Challan PMT-06</span>
           </span>
-          <div className="text-2xl font-mono font-bold text-brand-400 mt-1">
+          <div id="stat-gst-net-payable" className="text-2xl font-mono font-bold text-brand-400 mt-1">
             ₹{netCashTaxPayable.toLocaleString('en-IN')}
           </div>
           <div className="mt-2 text-[11px] text-surface-400 font-mono">
@@ -205,21 +219,23 @@ export const GstTaxSummary = () => {
       </div>
 
       {/* Return Tabs */}
-      <div className="flex border-b border-surface-800 text-xs font-semibold gap-1">
+      <div className="flex border-b border-surface-800 text-xs font-semibold gap-1 overflow-x-auto">
         <button
+          id="tab-gst-gstr1"
           onClick={() => setActiveReturnTab('GSTR1')}
-          className={`pb-3 px-4 flex items-center gap-2 border-b-2 transition-colors ${
+          className={`pb-3 px-4 flex items-center gap-2 border-b-2 transition-colors whitespace-nowrap ${
             activeReturnTab === 'GSTR1'
               ? 'border-brand-500 text-brand-400'
               : 'border-transparent text-surface-400 hover:text-surface-200'
           }`}
         >
           <FileText className="w-4 h-4" />
-          GSTR-1 Outward Supplies (B2B & B2CS)
+          GSTR-1 Outward Supplies (B2B &amp; B2CS)
         </button>
         <button
+          id="tab-gst-hsn"
           onClick={() => setActiveReturnTab('HSN')}
-          className={`pb-3 px-4 flex items-center gap-2 border-b-2 transition-colors ${
+          className={`pb-3 px-4 flex items-center gap-2 border-b-2 transition-colors whitespace-nowrap ${
             activeReturnTab === 'HSN'
               ? 'border-brand-500 text-brand-400'
               : 'border-transparent text-surface-400 hover:text-surface-200'
@@ -229,8 +245,9 @@ export const GstTaxSummary = () => {
           Table 12: HSN Summary (HSN 711319)
         </button>
         <button
+          id="tab-gst-gstr3b"
           onClick={() => setActiveReturnTab('GSTR3B')}
-          className={`pb-3 px-4 flex items-center gap-2 border-b-2 transition-colors ${
+          className={`pb-3 px-4 flex items-center gap-2 border-b-2 transition-colors whitespace-nowrap ${
             activeReturnTab === 'GSTR3B'
               ? 'border-brand-500 text-brand-400'
               : 'border-transparent text-surface-400 hover:text-surface-200'
@@ -255,7 +272,7 @@ export const GstTaxSummary = () => {
             <table className="w-full text-left text-xs text-surface-300">
               <thead className="bg-surface-950/60 text-surface-400 uppercase tracking-wider text-[11px] border-b border-surface-800 font-sans">
                 <tr>
-                  <th className="px-4 py-3">Invoice # & Date</th>
+                  <th className="px-4 py-3">Invoice # &amp; Date</th>
                   <th className="px-4 py-3">GSTIN of Recipient</th>
                   <th className="px-4 py-3">Trade Name</th>
                   <th className="px-4 py-3 text-right">Taxable Value</th>
@@ -422,6 +439,179 @@ export const GstTaxSummary = () => {
           </div>
         </div>
       )}
+
+      {/* DEDICATED PURE-PAPER A4 PORTRAIT PRINTABLE CONTAINER */}
+      <div
+        id="printable-gst-summary"
+        className="hidden printable-document printable-a4 bg-white text-slate-950 p-8 font-sans text-xs space-y-4"
+      >
+        {/* Header */}
+        <div className="flex justify-between items-start border-b-2 border-slate-900 pb-4">
+          <div>
+            <h1 className="text-xl font-black uppercase tracking-tight text-slate-950">
+              {tenant?.businessName || 'A3 JEWELLERY & BULLION HOUSE'}
+            </h1>
+            <p className="text-[10px] text-slate-600 font-medium">
+              {tenant?.address || 'Showroom 4, Bullion Exchange Plaza, Zaveri Bazaar, Mumbai - 400002'}
+            </p>
+            <p className="text-[10px] text-slate-600 font-mono mt-0.5">
+              GSTIN: <strong>{tenant?.gstin || '27AAACA1234A1Z5'}</strong> &bull; State Code: 07 (Delhi)
+            </p>
+          </div>
+          <div className="text-right">
+            <div className="inline-block px-3 py-1 bg-slate-900 text-white font-bold text-xs uppercase tracking-wider rounded">
+              GST COMPUTATION &amp; RETURN STATEMENT
+            </div>
+            <div className="text-[11px] font-mono text-slate-700 mt-1">
+              Filing Period: <strong>{returnPeriod}</strong>
+            </div>
+            <div className="text-[10px] font-semibold text-slate-500">
+              Statutory Form: GSTR-1 &amp; GSTR-3B Tax Offset
+            </div>
+          </div>
+        </div>
+
+        {/* Executive Tax Liability Summary */}
+        <div className="grid grid-cols-4 gap-3 bg-slate-50 p-3 rounded border border-slate-200 text-center font-mono">
+          <div className="border-r border-slate-200">
+            <span className="text-[10px] font-sans font-semibold text-slate-500 uppercase block">Taxable Turnover</span>
+            <span className="text-sm font-bold text-slate-950">₹{outwardTaxableValue.toLocaleString('en-IN')}</span>
+          </div>
+          <div className="border-r border-slate-200">
+            <span className="text-[10px] font-sans font-semibold text-slate-500 uppercase block">Output 3% Tax (Due)</span>
+            <span className="text-sm font-bold text-rose-800">₹{totalGstOutward.toLocaleString('en-IN')}</span>
+          </div>
+          <div className="border-r border-slate-200">
+            <span className="text-[10px] font-sans font-semibold text-slate-500 uppercase block">Eligible ITC (2B)</span>
+            <span className="text-sm font-bold text-emerald-800">₹{totalItcAvailable.toLocaleString('en-IN')}</span>
+          </div>
+          <div>
+            <span className="text-[10px] font-sans font-semibold text-slate-500 uppercase block">Net Cash Tax Payable</span>
+            <span className="text-sm font-bold text-slate-950">₹{netCashTaxPayable.toLocaleString('en-IN')}</span>
+          </div>
+        </div>
+
+        {/* Section 1: Outward Supplies */}
+        <div className="space-y-1">
+          <h3 className="font-bold text-slate-900 uppercase text-[11px] tracking-wide border-b border-slate-300 pb-1">
+            1. GSTR-1 Outward Supplies Summary (B2B &amp; B2CS)
+          </h3>
+          <table className="w-full text-left text-[11px] border border-slate-300">
+            <thead className="bg-slate-100 border-b border-slate-300 font-bold uppercase text-slate-800">
+              <tr>
+                <th className="p-2 border-r border-slate-300">Supply Category</th>
+                <th className="p-2 border-r border-slate-300">Recipient Details</th>
+                <th className="p-2 border-r border-slate-300 text-right">Taxable Value</th>
+                <th className="p-2 border-r border-slate-300 text-right">CGST (1.5%)</th>
+                <th className="p-2 border-r border-slate-300 text-right">SGST (1.5%)</th>
+                <th className="p-2 text-right">Total Invoice Value</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200 font-mono">
+              <tr>
+                <td className="p-2 border-r border-slate-300 font-sans font-medium">Table 4: Registered B2B</td>
+                <td className="p-2 border-r border-slate-300 font-sans">{b2bInvoices[0].buyerTradeName} ({b2bInvoices[0].buyerGstin})</td>
+                <td className="p-2 border-r border-slate-300 text-right">₹{b2bInvoices[0].taxableValue.toLocaleString('en-IN')}</td>
+                <td className="p-2 border-r border-slate-300 text-right">₹{b2bInvoices[0].cgst.toLocaleString('en-IN')}</td>
+                <td className="p-2 border-r border-slate-300 text-right">₹{b2bInvoices[0].sgst.toLocaleString('en-IN')}</td>
+                <td className="p-2 text-right font-bold">₹{b2bInvoices[0].invoiceValue.toLocaleString('en-IN')}</td>
+              </tr>
+              <tr>
+                <td className="p-2 border-r border-slate-300 font-sans font-medium">Table 7: Consumer B2CS</td>
+                <td className="p-2 border-r border-slate-300 font-sans">Retail Consumers (Aggregate: 28 Invoices)</td>
+                <td className="p-2 border-r border-slate-300 text-right">₹{b2csSummary.taxableValue.toLocaleString('en-IN')}</td>
+                <td className="p-2 border-r border-slate-300 text-right">₹{b2csSummary.cgst.toLocaleString('en-IN')}</td>
+                <td className="p-2 border-r border-slate-300 text-right">₹{b2csSummary.sgst.toLocaleString('en-IN')}</td>
+                <td className="p-2 text-right font-bold">₹{(b2csSummary.taxableValue + b2csSummary.totalGst).toLocaleString('en-IN')}</td>
+              </tr>
+            </tbody>
+            <tfoot className="bg-slate-100 font-bold border-t-2 border-slate-900 font-mono">
+              <tr>
+                <td colSpan="2" className="p-2 font-sans uppercase">Total Outward Turnover:</td>
+                <td className="p-2 text-right">₹{outwardTaxableValue.toLocaleString('en-IN')}</td>
+                <td className="p-2 text-right">₹{totalCgstOutward.toLocaleString('en-IN')}</td>
+                <td className="p-2 text-right">₹{totalSgstOutward.toLocaleString('en-IN')}</td>
+                <td className="p-2 text-right">₹{(outwardTaxableValue + totalGstOutward).toLocaleString('en-IN')}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        {/* Section 2: HSN Summary */}
+        <div className="space-y-1">
+          <h3 className="font-bold text-slate-900 uppercase text-[11px] tracking-wide border-b border-slate-300 pb-1">
+            2. Table 12 HSN-Wise Breakup of Precious Metal &amp; Jewellery
+          </h3>
+          <table className="w-full text-left text-[11px] border border-slate-300">
+            <thead className="bg-slate-100 border-b border-slate-300 font-bold uppercase text-slate-800">
+              <tr>
+                <th className="p-2 border-r border-slate-300">HSN Code</th>
+                <th className="p-2 border-r border-slate-300">Commodity Description</th>
+                <th className="p-2 border-r border-slate-300 text-right">Weight (Grams)</th>
+                <th className="p-2 border-r border-slate-300 text-right">Taxable Value</th>
+                <th className="p-2 border-r border-slate-300 text-center">Rate</th>
+                <th className="p-2 text-right">Total Tax (CGST+SGST)</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200 font-mono">
+              {hsnSummary.map(hsn => (
+                <tr key={hsn.hsnCode}>
+                  <td className="p-2 border-r border-slate-300 font-bold">{hsn.hsnCode}</td>
+                  <td className="p-2 border-r border-slate-300 font-sans">{hsn.description}</td>
+                  <td className="p-2 border-r border-slate-300 text-right font-bold">{hsn.totalQuantity.toFixed(3)} g</td>
+                  <td className="p-2 border-r border-slate-300 text-right">₹{hsn.taxableValue.toLocaleString('en-IN')}</td>
+                  <td className="p-2 border-r border-slate-300 text-center">{hsn.taxRate}</td>
+                  <td className="p-2 text-right font-bold">₹{hsn.totalTax.toLocaleString('en-IN')}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Section 3: GSTR-3B Tax Offset */}
+        <div className="space-y-1">
+          <h3 className="font-bold text-slate-900 uppercase text-[11px] tracking-wide border-b border-slate-300 pb-1">
+            3. GSTR-3B Tax Offset &amp; Discharge Summary (Section 49)
+          </h3>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="border border-slate-300 p-3 rounded bg-slate-50 space-y-1 font-mono text-[11px]">
+              <div className="font-bold font-sans uppercase text-slate-900 border-b border-slate-200 pb-1">Central Tax (CGST)</div>
+              <div className="flex justify-between"><span>Output Tax Due:</span><span>₹{totalCgstOutward.toLocaleString('en-IN')}</span></div>
+              <div className="flex justify-between text-emerald-800"><span>Less: Eligible ITC (GSTR-2B):</span><span>-₹{totalCgstItc.toLocaleString('en-IN')}</span></div>
+              <div className="border-t border-slate-300 pt-1 flex justify-between font-bold text-slate-950">
+                <span>Net Cash Tax Payable:</span>
+                <span>₹{(totalCgstOutward - totalCgstItc).toLocaleString('en-IN')}</span>
+              </div>
+            </div>
+
+            <div className="border border-slate-300 p-3 rounded bg-slate-50 space-y-1 font-mono text-[11px]">
+              <div className="font-bold font-sans uppercase text-slate-900 border-b border-slate-200 pb-1">State Tax (SGST)</div>
+              <div className="flex justify-between"><span>Output Tax Due:</span><span>₹{totalSgstOutward.toLocaleString('en-IN')}</span></div>
+              <div className="flex justify-between text-emerald-800"><span>Less: Eligible ITC (GSTR-2B):</span><span>-₹{totalSgstItc.toLocaleString('en-IN')}</span></div>
+              <div className="border-t border-slate-300 pt-1 flex justify-between font-bold text-slate-950">
+                <span>Net Cash Tax Payable:</span>
+                <span>₹{(totalSgstOutward - totalSgstItc).toLocaleString('en-IN')}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Verification and Signatures */}
+        <div className="grid grid-cols-2 gap-8 pt-8 border-t border-slate-200 text-center text-[10px]">
+          <div>
+            <div className="h-10 border-b border-dashed border-slate-400"></div>
+            <span className="font-bold text-slate-800 mt-1 block">Chartered Accountant / Tax Consultant</span>
+            <span className="text-[9px] text-slate-500">Membership / Practice No.</span>
+          </div>
+          <div>
+            <div className="h-10 border-b border-dashed border-slate-400"></div>
+            <span className="font-bold text-slate-800 mt-1 block">For {tenant?.businessName || 'A3 Jewellery'}</span>
+            <span className="text-[9px] text-slate-500">Authorised Signatory / Managing Partner</span>
+          </div>
+        </div>
+
+      </div>
+
     </div>
   );
 };
