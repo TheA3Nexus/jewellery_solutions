@@ -257,3 +257,102 @@
     height: 0 !important;
   }
 }
+
+// ==============================================================================
+// EXPERIMENTAL MATTE BLACK EMBOSSED STYLING (Dark Theme)
+// Tactile beveled edges, sculpted matte surfaces, debossed inputs, no glossy glare
+// ==============================================================================
+[data-theme="dark"] {
+  // 1. Embossed Sculpted Cards
+  .card-surface {
+    background-color: var(--surface-card);
+    border: 1px solid var(--border-subtle);
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.75), inset 1px 1px 0 rgba(255, 255, 255, 0.07), inset -1px -1px 0 rgba(0, 0, 0, 0.45);
+  }
+
+  .card-luxury {
+    background: var(--surface-card);
+    border: 1px solid var(--border-subtle);
+    box-shadow: 3px 6px 16px rgba(0, 0, 0, 0.85), inset 1px 1px 0 rgba(255, 255, 255, 0.09), inset -1px -1px 0 rgba(0, 0, 0, 0.55);
+  }
+
+  // 2. Raised Tactile Buttons
+  .btn-primary {
+    background-color: var(--gold-primary);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.65), inset 1px 1px 0 rgba(255, 255, 255, 0.22), inset -1px -1px 0 rgba(0, 0, 0, 0.35);
+
+    &:hover:not(:disabled) {
+      background-color: var(--gold-hover);
+      box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.75), inset 1px 1px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    &:active:not(:disabled) {
+      box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.85);
+      transform: translateY(1px);
+    }
+  }
+
+  .btn-secondary {
+    background-color: var(--surface-card);
+    border: 1px solid var(--border-medium);
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.55), -1px -1px 2px rgba(255, 255, 255, 0.04), inset 1px 1px 0 rgba(255, 255, 255, 0.06);
+
+    &:hover:not(:disabled) {
+      background-color: var(--surface-hover);
+      box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.7), inset 1px 1px 0 rgba(255, 255, 255, 0.09);
+    }
+
+    &:active:not(:disabled) {
+      box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.85);
+      transform: translateY(1px);
+    }
+  }
+
+  .btn-gold {
+    background: var(--gold-primary);
+    box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.65), inset 1px 1px 0 rgba(255, 255, 255, 0.25);
+
+    &:active:not(:disabled) {
+      box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.85);
+    }
+  }
+
+  // 3. Debossed Inset Form Inputs
+  .input-field,
+  .select-field {
+    background-color: var(--surface-subtle);
+    border: 1px solid var(--border-medium);
+    box-shadow: inset 1px 2px 4px rgba(0, 0, 0, 0.65), inset -1px -1px 1px rgba(255, 255, 255, 0.03);
+
+    &:focus {
+      background-color: var(--surface-card);
+      border-color: var(--border-focus);
+      box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border-focus);
+    }
+  }
+
+  // 4. Subtle Inset/Bevel for Badges
+  .badge-gold,
+  .badge-emerald,
+  .badge-ruby,
+  .badge-sapphire,
+  .badge-amber,
+  .badge-platinum {
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.08), 1px 1px 3px rgba(0, 0, 0, 0.4);
+  }
+
+  // 5. Header and Sidebar Beveling
+  header {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.75), inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  aside {
+    box-shadow: 3px 0 10px rgba(0, 0, 0, 0.75), inset -1px 0 0 rgba(255, 255, 255, 0.04);
+  }
+
+  // 6. Navigation item active state embossed feel
+  aside button.bg-brand-500 {
+    box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.65), inset 1px 1px 0 rgba(255, 255, 255, 0.25), inset -1px -1px 0 rgba(0, 0, 0, 0.35);
+  }
+}
