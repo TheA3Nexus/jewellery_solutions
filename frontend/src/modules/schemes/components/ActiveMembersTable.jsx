@@ -6,14 +6,17 @@ import {
   Coins, 
   Plus, 
   CreditCard,
-  Gift
+  Gift,
+  UserPlus,
+  Trophy
 } from 'lucide-react';
 
 export const ActiveMembersTable = ({ 
   members, 
   onOpenCreatePlan, 
+  onOpenEnrollMember,
   onOpenPassbook,
-  onQuickCollect
+  onOpenMaturity
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -36,11 +39,12 @@ export const ActiveMembersTable = ({
   return (
     <div className="card-surface space-y-4">
       {/* Top Controls */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 flex-wrap">
         <div className="relative flex-1 max-w-md">
           <Search className="w-4 h-4 text-surface-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
+            id="input-search-members"
             placeholder="Search by Member Name, Phone, Token No, or Scheme..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -48,13 +52,25 @@ export const ActiveMembersTable = ({
           />
         </div>
 
-        <button
-          onClick={onOpenCreatePlan}
-          className="btn-primary py-2 text-xs font-sans font-bold"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          <span>Create New Scheme Plan</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            id="btn-open-enroll-member"
+            onClick={onOpenEnrollMember}
+            className="btn-primary py-2 px-3 text-xs font-sans font-bold flex items-center gap-1.5 shadow-sm"
+          >
+            <UserPlus className="w-3.5 h-3.5" />
+            <span>Enroll New Member (नया खाता)</span>
+          </button>
+
+          <button
+            id="btn-open-create-plan"
+            onClick={onOpenCreatePlan}
+            className="btn-secondary py-2 px-3 text-xs font-sans font-medium flex items-center gap-1.5"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>New Scheme Plan</span>
+          </button>
+        </div>
       </div>
 
       {/* Members Table */}
@@ -76,13 +92,14 @@ export const ActiveMembersTable = ({
             {filteredMembers.length === 0 ? (
               <tr>
                 <td colSpan={8} className="p-8 text-center text-surface-500 font-sans text-xs">
-                  No scheme members enrolled yet.
+                  No scheme members found matching your search.
                 </td>
               </tr>
             ) : (
               filteredMembers.map((m) => {
                 const paidCount = (m.paidInstallments || []).length;
                 const totalPaid = paidCount * m.monthlyEmi;
+                const isMatured = paidCount >= m.tenureMonths;
 
                 return (
                   <tr key={m.id} className="hover:bg-surface-850/40 transition">
@@ -91,13 +108,20 @@ export const ActiveMembersTable = ({
                     </td>
 
                     <td className="p-2.5 font-sans">
-                      <div className="font-semibold text-surface-100">{m.customerName}</div>
+                      <div className="font-semibold text-surface-100 flex items-center gap-1.5">
+                        <span>{m.customerName}</span>
+                        {isMatured && (
+                          <span className="px-1.5 py-0.2 rounded text-[9px] bg-brand-500/20 text-brand-400 border border-brand-500/30 font-bold uppercase">
+                            Matured
+                          </span>
+                        )}
+                      </div>
                       <div className="text-[10px] text-surface-400 font-mono">{m.phone}</div>
                     </td>
 
                     <td className="p-2.5 font-sans">
                       <div className="text-surface-200 font-medium">{m.schemeName}</div>
-                      <div className="text-[10px] text-brand-400 font-mono">Gift: {m.joiningGift}</div>
+                      <div className="text-[10px] text-brand-400 font-mono">Gift: {m.joiningGift || '10g 999 Silver Coin'}</div>
                     </td>
 
                     <td className="p-2.5 text-right font-bold text-surface-100">
@@ -105,7 +129,11 @@ export const ActiveMembersTable = ({
                     </td>
 
                     <td className="p-2.5 text-center font-bold">
-                      <span className="px-2 py-0.5 rounded bg-surface-950 border border-surface-800 text-brand-300">
+                      <span className={`px-2 py-0.5 rounded border ${
+                        isMatured 
+                          ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' 
+                          : 'bg-surface-950 border-surface-800 text-brand-300'
+                      }`}>
                         {paidCount} / {m.tenureMonths} EMIs
                       </span>
                     </td>
@@ -120,6 +148,7 @@ export const ActiveMembersTable = ({
 
                     <td className="p-2.5 text-center space-x-1 font-sans">
                       <button
+                        id={`btn-passbook-${m.id}`}
                         onClick={() => onOpenPassbook(m)}
                         className="btn-secondary py-1 px-2.5 text-[10px]"
                         title="Open Digital Passbook"
@@ -127,6 +156,18 @@ export const ActiveMembersTable = ({
                         <BookOpen className="w-3 h-3 text-brand-400" />
                         <span>Passbook</span>
                       </button>
+
+                      {isMatured && (
+                        <button
+                          id={`btn-redeem-${m.id}`}
+                          onClick={() => onOpenMaturity(m)}
+                          className="btn-primary py-1 px-2 text-[10px] font-bold"
+                          title="Generate Maturity Certificate"
+                        >
+                          <Trophy className="w-3 h-3" />
+                          <span>Redeem</span>
+                        </button>
+                      )}
                     </td>
                   </tr>
                 );
@@ -140,11 +181,11 @@ export const ActiveMembersTable = ({
       <div className="p-3.5 rounded-xl bg-surface-950 border border-surface-800 flex flex-wrap items-center justify-between gap-4 font-mono text-xs">
         <div>
           <span className="text-surface-400">Total Enrolled Members: </span>
-          <strong className="text-surface-100">{members.length}</strong>
+          <strong id="stat-total-members" className="text-surface-100">{members.length}</strong>
         </div>
         <div>
           <span className="text-surface-400">Cumulative Deposits Collected: </span>
-          <strong className="text-emerald-400 font-bold text-sm">
+          <strong id="stat-total-deposits" className="text-emerald-400 font-bold text-sm">
             ₹{totalFundCollected.toLocaleString('en-IN')}
           </strong>
         </div>

@@ -10,7 +10,6 @@ import {
   Maximize2, 
   ShieldCheck,
   Building2,
-  Sparkles,
   RefreshCw
 } from 'lucide-react';
 

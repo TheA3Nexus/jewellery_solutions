@@ -53,7 +53,7 @@ export const ReceiveGoodsModal = ({ isOpen, onClose, onReceiveGoods, karigars })
               Receive Finished Jewellery &amp; Scrap
             </h3>
           </div>
-          <button onClick={onClose} className="text-surface-400 hover:text-surface-100 p-1">
+          <button data-testid="close-modal-btn" onClick={onClose} className="text-surface-400 hover:text-surface-100 p-1">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -78,7 +78,7 @@ export const ReceiveGoodsModal = ({ isOpen, onClose, onReceiveGoods, karigars })
               <input
                 type="text"
                 required
-                value={form.articleName}
+                id="input-receive-article-name" value={form.articleName}
                 onChange={(e) => setForm({ ...form, articleName: e.target.value })}
                 className="input-field font-sans"
               />
@@ -102,7 +102,7 @@ export const ReceiveGoodsModal = ({ isOpen, onClose, onReceiveGoods, karigars })
                 step="0.001"
                 required
                 placeholder="0.000"
-                value={form.grossWeight}
+                id="input-receive-gross-weight" value={form.grossWeight}
                 onChange={(e) => setForm({ ...form, grossWeight: e.target.value })}
                 className="input-field font-bold text-surface-100"
               />
@@ -113,7 +113,7 @@ export const ReceiveGoodsModal = ({ isOpen, onClose, onReceiveGoods, karigars })
               <input
                 type="number"
                 step="0.001"
-                value={form.returnScrapWeight}
+                id="input-receive-scrap-weight" value={form.returnScrapWeight}
                 onChange={(e) => setForm({ ...form, returnScrapWeight: e.target.value })}
                 className="input-field"
               />
@@ -138,7 +138,7 @@ export const ReceiveGoodsModal = ({ isOpen, onClose, onReceiveGoods, karigars })
                 <label className="text-[10px] text-surface-400 font-sans block">Making Charge (₹/Gram)</label>
                 <input
                   type="number"
-                  value={form.makingRatePerGram}
+                  id="input-receive-making-rate" value={form.makingRatePerGram}
                   onChange={(e) => setForm({ ...form, makingRatePerGram: e.target.value })}
                   className="input-field w-32 py-1 mt-0.5"
                 />
@@ -162,7 +162,7 @@ export const ReceiveGoodsModal = ({ isOpen, onClose, onReceiveGoods, karigars })
               Cancel
             </button>
             <button
-              type="submit"
+              id="btn-submit-receive-goods" type="submit"
               className="btn-primary flex-1 py-2 text-xs font-bold font-sans"
             >
               <Check className="w-4 h-4" />

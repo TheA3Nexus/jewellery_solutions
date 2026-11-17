@@ -4,6 +4,7 @@ import { ActiveLoansTable } from './components/ActiveLoansTable';
 import { NewLoanSanctionModal } from './components/NewLoanSanctionModal';
 import { LoanSettlementModal } from './components/LoanSettlementModal';
 import { PawnTicketFormGModal } from './components/PawnTicketFormGModal';
+import { GirviPartPaymentModal } from './components/GirviPartPaymentModal';
 import { AuctionRadar } from './components/AuctionRadar';
 import { RePledgeModal } from './components/RePledgeModal';
 import { 
@@ -19,6 +20,7 @@ import {
 const INITIAL_LOANS = [
   {
     id: 'LN-2026-1001',
+    packetNo: 'PKT-2026-1001',
     borrower: {
       name: 'Ashish Kumar Singh',
       phone: '+91 98200 44321',
@@ -49,6 +51,7 @@ const INITIAL_LOANS = [
   },
   {
     id: 'LN-2026-1002',
+    packetNo: 'PKT-2026-1002',
     borrower: {
       name: 'Rishi Patel',
       phone: '+91 98111 88990',
@@ -85,11 +88,12 @@ export const GirviWorkspace = () => {
     return saved ? JSON.parse(saved) : INITIAL_LOANS;
   });
 
-  const [activeSubcategory, setActiveSubcategory] = useState('ACTIVE_LOANS');
+  const [activeSubcategory, setActiveSubcategory] = useState('ACTIVE_LOANS'); // 'ACTIVE_LOANS' | 'AUCTION_RADAR' | 'RE_PLEDGE'
   const [isSanctionModalOpen, setIsSanctionModalOpen] = useState(false);
   const [isRePledgeModalOpen, setIsRePledgeModalOpen] = useState(false);
   const [activeSettlementLoan, setActiveSettlementLoan] = useState(null);
   const [activeFormGLoan, setActiveFormGLoan] = useState(null);
+  const [activePartPaymentLoan, setActivePartPaymentLoan] = useState(null);
 
   // Sync loans from GoDaddy MySQL backend on mount
   React.useEffect(() => {
@@ -97,15 +101,27 @@ export const GirviWorkspace = () => {
       .then(res => res.json())
       .then(json => {
         if (json.success && Array.isArray(json.data) && json.data.length > 0) {
-          const normalized = json.data.map(item => ({
+          const backendLoans = json.data.map(item => ({
             ...item,
             id: item.loanNo || item.id,
+            packetNo: item.packetNo || `PKT-${item.id?.slice(-4)}`,
             borrower: item.customer || { name: 'Customer' },
             interestRateMonthly: parseFloat(item.monthlyInterestRate || 1.5),
             principalAmount: parseFloat(item.principalAmount || 0),
             startDate: item.sanctionedAt
           }));
-          setLoans(normalized);
+          setLoans(prev => {
+            const map = new Map();
+            prev.forEach(l => map.set(l.id, l));
+            backendLoans.forEach(l => {
+              if (!map.has(l.id)) {
+                map.set(l.id, l);
+              }
+            });
+            const merged = Array.from(map.values());
+            localStorage.setItem('A3_GIRVI_LOANS', JSON.stringify(merged));
+            return merged;
+          });
         }
       })
       .catch(() => {});
@@ -149,10 +165,34 @@ export const GirviWorkspace = () => {
     } catch (e) {}
   };
 
-  const handleConfirmRelease = async ({ loanId, settlementAmount, paymentMode }) => {
+  const handlePartPaymentRecorded = (loanId, { interestPaid, principalPaid, receipt }) => {
+    setLoans(prev => {
+      const updated = prev.map(l => {
+        if (l.id === loanId) {
+          return {
+            ...l,
+            principalAmount: Math.max(0, l.principalAmount - principalPaid),
+            totalDepositedInterest: (l.totalDepositedInterest || 0) + interestPaid
+          };
+        }
+        return l;
+      });
+      localStorage.setItem('A3_GIRVI_LOANS', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const handleConfirmRelease = async ({ loanId, settlementAmount, paymentMode, releaseVoucherNo }) => {
     const updated = loans.map(l => 
       l.id === loanId 
-        ? { ...l, status: 'RELEASED', releasedAt: new Date().toISOString(), settlementAmount, paymentMode }
+        ? { 
+            ...l, 
+            status: 'RELEASED', 
+            releasedAt: new Date().toISOString(), 
+            settlementAmount, 
+            paymentMode,
+            releaseVoucherNo 
+          }
         : l
     );
     setLoans(updated);
@@ -163,11 +203,12 @@ export const GirviWorkspace = () => {
       await fetch(`http://localhost:5000/api/v1/girvi/loans/${loanId}/settle`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ paidInterest: settlementAmount - (loans.find(l => l.id === loanId)?.principalAmount || 0), paymentMode })
+        body: JSON.stringify({ 
+          paidInterest: settlementAmount - (loans.find(l => l.id === loanId)?.principalAmount || 0), 
+          paymentMode 
+        })
       });
     } catch (e) {}
-
-    alert(`Loan ${loanId} settled successfully! Ornament released from locker vault.`);
   };
 
   return (
@@ -177,15 +218,16 @@ export const GirviWorkspace = () => {
       <div className="flex flex-wrap items-center justify-between border-b border-surface-800 pb-2 gap-2">
         <div className="flex items-center gap-1 font-sans text-xs">
           {[
-            { id: 'ACTIVE_LOANS', label: 'Active Loan Portfolio', icon: Coins },
-            { id: 'AUCTION_RADAR', label: 'Default & Auction Radar', icon: Gavel },
-            { id: 'RE_PLEDGE', label: 'Bank Re-Pledge (Liquidity)', icon: Building2 }
+            { id: 'ACTIVE_LOANS', tabId: 'tab-girvi-active-loans', label: 'Active Loan Portfolio', icon: Coins },
+            { id: 'AUCTION_RADAR', tabId: 'tab-girvi-auction-radar', label: 'Default & Auction Radar', icon: Gavel },
+            { id: 'RE_PLEDGE', tabId: 'tab-girvi-re-pledge', label: 'Bank Re-Pledge (Liquidity)', icon: Building2 }
           ].map(tab => {
             const Icon = tab.icon;
             const isActive = activeSubcategory === tab.id;
             return (
               <button
                 key={tab.id}
+                id={tab.tabId}
                 onClick={() => setActiveSubcategory(tab.id)}
                 className={`px-3 py-1.5 rounded-lg flex items-center gap-2 font-medium transition ${
                   isActive
@@ -201,8 +243,9 @@ export const GirviWorkspace = () => {
         </div>
 
         <button
+          id="btn-top-new-girvi"
           onClick={() => setIsSanctionModalOpen(true)}
-          className="btn-primary py-1.5 px-3 text-xs font-sans font-bold"
+          className="btn-primary py-1.5 px-3 text-xs font-sans font-bold flex items-center gap-1.5 shadow-sm"
         >
           <Plus className="w-3.5 h-3.5" />
           <span>New Gold Loan</span>
@@ -216,6 +259,7 @@ export const GirviWorkspace = () => {
           onOpenSanctionModal={() => setIsSanctionModalOpen(true)}
           onOpenSettlement={(loan) => setActiveSettlementLoan(loan)}
           onOpenFormG={(loan) => setActiveFormGLoan(loan)}
+          onOpenPartPayment={(loan) => setActivePartPaymentLoan(loan)}
         />
       )}
 
@@ -231,22 +275,23 @@ export const GirviWorkspace = () => {
             <div>
               <h3 className="text-sm font-bold text-surface-100 uppercase tracking-wider flex items-center gap-2">
                 <Building2 className="w-4 h-4 text-brand-400" />
-                Bank Re-Pledge Portfolio (Institutional Liquidity)
+                <span>Bank Re-Pledge Portfolio (Institutional Liquidity)</span>
               </h3>
               <p className="text-xs text-surface-400">
                 Tracking pledged gold packets deposited with Commercial Banks/NBFCs at wholesale interest rates.
               </p>
             </div>
             <button
+              id="btn-open-repledge-modal"
               onClick={() => setIsRePledgeModalOpen(true)}
               className="btn-primary text-xs py-2 px-3 flex items-center gap-1.5"
             >
-              <Building2 className="w-3.5 h-3.5" /> Re-Pledge to Bank
+              <Building2 className="w-3.5 h-3.5" /> <span>Re-Pledge to Bank</span>
             </button>
           </div>
 
           <table className="w-full text-left text-xs text-surface-300">
-            <thead className="bg-surface-950 text-surface-400 uppercase tracking-wider text-[11px] border-b border-surface-800">
+            <thead className="bg-surface-950 text-surface-400 uppercase tracking-wider text-[11px] border-b border-surface-800 font-sans">
               <tr>
                 <th className="p-2.5">Bank / NBFC &amp; Loan A/c</th>
                 <th className="p-2.5 text-right">Gold Pledged</th>
@@ -258,7 +303,7 @@ export const GirviWorkspace = () => {
             </thead>
             <tbody className="divide-y divide-surface-800/60 font-mono">
               {rePledges.map((rpl) => (
-                <tr key={rpl.id} className="hover:bg-surface-800/40">
+                <tr key={rpl.id} id={`row-repledge-${rpl.id}`} className="hover:bg-surface-800/40">
                   <td className="p-2.5 font-sans">
                     <div className="font-semibold text-surface-100">{rpl.bankName}</div>
                     <div className="text-[11px] text-brand-400 font-mono">{rpl.bankLoanAccountNo}</div>
@@ -310,6 +355,16 @@ export const GirviWorkspace = () => {
         <PawnTicketFormGModal
           loan={activeFormGLoan}
           onClose={() => setActiveFormGLoan(null)}
+        />
+      )}
+
+      {/* Modal 4: Monthly Interest & Part-Payment Desk */}
+      {activePartPaymentLoan && (
+        <GirviPartPaymentModal
+          loan={activePartPaymentLoan}
+          isOpen={Boolean(activePartPaymentLoan)}
+          onClose={() => setActivePartPaymentLoan(null)}
+          onPaymentRecorded={handlePartPaymentRecorded}
         />
       )}
 

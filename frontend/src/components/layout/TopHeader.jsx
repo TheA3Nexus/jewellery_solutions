@@ -1,47 +1,19 @@
 import React, { useState } from 'react';
 import { useTenant } from '../../context/TenantContext';
 import { useHardware } from '../../context/HardwareContext';
-import { useTheme } from '../../context/ThemeContext';
 import { 
   Scale, 
   Printer, 
   Radio, 
   Edit3, 
-  UserCheck, 
   SlidersHorizontal,
   X,
-  Check,
-  Sun,
-  Moon,
-  CreditCard,
-  Boxes,
-  Layers,
-  Coins,
-  CalendarCheck,
-  Hammer,
-  BookOpen,
-  TrendingUp,
-  MessageSquare,
-  ShieldCheck,
-  CheckCircle2
+  CheckCircle2,
+  UserCheck
 } from 'lucide-react';
 
-const CATEGORIES = [
-  { id: 'POS', label: 'POS & Sales', icon: CreditCard },
-  { id: 'INVENTORY', label: 'Inventory & RFID', icon: Boxes },
-  { id: 'SHOWROOM', label: 'Showroom Lookbook', icon: Layers },
-  { id: 'GIRVI', label: 'Girvi / Gold Loan', icon: Coins },
-  { id: 'SCHEMES', label: 'Savings Schemes', icon: CalendarCheck },
-  { id: 'KARIGAR', label: 'Karigar Desk', icon: Hammer },
-  { id: 'UDHAAR', label: 'Customer Udhaar', icon: BookOpen },
-  { id: 'ACCOUNTS', label: 'Day Book & Accounts', icon: TrendingUp },
-  { id: 'CRM', label: 'WhatsApp CRM', icon: MessageSquare },
-  { id: 'SETTINGS', label: 'Settings', icon: SlidersHorizontal }
-];
-
-export const TopHeader = ({ activeCategory, setActiveCategory }) => {
+export const TopHeader = () => {
   const { tenant, currentUser, bullionRates, updateRates } = useTenant();
-  const { theme, toggleTheme } = useTheme();
 
   const { 
     scaleStatus, 
@@ -78,52 +50,97 @@ export const TopHeader = ({ activeCategory, setActiveCategory }) => {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-surface-card border-b border-surface-border shadow-sm">
-      {/* 1. Upper Utility Strip: Bullion Ticker & Peripheral Status */}
-      <div className="px-4 py-1.5 border-b border-surface-border/70 bg-surface-canvas/50 flex flex-wrap items-center justify-between gap-3 text-xs">
+    <header className="sticky top-0 z-40 bg-surface-card border-b border-surface-border shadow-xs shrink-0 select-none">
+      <div className="px-3.5 py-2 flex items-center justify-between gap-3 text-xs">
         
-        {/* Live Rates Ticker */}
-        <div className="flex items-center gap-3 overflow-x-auto no-scrollbar py-0.5 font-mono text-[11px]">
-          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-300 text-[10px] font-sans font-bold text-emerald-700 shrink-0">
+        {/* Left: Brand Identity, Showroom Credentials & GST */}
+        <div className="flex items-center gap-2.5 shrink-0">
+          {/* Showroom Logo Badge */}
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-white font-black text-xs shadow-xs ring-1 ring-brand-400/30 shrink-0">
+            A3
+          </div>
+
+          {/* Showroom Name, Branch, GST & HUID Active Badge */}
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <h1 className="font-bold text-xs tracking-wide text-surface-100 uppercase leading-none truncate max-w-[190px] sm:max-w-none">
+                {tenant?.name}
+              </h1>
+              <span className="text-[9px] px-1.5 py-0.2 rounded bg-surface-canvas text-surface-300 border border-surface-border font-mono font-semibold shrink-0">
+                HUID Active
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5 font-mono text-[10px] text-surface-400 mt-0.5">
+              <span className="truncate">{tenant?.branch}</span>
+              <span className="text-surface-600">&bull;</span>
+              <span className="text-surface-300 font-semibold shrink-0">GST: {tenant?.gstin}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Center: Live Bullion Rates 2x2 Grid */}
+        <div className="flex items-center gap-2 bg-surface-canvas/60 border border-surface-border rounded-lg px-2.5 py-1 shrink-0 shadow-2xs">
+          {/* Live Indicator Badge */}
+          <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-emerald-50 border border-emerald-300 text-[10px] font-sans font-bold text-emerald-700 shrink-0">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-            <span className="uppercase tracking-wider">Live Rates</span>
+            <span className="uppercase tracking-wider">Live</span>
           </div>
 
-          <div className="flex items-center gap-1.5">
-            <span className="text-surface-400 font-sans">24K:</span>
-            <strong className="text-brand-benchmark font-bold">₹{bullionRates.gold24k.toFixed(2)}/g</strong>
-          </div>
-          <span className="text-surface-700/60">&bull;</span>
+          {/* 2x2 Grid */}
+          <div className="grid grid-cols-2 gap-x-3.5 gap-y-0.5 font-mono text-[11px] leading-tight">
+            {/* Row 1, Col 1: 24K */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-surface-400 font-sans text-[10px] font-semibold">24K:</span>
+              <strong className="text-brand-benchmark font-bold">₹{Number(bullionRates.gold24k || 0).toFixed(2)}/g</strong>
+            </div>
 
-          <div className="flex items-center gap-1.5">
-            <span className="text-surface-400 font-sans">22K:</span>
-            <strong className="text-brand-accent font-bold">₹{bullionRates.gold22k.toFixed(2)}/g</strong>
-          </div>
-          <span className="text-surface-700/60">&bull;</span>
+            {/* Row 1, Col 2: 22K */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-surface-400 font-sans text-[10px] font-semibold">22K:</span>
+              <strong className="text-brand-accent font-bold">₹{Number(bullionRates.gold22k || 0).toFixed(2)}/g</strong>
+            </div>
 
-          <div className="flex items-center gap-1.5">
-            <span className="text-surface-400 font-sans">18K:</span>
-            <strong className="text-brand-accent font-semibold">₹{bullionRates.gold18k.toFixed(2)}/g</strong>
-          </div>
-          <span className="text-surface-700/60">&bull;</span>
+            {/* Row 2, Col 1: 18K */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-surface-400 font-sans text-[10px] font-semibold">18K:</span>
+              <strong className="text-brand-accent font-semibold">₹{Number(bullionRates.gold18k || 0).toFixed(2)}/g</strong>
+            </div>
 
-          <div className="flex items-center gap-1.5">
-            <span className="text-surface-400 font-sans">Silver:</span>
-            <strong className="text-surface-200 font-semibold">₹{bullionRates.silver.toFixed(2)}/g</strong>
+            {/* Row 2, Col 2: Silver */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-surface-400 font-sans text-[10px] font-semibold">Silver:</span>
+              <strong className="text-surface-200 font-semibold">₹{Number(bullionRates.silver || bullionRates.silver999 || 0).toFixed(2)}/g</strong>
+            </div>
           </div>
 
+          {/* Quick Edit Rate Button */}
           <button
             type="button"
-            onClick={() => setIsRateModalOpen(true)}
-            className="p-1 text-surface-400 hover:text-brand-accent hover:bg-surface-hover rounded-md transition cursor-pointer"
+            onClick={() => {
+              setTempRates({
+                gold24k: bullionRates.gold24k,
+                gold22k: bullionRates.gold22k,
+                gold18k: bullionRates.gold18k,
+                gold14k: bullionRates.gold14k,
+                silver: bullionRates.silver || bullionRates.silver999 || 229.90,
+              });
+              setIsRateModalOpen(true);
+            }}
+            className="p-1 text-surface-400 hover:text-brand-accent hover:bg-surface-hover rounded-md transition cursor-pointer shrink-0 ml-0.5"
             title="Modify Daily Rates & Premium"
           >
             <Edit3 className="w-3.5 h-3.5" />
           </button>
         </div>
 
-        {/* Hardware Status Strip & User Controls */}
-        <div className="flex items-center gap-2 font-mono text-xs">
+        {/* Right: Electronic Scale, Hardware Peripherals, Cashier & Theme */}
+        <div className="flex items-center gap-2 font-mono text-xs shrink-0">
+          {/* Statutory Compliance Indicator */}
+          <div className="hidden xl:flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-300 text-emerald-700 text-[10px] font-sans font-semibold">
+            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+            <span>Rule 114B Active</span>
+          </div>
+
           {/* Weighing Scale Pill */}
           <div 
             onClick={() => setIsScaleSimulatorOpen(true)}
@@ -155,91 +172,13 @@ export const TopHeader = ({ activeCategory, setActiveCategory }) => {
           </div>
 
           {/* Cashier Badge */}
-          <div className="flex items-center gap-1.5 pl-2 border-l border-surface-border text-[11px] text-surface-300 font-sans">
-            <UserCheck className="w-3.5 h-3.5 text-brand-accent" />
-            <span className="font-medium">{currentUser.name}</span>
-          </div>
-
-          {/* Theme Switcher */}
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="flex items-center gap-1.5 px-2.5 py-1 bg-surface-card hover:bg-surface-hover border border-surface-border rounded-lg text-[10px] text-surface-200 font-sans transition-all shadow-card cursor-pointer"
-            title={`Active Theme: ${theme === 'light' ? 'Boutique Light' : 'Velvet Dark'}. Click to toggle.`}
-          >
-            {theme === 'light' ? (
-              <>
-                <Sun className="w-3.5 h-3.5 text-brand-benchmark" />
-                <span className="font-semibold text-surface-100">Light</span>
-              </>
-            ) : (
-              <>
-                <Moon className="w-3.5 h-3.5 text-brand-accent" />
-                <span className="font-semibold text-surface-100">Dark</span>
-              </>
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* 2. Middle Brand Bar */}
-      <div className="px-5 py-2.5 flex items-center justify-between border-b border-surface-border/60 bg-surface-card">
-        {/* Brand Identity & Metadata */}
-        <div className="flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-white font-black text-base shadow-sm ring-1 ring-brand-400/30 shrink-0">
-            A3
-          </div>
-          <div>
-            <h1 className="font-bold text-base tracking-wide text-surface-100 uppercase font-sans leading-tight">
-              {tenant.name}
-            </h1>
-            <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] text-surface-400 whitespace-nowrap mt-0.5">
-              <span className="font-semibold text-surface-300">{tenant.branch}</span>
-              <span className="text-surface-700/60">&bull;</span>
-              <span className="px-1.5 py-0.2 rounded bg-surface-hover text-surface-200 border border-surface-border font-semibold">
-                GSTIN: {tenant.gstin}
-              </span>
-              <span className="text-surface-700/60">&bull;</span>
-              <span>BIS HUID Lic: {tenant.bisLicenseNo}</span>
-            </div>
+          <div className="hidden lg:flex items-center gap-1.5 px-2 py-1 bg-surface-canvas border border-surface-border rounded-lg text-[10px] text-surface-300">
+            <UserCheck className="w-3.5 h-3.5 text-brand-accent shrink-0" />
+            <span className="font-semibold text-surface-200 truncate max-w-[90px]">{currentUser?.name}</span>
+            <span className="text-surface-500 font-mono text-[9px]">(C01)</span>
           </div>
         </div>
 
-        {/* Showroom Safeguards & Status Badges */}
-        <div className="hidden lg:flex items-center gap-3 font-mono text-xs">
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-300 text-emerald-700 text-[11px] font-sans font-semibold">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Sec 269ST &amp; Rule 114B Enforced</span>
-          </div>
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-hover border border-surface-border text-surface-300 text-[11px] font-sans">
-            <ShieldCheck className="w-3.5 h-3.5 text-brand-accent" />
-            <span>BIS Hallmarking Verified</span>
-          </div>
-        </div>
-      </div>
-
-      {/* 3. Lower Dedicated Workspace Navigation Line (Full-width, zero horizontal scrollbar) */}
-      <div className="px-4 py-1.5 bg-surface-card border-b border-surface-border/80">
-        <nav className="flex items-center gap-1.5 overflow-x-auto no-scrollbar justify-start xl:justify-between w-full py-0.5">
-          {CATEGORIES.map((cat) => {
-            const Icon = cat.icon;
-            const isActive = activeCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap shrink-0 transition-all cursor-pointer ${
-                  isActive
-                    ? 'bg-brand-500 text-white font-bold shadow-sm'
-                    : 'text-surface-400 hover:text-surface-100 hover:bg-surface-hover font-medium'
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5 shrink-0" />
-                <span>{cat.label}</span>
-              </button>
-            );
-          })}
-        </nav>
       </div>
 
       {/* Daily Rates Modal */}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTenant } from '../../../context/TenantContext';
 import { useHardware } from '../../../context/HardwareContext';
+import { printThermal } from '../../../utils/printService';
 import { 
   Tag, 
   Printer, 
@@ -123,7 +124,7 @@ export const TagStudioZpl = ({ initialItem }) => {
 
             {/* Simulated Physical Jewelry Dumbbell Label */}
             <div className="p-6 bg-slate-900 rounded-lg flex items-center justify-center overflow-x-auto min-h-[180px]">
-              <div className="flex items-center shadow-2xl">
+              <div id="printable-jewellery-tag" className="printable-document printable-thermal flex items-center shadow-2xl bg-white text-black p-1 rounded">
                 
                 {/* Left Tag Wing (Printed Data) */}
                 <div className="w-56 h-24 bg-white text-black p-2.5 rounded-l-md font-mono text-[10px] flex flex-col justify-between border-r border-dashed border-slate-300">
@@ -175,7 +176,17 @@ export const TagStudioZpl = ({ initialItem }) => {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-2.5">
+          <div className="flex flex-wrap gap-2.5">
+            <button
+              id="btn-print-browser-tag"
+              type="button"
+              onClick={() => printThermal('printable-jewellery-tag', `Tag_${selectedItem.barcode || selectedItem.id}`)}
+              className="btn-primary py-2.5 px-3 text-xs font-sans font-bold flex items-center gap-1.5"
+            >
+              <Printer className="w-4 h-4" />
+              <span>Print Tag Slip (Thermal / Windows)</span>
+            </button>
+
             <button
               type="button"
               onClick={handleDirectPrint}

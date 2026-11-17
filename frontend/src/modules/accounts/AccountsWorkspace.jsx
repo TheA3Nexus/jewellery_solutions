@@ -22,6 +22,7 @@ export const AccountsWorkspace = () => {
       {/* Subcategory Level 2 Tab Navigation */}
       <div className="flex border-b border-surface-800 text-xs font-semibold gap-1 overflow-x-auto">
         <button
+          id="tab-rojnamcha"
           onClick={() => setActiveSubTab('ROJNAMCHA')}
           className={`pb-3 px-4 flex items-center gap-2 border-b-2 transition-colors whitespace-nowrap ${
             activeSubTab === 'ROJNAMCHA'
@@ -33,6 +34,7 @@ export const AccountsWorkspace = () => {
           Daily Rojnamcha &amp; Cash Counter
         </button>
         <button
+          id="tab-profit-loss"
           onClick={() => setActiveSubTab('PROFIT_LOSS')}
           className={`pb-3 px-4 flex items-center gap-2 border-b-2 transition-colors whitespace-nowrap ${
             activeSubTab === 'PROFIT_LOSS'
@@ -44,6 +46,7 @@ export const AccountsWorkspace = () => {
           Item-by-Item Profit &amp; Loss
         </button>
         <button
+          id="tab-gst-radar"
           onClick={() => setActiveSubTab('GST_RADAR')}
           className={`pb-3 px-4 flex items-center gap-2 border-b-2 transition-colors whitespace-nowrap ${
             activeSubTab === 'GST_RADAR'
@@ -55,6 +58,7 @@ export const AccountsWorkspace = () => {
           GST Returns (GSTR-1, 3B, HSN)
         </button>
         <button
+          id="tab-statements"
           onClick={() => setActiveSubTab('STATEMENTS')}
           className={`pb-3 px-4 flex items-center gap-2 border-b-2 transition-colors whitespace-nowrap ${
             activeSubTab === 'STATEMENTS'

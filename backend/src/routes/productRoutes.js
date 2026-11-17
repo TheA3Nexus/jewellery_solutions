@@ -81,6 +81,20 @@ router.get('/', async (req, res) => {
   }
 });
 
+// POST /api/v1/products/reset-stock - Reset all inventory items to IN_STOCK for testing & demo
+router.post('/reset-stock', async (req, res) => {
+  try {
+    const result = await prisma.product.updateMany({
+      where: { tenantId: req.tenantId },
+      data: { status: 'IN_STOCK' }
+    });
+    res.json({ success: true, message: 'All inventory products reset to IN_STOCK', count: result.count });
+  } catch (error) {
+    console.error('[PRODUCT RESET ERROR]', error);
+    res.status(500).json({ success: false, message: 'Failed to reset product stock', error: error.message });
+  }
+});
+
 // GET /api/v1/products/:identifier - Find by ID, Barcode, RFID, or HUID
 router.get('/:identifier', async (req, res) => {
   try {

@@ -49,7 +49,7 @@ export const IssueMetalModal = ({ isOpen, onClose, onIssueMetal, karigars }) => 
               Issue Pure Metal to Artisan (Karigar Javak)
             </h3>
           </div>
-          <button onClick={onClose} className="text-surface-400 hover:text-surface-100 p-1">
+          <button data-testid="close-modal-btn" onClick={onClose} className="text-surface-400 hover:text-surface-100 p-1">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -59,7 +59,7 @@ export const IssueMetalModal = ({ isOpen, onClose, onIssueMetal, karigars }) => 
             <div>
               <label className="text-[10px] text-surface-400 font-sans block mb-1">Select Karigar *</label>
               <select
-                value={form.karigarId}
+                id="select-karigar-issue" value={form.karigarId}
                 onChange={(e) => setForm({ ...form, karigarId: e.target.value })}
                 className="select-field font-sans text-xs"
               >
@@ -88,7 +88,7 @@ export const IssueMetalModal = ({ isOpen, onClose, onIssueMetal, karigars }) => 
             <input
               type="text"
               required
-              value={form.workOrderDesc}
+              id="input-work-order-desc" value={form.workOrderDesc}
               onChange={(e) => setForm({ ...form, workOrderDesc: e.target.value })}
               className="input-field font-sans"
             />
@@ -111,7 +111,7 @@ export const IssueMetalModal = ({ isOpen, onClose, onIssueMetal, karigars }) => 
                 step="0.001"
                 required
                 placeholder="0.000"
-                value={form.weightGrams}
+                id="input-issue-weight" value={form.weightGrams}
                 onChange={(e) => setForm({ ...form, weightGrams: e.target.value })}
                 className="input-field font-bold text-surface-100"
               />
@@ -138,7 +138,7 @@ export const IssueMetalModal = ({ isOpen, onClose, onIssueMetal, karigars }) => 
               Cancel
             </button>
             <button
-              type="submit"
+              id="btn-submit-issue-metal" type="submit"
               className="btn-primary flex-1 py-2 text-xs font-bold font-sans"
             >
               <Check className="w-4 h-4" />
