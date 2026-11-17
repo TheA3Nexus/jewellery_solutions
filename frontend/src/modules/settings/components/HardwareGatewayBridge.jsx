@@ -31,10 +31,10 @@ export const HardwareGatewayBridge = () => {
 
   // Printer Configuration
   const [printerConfig, setPrinterConfig] = useState({
-    connectionType: 'RAW_TCP', // RAW_TCP or WINDOWS_SPOOLER
+    connectionType: 'RAW_TCP',
     ipAddress: '192.168.1.120',
     rawPort: '9100',
-    dpi: '203', // 203 or 300
+    dpi: '203',
     tagFormat: 'DUMBBELL_75x12',
     darkness: '22',
     speed: '3'
@@ -43,12 +43,11 @@ export const HardwareGatewayBridge = () => {
   // RFID Reader Configuration
   const [rfidConfig, setRfidConfig] = useState({
     readerType: 'DESKTOP_TRAY_PAD',
-    powerDbm: '24', // 15 to 30 dBm
+    powerDbm: '24',
     scanDurationMs: '1200',
-    frequencyBand: 'IN_865_867' // India 865-867 MHz
+    frequencyBand: 'IN_865_867'
   });
 
-  const [daemonStatus, setDaemonStatus] = useState('ONLINE'); // ONLINE, SIMULATING, DISCONNECTED
   const [testLog, setTestLog] = useState([
     '[GATEWAY] Daemon active at ws://127.0.0.1:9876 (PID: 4092)',
     '[SERIAL] COM3 opened at 9600-8-N-1 (Essae Teraoka Precision 4-decimal scale)',
@@ -63,7 +62,7 @@ export const HardwareGatewayBridge = () => {
       `[PING] Hardware bridge loopback test initiated at ${new Date().toLocaleTimeString()}...`,
       `[SCALE] Frame received: ST,GS,+${scaleWeight.toFixed(3)}g (STABLE)`,
       `[PRINTER] Zebra status: READY, HEAD_CLOSED, PAPER_OK`,
-      `[RFID] Carrier frequency calibrated. Ready for tray scan.`,
+      `[RFID] Carrier frequency calibrated (865-867 MHz). Ready for tray scan.`,
       ...prev
     ]);
   };
@@ -71,13 +70,13 @@ export const HardwareGatewayBridge = () => {
   const handleSave = (e) => {
     e.preventDefault();
     setIsSaved(true);
-    setTimeout(() => setIsSaved(false), 3000);
+    setTimeout(() => setIsSaved(false), 3500);
   };
 
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-surface-900 border border-surface-800 p-4 rounded-xl">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-surface-900 border border-surface-800 p-4 rounded-xl shadow-sm">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400">
             <Cpu className="w-5 h-5" />
@@ -88,6 +87,14 @@ export const HardwareGatewayBridge = () => {
               <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
                 <Activity className="w-3 h-3" /> Bridge Active (127.0.0.1:9876)
               </span>
+              {isSaved && (
+                <span 
+                  id="notice-hardware-saved"
+                  className="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1 animate-in fade-in"
+                >
+                  <CheckCircle2 className="w-3 h-3" /> Mappings Saved
+                </span>
+              )}
             </h2>
             <p className="text-xs text-surface-400">
               Low-latency RS232 electronic scale parser, direct Zebra ZPL tag printer, and UHF RFID tray drivers.
@@ -97,6 +104,7 @@ export const HardwareGatewayBridge = () => {
 
         <div className="flex items-center gap-2">
           <button
+            id="btn-diagnostic-ping"
             onClick={handleTestBridge}
             className="px-3.5 py-2 rounded-lg bg-surface-800 hover:bg-surface-700 text-surface-200 border border-surface-600 font-semibold text-xs flex items-center gap-1.5 transition-colors"
           >
@@ -104,6 +112,7 @@ export const HardwareGatewayBridge = () => {
             Diagnostic Ping
           </button>
           <button
+            id="btn-save-hardware-config"
             onClick={handleSave}
             className="px-4 py-2 rounded-lg bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition-colors shadow-sm shadow-brand-500/20"
           >
@@ -115,13 +124,16 @@ export const HardwareGatewayBridge = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Scale Configuration Card */}
-        <div className="bg-surface-900 border border-surface-700/60 rounded-xl p-5 space-y-4">
+        <div className="bg-surface-900 border border-surface-700/60 rounded-2xl p-5 space-y-4 shadow-sm">
           <div className="flex justify-between items-center border-b border-surface-800 pb-2">
             <h3 className="text-xs font-bold uppercase tracking-wider text-surface-200 flex items-center gap-2">
               <Scale className="w-4 h-4 text-brand-400" />
               Electronic Precision Scale
             </h3>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <span 
+              id="stat-scale-status"
+              className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+            >
               {scaleStatus}
             </span>
           </div>
@@ -130,9 +142,10 @@ export const HardwareGatewayBridge = () => {
             <div>
               <label className="block text-surface-400 font-medium mb-1">Serial COM Port</label>
               <select
+                id="select-scale-port"
                 value={scaleConfig.port}
                 onChange={(e) => setScaleConfig({ ...scaleConfig, port: e.target.value })}
-                className="w-full bg-surface-950 border border-surface-700 rounded-lg px-3 py-2 text-surface-100 font-mono font-bold focus:outline-none focus:border-brand-500"
+                className="w-full bg-surface-950 border border-surface-700 rounded-lg px-3 py-2 text-surface-100 font-mono font-bold focus:outline-none focus:border-brand-500 cursor-pointer"
               >
                 <option value="COM1">COM1 (Motherboard Serial)</option>
                 <option value="COM2">COM2</option>
@@ -146,9 +159,10 @@ export const HardwareGatewayBridge = () => {
               <div>
                 <label className="block text-surface-400 font-medium mb-1">Baud Rate</label>
                 <select
+                  id="select-scale-baud"
                   value={scaleConfig.baudRate}
                   onChange={(e) => setScaleConfig({ ...scaleConfig, baudRate: e.target.value })}
-                  className="w-full bg-surface-950 border border-surface-700 rounded-lg px-2 py-2 text-surface-100 font-mono focus:outline-none focus:border-brand-500"
+                  className="w-full bg-surface-950 border border-surface-700 rounded-lg px-2 py-2 text-surface-100 font-mono focus:outline-none focus:border-brand-500 cursor-pointer"
                 >
                   <option value="4800">4800</option>
                   <option value="9600">9600 (Standard)</option>
@@ -159,9 +173,10 @@ export const HardwareGatewayBridge = () => {
               <div>
                 <label className="block text-surface-400 font-medium mb-1">Scale Protocol</label>
                 <select
+                  id="select-scale-protocol"
                   value={scaleConfig.protocol}
                   onChange={(e) => setScaleConfig({ ...scaleConfig, protocol: e.target.value })}
-                  className="w-full bg-surface-950 border border-surface-700 rounded-lg px-2 py-2 text-surface-100 focus:outline-none focus:border-brand-500"
+                  className="w-full bg-surface-950 border border-surface-700 rounded-lg px-2 py-2 text-surface-100 focus:outline-none focus:border-brand-500 cursor-pointer"
                 >
                   <option value="ESSAE_STANDARD">Essae / Teraoka</option>
                   <option value="SARTORIUS_SBI">Sartorius / Gold SBI</option>
@@ -173,7 +188,7 @@ export const HardwareGatewayBridge = () => {
 
             <div className="p-3 bg-surface-950 rounded-xl border border-surface-800 flex justify-between items-center font-mono">
               <span className="text-surface-400 text-[11px] font-sans">Live Scale Feed:</span>
-              <span className="text-base font-bold text-amber-400">
+              <span id="stat-hardware-scale-weight" className="text-base font-bold text-amber-400">
                 {scaleWeight.toFixed(scaleConfig.decimalPlaces)} g
               </span>
             </div>
@@ -181,13 +196,13 @@ export const HardwareGatewayBridge = () => {
         </div>
 
         {/* Tag Printer Configuration Card */}
-        <div className="bg-surface-900 border border-surface-700/60 rounded-xl p-5 space-y-4">
+        <div className="bg-surface-900 border border-surface-700/60 rounded-2xl p-5 space-y-4 shadow-sm">
           <div className="flex justify-between items-center border-b border-surface-800 pb-2">
             <h3 className="text-xs font-bold uppercase tracking-wider text-surface-200 flex items-center gap-2">
               <Printer className="w-4 h-4 text-emerald-400" />
               Thermal Tag Printer (ZPL)
             </h3>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
               {printerStatus}
             </span>
           </div>
@@ -196,6 +211,7 @@ export const HardwareGatewayBridge = () => {
             <div>
               <label className="block text-surface-400 font-medium mb-1">Direct TCP/IP Address</label>
               <input
+                id="input-printer-ip"
                 type="text"
                 value={printerConfig.ipAddress}
                 onChange={(e) => setPrinterConfig({ ...printerConfig, ipAddress: e.target.value })}
@@ -205,8 +221,9 @@ export const HardwareGatewayBridge = () => {
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block text-surface-400 font-medium mb-1">Port</label>
+                <label className="block text-surface-400 font-medium mb-1">Raw Port</label>
                 <input
+                  id="input-printer-port"
                   type="text"
                   value={printerConfig.rawPort}
                   onChange={(e) => setPrinterConfig({ ...printerConfig, rawPort: e.target.value })}
@@ -218,7 +235,7 @@ export const HardwareGatewayBridge = () => {
                 <select
                   value={printerConfig.dpi}
                   onChange={(e) => setPrinterConfig({ ...printerConfig, dpi: e.target.value })}
-                  className="w-full bg-surface-950 border border-surface-700 rounded-lg px-2 py-2 text-surface-100 focus:outline-none focus:border-brand-500"
+                  className="w-full bg-surface-950 border border-surface-700 rounded-lg px-2 py-2 text-surface-100 focus:outline-none focus:border-brand-500 cursor-pointer"
                 >
                   <option value="203">203 DPI (Standard)</option>
                   <option value="300">300 DPI (High Res HUID)</option>
@@ -229,9 +246,10 @@ export const HardwareGatewayBridge = () => {
             <div>
               <label className="block text-surface-400 font-medium mb-1">Tag Format Preset</label>
               <select
+                id="select-tag-format"
                 value={printerConfig.tagFormat}
                 onChange={(e) => setPrinterConfig({ ...printerConfig, tagFormat: e.target.value })}
-                className="w-full bg-surface-950 border border-surface-700 rounded-lg px-3 py-2 text-surface-100 focus:outline-none focus:border-brand-500"
+                className="w-full bg-surface-950 border border-surface-700 rounded-lg px-3 py-2 text-surface-100 focus:outline-none focus:border-brand-500 cursor-pointer"
               >
                 <option value="DUMBBELL_75x12">Dumbbell Rat-Tail 75 x 12 mm</option>
                 <option value="RECT_68x14">Foldable Flap Tag 68 x 14 mm</option>
@@ -242,13 +260,13 @@ export const HardwareGatewayBridge = () => {
         </div>
 
         {/* RFID Reader Card */}
-        <div className="bg-surface-900 border border-surface-700/60 rounded-xl p-5 space-y-4">
+        <div className="bg-surface-900 border border-surface-700/60 rounded-2xl p-5 space-y-4 shadow-sm">
           <div className="flex justify-between items-center border-b border-surface-800 pb-2">
             <h3 className="text-xs font-bold uppercase tracking-wider text-surface-200 flex items-center gap-2">
               <Radio className="w-4 h-4 text-sky-400" />
               UHF RFID Smart Tray Driver
             </h3>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/10 text-sky-400 border border-sky-500/20">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/15 text-sky-400 border border-sky-500/30">
               {rfidStatus}
             </span>
           </div>
@@ -257,9 +275,10 @@ export const HardwareGatewayBridge = () => {
             <div>
               <label className="block text-surface-400 font-medium mb-1">Reader Hardware Type</label>
               <select
+                id="select-rfid-type"
                 value={rfidConfig.readerType}
                 onChange={(e) => setRfidConfig({ ...rfidConfig, readerType: e.target.value })}
-                className="w-full bg-surface-950 border border-surface-700 rounded-lg px-3 py-2 text-surface-100 focus:outline-none focus:border-brand-500"
+                className="w-full bg-surface-950 border border-surface-700 rounded-lg px-3 py-2 text-surface-100 focus:outline-none focus:border-brand-500 cursor-pointer"
               >
                 <option value="DESKTOP_TRAY_PAD">Near-Field Desktop Smart Pad (0.5m)</option>
                 <option value="PORTAL_ANTENNA">Vault Security Gate Portal (3.0m)</option>
@@ -271,6 +290,7 @@ export const HardwareGatewayBridge = () => {
               <div>
                 <label className="block text-surface-400 font-medium mb-1">RF Power (dBm)</label>
                 <input
+                  id="input-rfid-power"
                   type="number"
                   min="15"
                   max="30"
@@ -305,7 +325,7 @@ export const HardwareGatewayBridge = () => {
       </div>
 
       {/* Hardware Daemon Console Logs */}
-      <div className="bg-surface-900 border border-surface-700/60 rounded-xl p-4 shadow-sm">
+      <div className="bg-surface-900 border border-surface-700/60 rounded-2xl p-4 shadow-sm">
         <div className="flex justify-between items-center mb-3">
           <h4 className="text-xs font-bold uppercase tracking-wider text-surface-200 flex items-center gap-2">
             <Terminal className="w-4 h-4 text-brand-400" />
@@ -313,7 +333,10 @@ export const HardwareGatewayBridge = () => {
           </h4>
           <span className="text-[10px] font-mono text-surface-500">WebSocket 127.0.0.1:9876</span>
         </div>
-        <div className="bg-black/90 rounded-lg p-3 font-mono text-xs text-emerald-400/90 space-y-1 max-h-40 overflow-y-auto border border-surface-800">
+        <div 
+          id="console-hardware-logs"
+          className="bg-black rounded-xl p-3.5 font-mono text-xs text-emerald-400 space-y-1 max-h-40 overflow-y-auto border border-surface-800 shadow-inner"
+        >
           {testLog.map((log, idx) => (
             <div key={idx}>{log}</div>
           ))}

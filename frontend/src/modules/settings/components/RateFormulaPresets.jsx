@@ -23,13 +23,14 @@ export const RateFormulaPresets = () => {
     enabled: true,
     ipAddress: '192.168.1.185',
     port: '8080',
-    protocol: 'JSON_HTTP', // JSON_HTTP or RS485_HEX
+    protocol: 'JSON_HTTP', // JSON_HTTP, RS485_HEX, MQTT
     refreshIntervalSeconds: 60,
-    displayText: 'WELCOME TO A3 JEWELLERY &bull; TODAY GOLD 22K RATE: '
+    displayText: 'WELCOME TO A3 JEWELLERY • TODAY GOLD 22K 916 RATE: '
   });
 
   const [isSaved, setIsSaved] = useState(false);
   const [isBroadcasting, setIsBroadcasting] = useState(false);
+  const [ledBroadcastNotice, setLedBroadcastNotice] = useState(false);
 
   // Derived Rates
   const calc22k = Math.round(base24k * 0.9167 + parseFloat(premiumMargin || 0));
@@ -48,21 +49,22 @@ export const RateFormulaPresets = () => {
       silver925: calcSilver925
     });
     setIsSaved(true);
-    setTimeout(() => setIsSaved(false), 3000);
+    setTimeout(() => setIsSaved(false), 3500);
   };
 
   const handleTestBroadcast = () => {
     setIsBroadcasting(true);
     setTimeout(() => {
       setIsBroadcasting(false);
-      alert(`Successfully dispatched live rates to LED Screen at ${ledConfig.ipAddress}:${ledConfig.port}`);
-    }, 1200);
+      setLedBroadcastNotice(true);
+      setTimeout(() => setLedBroadcastNotice(false), 3500);
+    }, 800);
   };
 
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-surface-900 border border-surface-800 p-4 rounded-xl">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-surface-900 border border-surface-800 p-4 rounded-xl shadow-sm">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
             <Coins className="w-5 h-5" />
@@ -71,7 +73,10 @@ export const RateFormulaPresets = () => {
             <h2 className="text-base font-bold text-surface-100 flex items-center gap-2">
               Bullion Rate Derivation &amp; LED Board Broadcaster
               {isSaved && (
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
+                <span 
+                  id="notice-rates-updated"
+                  className="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1 animate-in fade-in"
+                >
                   <CheckCircle2 className="w-3 h-3" /> Rates Updated
                 </span>
               )}
@@ -83,8 +88,9 @@ export const RateFormulaPresets = () => {
         </div>
 
         <button
+          id="btn-apply-rates"
           onClick={handleApplyRates}
-          className="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition-colors shadow-sm shadow-amber-500/20"
+          className="px-4 py-2 rounded-lg bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition-colors shadow-sm shadow-brand-500/20"
         >
           <Save className="w-4 h-4" />
           Apply &amp; Broadcast New Rates
@@ -93,7 +99,7 @@ export const RateFormulaPresets = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left: Base Rates & Formula Engine */}
-        <div className="bg-surface-900 border border-surface-700/60 rounded-xl p-5 space-y-4">
+        <div className="bg-surface-900 border border-surface-700/60 rounded-2xl p-5 space-y-4 shadow-sm">
           <h3 className="text-xs font-bold uppercase tracking-wider text-surface-200 flex items-center gap-2 border-b border-surface-800 pb-2">
             <TrendingUp className="w-4 h-4 text-amber-400" />
             Base Input &amp; Derivation Formula
@@ -108,14 +114,15 @@ export const RateFormulaPresets = () => {
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-500 font-mono">₹</span>
                   <input
+                    id="input-base-24k"
                     type="number"
                     step="0.01"
                     value={base24k}
                     onChange={(e) => setBase24k(parseFloat(e.target.value) || 0)}
-                    className="w-full bg-surface-950 border border-surface-700 rounded-lg pl-7 pr-3 py-2 text-surface-100 font-mono font-bold focus:outline-none focus:border-amber-500"
+                    className="w-full bg-surface-950 border border-surface-700 rounded-lg pl-7 pr-3 py-2 text-amber-400 font-mono font-bold focus:outline-none focus:border-amber-500"
                   />
                 </div>
-                <span className="text-[10px] text-surface-500 mt-1 block">
+                <span className="text-[10px] text-surface-500 mt-1 block font-mono">
                   ₹{(base24k * 10).toLocaleString('en-IN')} per 10 grams (1 Tola)
                 </span>
               </div>
@@ -127,14 +134,15 @@ export const RateFormulaPresets = () => {
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-500 font-mono">₹</span>
                   <input
+                    id="input-base-silver"
                     type="number"
                     step="0.01"
                     value={baseSilver}
                     onChange={(e) => setBaseSilver(parseFloat(e.target.value) || 0)}
-                    className="w-full bg-surface-950 border border-surface-700 rounded-lg pl-7 pr-3 py-2 text-surface-100 font-mono font-bold focus:outline-none focus:border-amber-500"
+                    className="w-full bg-surface-950 border border-surface-700 rounded-lg pl-7 pr-3 py-2 text-slate-200 font-mono font-bold focus:outline-none focus:border-amber-500"
                   />
                 </div>
-                <span className="text-[10px] text-surface-500 mt-1 block">
+                <span className="text-[10px] text-surface-500 mt-1 block font-mono">
                   ₹{(baseSilver * 1000).toLocaleString('en-IN')} per 1 Kilogram
                 </span>
               </div>
@@ -145,6 +153,7 @@ export const RateFormulaPresets = () => {
                 Showroom Retail Premium Margin on 22K (₹ / Gram)
               </label>
               <input
+                id="input-premium-margin"
                 type="number"
                 value={premiumMargin}
                 onChange={(e) => setPremiumMargin(e.target.value)}
@@ -154,26 +163,34 @@ export const RateFormulaPresets = () => {
             </div>
 
             {/* Formula Preview Grid */}
-            <div className="bg-surface-950 rounded-xl p-3 border border-surface-800 space-y-2">
+            <div className="bg-surface-950 rounded-xl p-3.5 border border-surface-800 space-y-2">
               <span className="text-[11px] font-semibold text-surface-400 uppercase tracking-wider block">
                 Calculated Showroom Purity Rates Preview
               </span>
               <div className="grid grid-cols-2 gap-2 font-mono text-xs">
-                <div className="p-2 bg-surface-900 rounded border border-surface-800 flex justify-between">
+                <div className="p-2.5 bg-surface-900 rounded-lg border border-surface-800 flex justify-between items-center">
                   <span className="text-surface-400">22K (91.6%):</span>
-                  <span className="font-bold text-amber-400">₹{calc22k} /g</span>
+                  <span id="stat-derived-22k" className="font-bold text-amber-400 text-sm">
+                    ₹{calc22k} /g
+                  </span>
                 </div>
-                <div className="p-2 bg-surface-900 rounded border border-surface-800 flex justify-between">
+                <div className="p-2.5 bg-surface-900 rounded-lg border border-surface-800 flex justify-between items-center">
                   <span className="text-surface-400">18K (75.0%):</span>
-                  <span className="font-bold text-surface-200">₹{calc18k} /g</span>
+                  <span id="stat-derived-18k" className="font-bold text-surface-100 text-sm">
+                    ₹{calc18k} /g
+                  </span>
                 </div>
-                <div className="p-2 bg-surface-900 rounded border border-surface-800 flex justify-between">
+                <div className="p-2.5 bg-surface-900 rounded-lg border border-surface-800 flex justify-between items-center">
                   <span className="text-surface-400">14K (58.5%):</span>
-                  <span className="font-bold text-surface-200">₹{calc14k} /g</span>
+                  <span id="stat-derived-14k" className="font-bold text-surface-100 text-sm">
+                    ₹{calc14k} /g
+                  </span>
                 </div>
-                <div className="p-2 bg-surface-900 rounded border border-surface-800 flex justify-between">
+                <div className="p-2.5 bg-surface-900 rounded-lg border border-surface-800 flex justify-between items-center">
                   <span className="text-surface-400">925 Sterling:</span>
-                  <span className="font-bold text-slate-300">₹{calcSilver925} /g</span>
+                  <span id="stat-derived-silver925" className="font-bold text-slate-300 text-sm">
+                    ₹{calcSilver925} /g
+                  </span>
                 </div>
               </div>
             </div>
@@ -181,7 +198,7 @@ export const RateFormulaPresets = () => {
         </div>
 
         {/* Right: Digital LED Display Board Integration */}
-        <div className="bg-surface-900 border border-surface-700/60 rounded-xl p-5 space-y-4">
+        <div className="bg-surface-900 border border-surface-700/60 rounded-2xl p-5 space-y-4 shadow-sm">
           <div className="flex justify-between items-center border-b border-surface-800 pb-2">
             <h3 className="text-xs font-bold uppercase tracking-wider text-surface-200 flex items-center gap-2">
               <Tv className="w-4 h-4 text-sky-400" />
@@ -197,6 +214,7 @@ export const RateFormulaPresets = () => {
               <div>
                 <label className="block text-surface-400 font-medium mb-1">LED Controller IP Address</label>
                 <input
+                  id="input-led-ip"
                   type="text"
                   value={ledConfig.ipAddress}
                   onChange={(e) => setLedConfig({ ...ledConfig, ipAddress: e.target.value })}
@@ -206,6 +224,7 @@ export const RateFormulaPresets = () => {
               <div>
                 <label className="block text-surface-400 font-medium mb-1">Port</label>
                 <input
+                  id="input-led-port"
                   type="text"
                   value={ledConfig.port}
                   onChange={(e) => setLedConfig({ ...ledConfig, port: e.target.value })}
@@ -217,9 +236,10 @@ export const RateFormulaPresets = () => {
             <div>
               <label className="block text-surface-400 font-medium mb-1">Communication Protocol</label>
               <select
+                id="select-led-protocol"
                 value={ledConfig.protocol}
                 onChange={(e) => setLedConfig({ ...ledConfig, protocol: e.target.value })}
-                className="w-full bg-surface-950 border border-surface-700 rounded-lg px-3 py-2 text-surface-100 focus:outline-none focus:border-brand-500"
+                className="w-full bg-surface-950 border border-surface-700 rounded-lg px-3 py-2 text-surface-100 focus:outline-none focus:border-brand-500 cursor-pointer"
               >
                 <option value="JSON_HTTP">HTTP REST API (JSON Payload)</option>
                 <option value="RS485_HEX">RS485 Serial HEX Broadcast</option>
@@ -230,6 +250,7 @@ export const RateFormulaPresets = () => {
             <div>
               <label className="block text-surface-400 font-medium mb-1">Scrolling Marquee Text</label>
               <input
+                id="input-led-ticker-text"
                 type="text"
                 value={ledConfig.displayText}
                 onChange={(e) => setLedConfig({ ...ledConfig, displayText: e.target.value })}
@@ -238,9 +259,9 @@ export const RateFormulaPresets = () => {
             </div>
 
             {/* LED Screen Live Preview */}
-            <div className="bg-black border-2 border-surface-800 rounded-xl p-3 font-mono text-center">
-              <div className="text-[10px] text-surface-600 mb-1">LED PHYSICAL PANEL SIMULATION</div>
-              <div className="text-amber-400 font-black tracking-widest text-sm animate-pulse">
+            <div className="bg-black border-2 border-surface-800 rounded-xl p-3.5 font-mono text-center shadow-inner">
+              <div className="text-[10px] text-surface-500 mb-1">LED PHYSICAL PANEL SIMULATION</div>
+              <div id="stat-led-ticker-preview" className="text-amber-400 font-black tracking-widest text-sm animate-pulse">
                 GOLD 24K: ₹{base24k} | GOLD 22K: ₹{calc22k} | SILVER: ₹{baseSilver}
               </div>
               <div className="text-[11px] text-emerald-400 font-bold mt-1">
@@ -249,14 +270,21 @@ export const RateFormulaPresets = () => {
             </div>
 
             <button
+              id="btn-test-led-broadcast"
               type="button"
               onClick={handleTestBroadcast}
               disabled={isBroadcasting}
-              className="w-full py-2 bg-surface-800 hover:bg-surface-700 text-surface-200 border border-surface-600 rounded-lg font-semibold flex items-center justify-center gap-1.5 transition-colors"
+              className="w-full py-2 bg-surface-800 hover:bg-surface-700 text-surface-200 border border-surface-600 rounded-xl font-bold flex items-center justify-center gap-1.5 transition-colors shadow-sm"
             >
               <Wifi className="w-3.5 h-3.5 text-sky-400" />
-              {isBroadcasting ? 'Broadcasting...' : 'Test Send Packet to LED Controller'}
+              {isBroadcasting ? 'Broadcasting to LED...' : 'Test Send Packet to LED Controller'}
             </button>
+
+            {ledBroadcastNotice && (
+              <span id="notice-led-broadcast-success" className="text-emerald-400 font-semibold text-[11px] flex items-center justify-center gap-1 animate-in fade-in">
+                <CheckCircle2 className="w-3.5 h-3.5" /> Successfully dispatched live rates to LED Screen at {ledConfig.ipAddress}:{ledConfig.port}
+              </span>
+            )}
           </div>
         </div>
       </div>

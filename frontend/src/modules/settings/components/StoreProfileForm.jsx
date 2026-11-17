@@ -49,13 +49,13 @@ export const StoreProfileForm = () => {
     e.preventDefault();
     updateTenant(formData);
     setIsSaved(true);
-    setTimeout(() => setIsSaved(false), 3000);
+    setTimeout(() => setIsSaved(false), 3500);
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Top Banner */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-surface-900 border border-surface-800 p-4 rounded-xl">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-surface-900 border border-surface-800 p-4 rounded-xl shadow-sm">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-brand-400">
             <Building2 className="w-5 h-5" />
@@ -64,7 +64,10 @@ export const StoreProfileForm = () => {
             <h2 className="text-base font-bold text-surface-100 flex items-center gap-2">
               Store Profile &amp; Statutory Credentials
               {isSaved && (
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1 animate-in fade-in">
+                <span 
+                  id="notice-profile-saved"
+                  className="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1 animate-in fade-in"
+                >
                   <CheckCircle2 className="w-3 h-3" /> Saved Successfully
                 </span>
               )}
@@ -76,6 +79,7 @@ export const StoreProfileForm = () => {
         </div>
 
         <button
+          id="btn-save-store-profile"
           type="submit"
           className="px-4 py-2 rounded-lg bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition-colors shadow-sm shadow-brand-500/20"
         >
@@ -86,7 +90,7 @@ export const StoreProfileForm = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Section 1: Business Identity & Showroom Info */}
-        <div className="bg-surface-900 border border-surface-700/60 rounded-xl p-5 space-y-4">
+        <div className="bg-surface-900 border border-surface-700/60 rounded-2xl p-5 space-y-4 shadow-sm">
           <h3 className="text-xs font-bold uppercase tracking-wider text-surface-200 flex items-center gap-2 border-b border-surface-800 pb-2">
             <Building2 className="w-4 h-4 text-brand-400" />
             Showroom Identity &amp; Contact Details
@@ -98,12 +102,13 @@ export const StoreProfileForm = () => {
                 Display Showroom Name (Printed on Top of Invoice)
               </label>
               <input
+                id="input-profile-name"
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full bg-surface-950 border border-surface-700 rounded-lg px-3 py-2 text-surface-100 focus:outline-none focus:border-brand-500"
+                className="w-full bg-surface-950 border border-surface-700 rounded-lg px-3 py-2 text-surface-100 font-semibold focus:outline-none focus:border-brand-500"
               />
             </div>
 
@@ -112,6 +117,7 @@ export const StoreProfileForm = () => {
                 Legal Entity / Trade Name (Registered under GST)
               </label>
               <input
+                id="input-profile-tradename"
                 type="text"
                 name="tradeName"
                 value={formData.tradeName}
@@ -125,6 +131,7 @@ export const StoreProfileForm = () => {
               <div>
                 <label className="block text-surface-400 font-medium mb-1">Branch / Counter</label>
                 <input
+                  id="input-profile-branch"
                   type="text"
                   name="branch"
                   value={formData.branch}
@@ -135,6 +142,7 @@ export const StoreProfileForm = () => {
               <div>
                 <label className="block text-surface-400 font-medium mb-1">City / Region</label>
                 <input
+                  id="input-profile-city"
                   type="text"
                   name="city"
                   value={formData.city}
@@ -147,6 +155,7 @@ export const StoreProfileForm = () => {
             <div>
               <label className="block text-surface-400 font-medium mb-1">Physical Showroom Address</label>
               <textarea
+                id="input-profile-address"
                 name="address"
                 rows="2"
                 value={formData.address}
@@ -159,6 +168,7 @@ export const StoreProfileForm = () => {
               <div>
                 <label className="block text-surface-400 font-medium mb-1">Official Mobile / Phone</label>
                 <input
+                  id="input-profile-phone"
                   type="text"
                   name="phone"
                   value={formData.phone}
@@ -169,6 +179,7 @@ export const StoreProfileForm = () => {
               <div>
                 <label className="block text-surface-400 font-medium mb-1">Billing Email</label>
                 <input
+                  id="input-profile-email"
                   type="email"
                   name="email"
                   value={formData.email}
@@ -181,7 +192,7 @@ export const StoreProfileForm = () => {
         </div>
 
         {/* Section 2: Statutory Compliance Credentials */}
-        <div className="bg-surface-900 border border-surface-700/60 rounded-xl p-5 space-y-4">
+        <div className="bg-surface-900 border border-surface-700/60 rounded-2xl p-5 space-y-4 shadow-sm">
           <h3 className="text-xs font-bold uppercase tracking-wider text-surface-200 flex items-center gap-2 border-b border-surface-800 pb-2">
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
             Statutory &amp; BIS Regulatory Licenses
@@ -192,6 +203,7 @@ export const StoreProfileForm = () => {
               <div>
                 <label className="block text-surface-400 font-medium mb-1">GSTIN Number (15 Digits)</label>
                 <input
+                  id="input-profile-gstin"
                   type="text"
                   name="gstin"
                   value={formData.gstin}
@@ -203,6 +215,7 @@ export const StoreProfileForm = () => {
               <div>
                 <label className="block text-surface-400 font-medium mb-1">Income Tax PAN</label>
                 <input
+                  id="input-profile-pan"
                   type="text"
                   name="pan"
                   value={formData.pan}
@@ -218,12 +231,13 @@ export const StoreProfileForm = () => {
                 BIS Hallmarking License Number (Rule 46 Mandatory)
               </label>
               <input
+                id="input-profile-bis"
                 type="text"
                 name="bisLicenseNo"
                 value={formData.bisLicenseNo}
                 onChange={handleChange}
                 required
-                className="w-full bg-surface-950 border border-surface-700 rounded-lg px-3 py-2 text-surface-100 font-mono font-bold focus:outline-none focus:border-brand-500"
+                className="w-full bg-surface-950 border border-surface-700 rounded-lg px-3 py-2 text-amber-400 font-mono font-bold focus:outline-none focus:border-brand-500"
               />
             </div>
 
@@ -232,6 +246,7 @@ export const StoreProfileForm = () => {
                 Assaying &amp; Hallmarking Center (AHC) Mapping
               </label>
               <input
+                id="input-profile-assay"
                 type="text"
                 name="assayCenter"
                 value={formData.assayCenter}
@@ -245,6 +260,7 @@ export const StoreProfileForm = () => {
                 State Money Lending License (Pawn Broker Reg No)
               </label>
               <input
+                id="input-profile-moneylender"
                 type="text"
                 name="moneyLendingLicense"
                 value={formData.moneyLendingLicense}
@@ -256,7 +272,7 @@ export const StoreProfileForm = () => {
         </div>
 
         {/* Section 3: Bank Account & Dynamic UPI QR Settlement */}
-        <div className="md:col-span-2 bg-surface-900 border border-surface-700/60 rounded-xl p-5 space-y-4">
+        <div className="md:col-span-2 bg-surface-900 border border-surface-700/60 rounded-2xl p-5 space-y-4 shadow-sm">
           <h3 className="text-xs font-bold uppercase tracking-wider text-surface-200 flex items-center gap-2 border-b border-surface-800 pb-2">
             <CreditCard className="w-4 h-4 text-sky-400" />
             Bank Settlement Account &amp; Dynamic UPI QR Settings
@@ -266,6 +282,7 @@ export const StoreProfileForm = () => {
             <div>
               <label className="block text-surface-400 font-medium mb-1">Settlement Bank Name</label>
               <input
+                id="input-profile-bank"
                 type="text"
                 name="bankName"
                 value={formData.bankName}
@@ -277,6 +294,7 @@ export const StoreProfileForm = () => {
             <div>
               <label className="block text-surface-400 font-medium mb-1">Current Account Number</label>
               <input
+                id="input-profile-account"
                 type="text"
                 name="accountNumber"
                 value={formData.accountNumber}
@@ -288,6 +306,7 @@ export const StoreProfileForm = () => {
             <div>
               <label className="block text-surface-400 font-medium mb-1">IFSC Code</label>
               <input
+                id="input-profile-ifsc"
                 type="text"
                 name="ifscCode"
                 value={formData.ifscCode}
@@ -303,6 +322,7 @@ export const StoreProfileForm = () => {
               <div className="relative">
                 <QrCode className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-surface-500" />
                 <input
+                  id="input-profile-upi"
                   type="text"
                   name="upiVpa"
                   value={formData.upiVpa}

@@ -19,6 +19,7 @@ export const SettingsWorkspace = () => {
       {/* Subcategory Level 2 Tab Navigation */}
       <div className="flex border-b border-surface-800 text-xs font-semibold gap-1 overflow-x-auto">
         <button
+          id="btn-tab-settings-profile"
           onClick={() => setActiveSubTab('PROFILE')}
           className={`pb-3 px-4 flex items-center gap-2 border-b-2 transition-colors whitespace-nowrap ${
             activeSubTab === 'PROFILE'
@@ -30,6 +31,7 @@ export const SettingsWorkspace = () => {
           Store Profile &amp; Statutory Licenses
         </button>
         <button
+          id="btn-tab-settings-rates"
           onClick={() => setActiveSubTab('RATES')}
           className={`pb-3 px-4 flex items-center gap-2 border-b-2 transition-colors whitespace-nowrap ${
             activeSubTab === 'RATES'
@@ -41,6 +43,7 @@ export const SettingsWorkspace = () => {
           Bullion Rate Derivation &amp; LED Board
         </button>
         <button
+          id="btn-tab-settings-hardware"
           onClick={() => setActiveSubTab('HARDWARE')}
           className={`pb-3 px-4 flex items-center gap-2 border-b-2 transition-colors whitespace-nowrap ${
             activeSubTab === 'HARDWARE'
@@ -52,6 +55,7 @@ export const SettingsWorkspace = () => {
           Hardware Gateway Bridge (Scale, Zebra, RFID)
         </button>
         <button
+          id="btn-tab-settings-security"
           onClick={() => setActiveSubTab('SECURITY')}
           className={`pb-3 px-4 flex items-center gap-2 border-b-2 transition-colors whitespace-nowrap ${
             activeSubTab === 'SECURITY'
