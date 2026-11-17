@@ -53,23 +53,28 @@ export const RePledgeModal = ({ isOpen, onClose, onSaveRePledge }) => {
           <div className="flex items-center gap-2">
             <Building2 className="w-5 h-5 text-brand-400" />
             <div>
-              <h3 className="text-sm font-bold text-surface-100 uppercase tracking-wider">
-                Bank Re-Pledge Facility (Third-Party Working Capital)
+              <h3 className="text-sm font-bold text-surface-100 uppercase tracking-wider font-sans">
+                Bank Re-Pledge Facility (Institutional Liquidity)
               </h3>
               <p className="text-[11px] text-surface-400">
-                Pledge gold packets to Commercial Banks/NBFCs at wholesale rates to generate liquidity.
+                Pledge gold packets to Commercial Banks/NBFCs at wholesale rates to generate counter cash.
               </p>
             </div>
           </div>
-          <button onClick={onClose} className="p-1 rounded-lg text-surface-400 hover:text-surface-100 hover:bg-surface-800">
+          <button 
+            id="btn-close-repledge-modal"
+            onClick={onClose} 
+            className="p-1 rounded-lg text-surface-400 hover:text-surface-100 hover:bg-surface-800 transition-colors"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+        <form onSubmit={handleSubmit} className="space-y-4 text-xs font-sans">
           <div>
             <label className="block text-surface-400 font-medium mb-1">Commercial Bank / NBFC Institution</label>
             <input
+              id="input-repledge-bank-name"
               type="text"
               value={bankName}
               onChange={(e) => setBankName(e.target.value)}
@@ -82,6 +87,7 @@ export const RePledgeModal = ({ isOpen, onClose, onSaveRePledge }) => {
             <div>
               <label className="block text-surface-400 font-medium mb-1">Bank Loan Account Number</label>
               <input
+                id="input-repledge-bank-loan-no"
                 type="text"
                 value={bankLoanAccountNo}
                 onChange={(e) => setBankLoanAccountNo(e.target.value)}
@@ -94,6 +100,7 @@ export const RePledgeModal = ({ isOpen, onClose, onSaveRePledge }) => {
               <label className="block text-surface-400 font-medium mb-1">Total Gold Weight Pledged (Grams)</label>
               <div className="relative">
                 <input
+                  id="input-repledge-gold-wt"
                   type="number"
                   step="0.001"
                   value={metalGramsPledged}
@@ -110,6 +117,7 @@ export const RePledgeModal = ({ isOpen, onClose, onSaveRePledge }) => {
             <div>
               <label className="block text-surface-400 font-medium mb-1">Sanctioned Capital (₹)</label>
               <input
+                id="input-repledge-amount"
                 type="number"
                 value={sanctionedAmount}
                 onChange={(e) => setSanctionedAmount(e.target.value)}
@@ -122,6 +130,7 @@ export const RePledgeModal = ({ isOpen, onClose, onSaveRePledge }) => {
               <label className="block text-surface-400 font-medium mb-1">Bank Interest Rate (% p.a.)</label>
               <div className="relative">
                 <input
+                  id="input-repledge-roi"
                   type="number"
                   step="0.05"
                   value={bankInterestRate}
@@ -135,6 +144,7 @@ export const RePledgeModal = ({ isOpen, onClose, onSaveRePledge }) => {
             <div>
               <label className="block text-surface-400 font-medium mb-1">Tenure (Months)</label>
               <input
+                id="input-repledge-tenure"
                 type="number"
                 value={tenureMonths}
                 onChange={(e) => setTenureMonths(e.target.value)}
@@ -146,6 +156,7 @@ export const RePledgeModal = ({ isOpen, onClose, onSaveRePledge }) => {
           <div>
             <label className="block text-surface-400 font-medium mb-1">Narration &amp; Packet Reference</label>
             <textarea
+              id="input-repledge-remarks"
               rows="2"
               value={remarks}
               onChange={(e) => setRemarks(e.target.value)}
@@ -163,10 +174,11 @@ export const RePledgeModal = ({ isOpen, onClose, onSaveRePledge }) => {
               Cancel
             </button>
             <button
+              id="btn-submit-repledge"
               type="submit"
               className="flex-1 py-2 bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-xs rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-sm"
             >
-              <CheckCircle2 className="w-4 h-4" /> Save Bank Re-Pledge
+              <CheckCircle2 className="w-4 h-4" /> <span>Save Bank Re-Pledge</span>
             </button>
           </div>
         </form>

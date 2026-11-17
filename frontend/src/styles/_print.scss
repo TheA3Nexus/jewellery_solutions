@@ -119,6 +119,10 @@
   #printable-thermal-receipt,
   #printable-urd-slip,
   #printable-pawn-ticket,
+  #printable-gold-release-slip,
+  #printable-girvi-interest-slip,
+  #printable-auction-notice,
+  #printable-girvi-packet-tag,
   #printable-passbook-modal,
   #printable-passbook-sheet,
   #printable-scheme-maturity-slip,
@@ -150,6 +154,8 @@
   .printable-thermal,
   #printable-thermal-receipt,
   #printable-udhaar-slip,
+  #printable-girvi-interest-slip,
+  #printable-girvi-packet-tag,
   #printable-jewellery-tag {
     max-width: 74mm !important;
     margin: 0 auto !important;

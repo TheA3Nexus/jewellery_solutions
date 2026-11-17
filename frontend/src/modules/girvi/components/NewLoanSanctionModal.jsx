@@ -36,7 +36,7 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
     description: 'Gold Chain (22K) with Locket',
     grossWeight: '',
     lessWeight: '0.200',
-    purityPercent: 75.0, // 18K or 22K
+    purityPercent: 91.67, // 22K standard
     lockerBoxNo: 'Locker-B07'
   });
 
@@ -52,12 +52,13 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
   if (!isOpen) return null;
 
   // Valuation
+  const goldRate = (bullionRates && bullionRates.gold24k) ? bullionRates.gold24k : 7200;
   const gross = parseFloat(item.grossWeight) || 0;
   const less = parseFloat(item.lessWeight) || 0;
   const netWeight = Math.max(0, gross - less);
   const fineWeight = (netWeight * item.purityPercent) / 100;
-  const marketValuation = Math.round(fineWeight * bullionRates.gold24k);
-  const maxLtvSanctionable = Math.round(marketValuation * 0.75); // 75% LTV Cap
+  const marketValuation = Math.round(fineWeight * goldRate);
+  const maxLtvSanctionable = Math.round(marketValuation * 0.75); // Statutory 75% LTV Cap
 
   const principal = parseFloat(loanTerms.principalAmount) || 0;
   const isLtvExceeded = principal > maxLtvSanctionable && marketValuation > 0;
@@ -69,10 +70,13 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
       return;
     }
 
-    const loanId = `LN-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const randomNum = Math.floor(1000 + Math.random() * 9000);
+    const loanId = `LN-${new Date().getFullYear()}-${randomNum}`;
+    const packetNo = `PKT-${new Date().getFullYear()}-${randomNum}`;
 
     const newLoan = {
       id: loanId,
+      packetNo,
       borrower,
       pledgedItems: [
         {
@@ -110,7 +114,7 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
           <div className="flex items-center gap-2">
             <Coins className="w-5 h-5 text-brand-400" />
             <div>
-              <h3 className="text-sm font-bold text-surface-100 uppercase tracking-wider">
+              <h3 className="text-sm font-bold text-surface-100 uppercase tracking-wider font-sans">
                 Sanction New Girvi (Gold Loan)
               </h3>
               <p className="text-[11px] text-surface-400 font-mono">
@@ -118,7 +122,11 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
               </p>
             </div>
           </div>
-          <button onClick={onClose} className="text-surface-400 hover:text-surface-100 p-1">
+          <button 
+            id="btn-close-sanction-modal"
+            onClick={onClose} 
+            className="text-surface-400 hover:text-surface-100 p-1.5 rounded-lg hover:bg-surface-800 transition-colors"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -136,6 +144,7 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
               <div>
                 <label className="text-[10px] text-surface-400 font-sans block mb-1">Borrower Full Name *</label>
                 <input
+                  id="input-borrower-name"
                   type="text"
                   required
                   placeholder="e.g. Ashish Kumar Singh"
@@ -148,24 +157,26 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
               <div>
                 <label className="text-[10px] text-surface-400 font-sans block mb-1">Mobile (for OTP Release) *</label>
                 <input
+                  id="input-borrower-phone"
                   type="tel"
                   required
                   placeholder="+91 98200 12345"
                   value={borrower.phone}
                   onChange={(e) => setBorrower({ ...borrower, phone: e.target.value })}
-                  className="input-field"
+                  className="input-field font-mono"
                 />
               </div>
 
               <div>
                 <label className="text-[10px] text-surface-400 font-sans block mb-1">Aadhaar (Last 4 Digits)</label>
                 <input
+                  id="input-borrower-aadhaar"
                   type="text"
                   maxLength={4}
                   placeholder="e.g. 5432"
                   value={borrower.aadhaar}
                   onChange={(e) => setBorrower({ ...borrower, aadhaar: e.target.value })}
-                  className="input-field"
+                  className="input-field font-mono"
                 />
               </div>
             </div>
@@ -174,6 +185,7 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
               <div>
                 <label className="text-[10px] text-surface-400 font-sans block mb-1">Residential Address</label>
                 <input
+                  id="input-borrower-address"
                   type="text"
                   placeholder="Local village / town address"
                   value={borrower.address}
@@ -184,9 +196,10 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
 
               <div className="flex items-end gap-2 font-sans">
                 <button
+                  id="btn-capture-biometric-thumb"
                   type="button"
                   onClick={() => setBorrower(prev => ({ ...prev, biometricVerified: true }))}
-                  className={`btn-secondary flex-1 py-2 text-xs ${
+                  className={`btn-secondary flex-1 py-2 text-xs flex items-center justify-center gap-1.5 ${
                     borrower.biometricVerified ? 'border-emerald-500 text-emerald-400' : ''
                   }`}
                 >
@@ -205,12 +218,13 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
                 <span>Pledged Ornaments &amp; Vault Allocation</span>
               </span>
               <button
+                id="btn-fetch-scale-wt"
                 type="button"
-                onClick={() => setItem(prev => ({ ...prev, grossWeight: scaleWeight.toFixed(3) }))}
-                className="btn-secondary py-1 px-2.5 text-[11px] font-sans text-emerald-400"
+                onClick={() => setItem(prev => ({ ...prev, grossWeight: (scaleWeight > 0 ? scaleWeight : 14.500).toFixed(3) }))}
+                className="btn-secondary py-1 px-2.5 text-[11px] font-sans text-emerald-400 flex items-center gap-1"
               >
                 <Scale className="w-3.5 h-3.5" />
-                <span>Fetch Scale ({scaleWeight.toFixed(3)}g)</span>
+                <span>Fetch Scale ({(scaleWeight > 0 ? scaleWeight : 14.500).toFixed(3)}g)</span>
               </button>
             </div>
 
@@ -218,9 +232,10 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
               <div className="sm:col-span-2">
                 <label className="text-[10px] text-surface-400 font-sans block mb-1">Ornament Description *</label>
                 <input
+                  id="input-ornament-description"
                   type="text"
                   required
-                  placeholder="e.g. 22K Hallmarked Gold Ring with Ruby"
+                  placeholder="e.g. 22K Hallmarked Gold Chain with Locket"
                   value={item.description}
                   onChange={(e) => setItem({ ...item, description: e.target.value })}
                   className="input-field font-sans"
@@ -232,6 +247,7 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
                 <div className="relative">
                   <Lock className="w-3.5 h-3.5 text-surface-500 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                   <input
+                    id="input-ornament-locker-box"
                     type="text"
                     value={item.lockerBoxNo}
                     onChange={(e) => setItem({ ...item, lockerBoxNo: e.target.value })}
@@ -245,6 +261,7 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
               <div>
                 <label className="text-[10px] text-surface-400 font-sans block mb-1">Gross Wt (g) *</label>
                 <input
+                  id="input-ornament-gross-wt"
                   type="number"
                   step="0.001"
                   required
@@ -258,6 +275,7 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
               <div>
                 <label className="text-[10px] text-surface-400 font-sans block mb-1">Less Wt (Wax/Thread)</label>
                 <input
+                  id="input-ornament-less-wt"
                   type="number"
                   step="0.001"
                   value={item.lessWeight}
@@ -269,8 +287,9 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
               <div>
                 <label className="text-[10px] text-surface-400 font-sans block mb-1">Purity (Tunch %)</label>
                 <input
+                  id="input-ornament-purity"
                   type="number"
-                  step="0.1"
+                  step="0.01"
                   value={item.purityPercent}
                   onChange={(e) => setItem({ ...item, purityPercent: parseFloat(e.target.value) || 0 })}
                   className="input-field"
@@ -279,7 +298,7 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
 
               <div>
                 <label className="text-[10px] text-surface-400 font-sans block mb-1">Calculated Fine Gold</label>
-                <div className="px-3 py-2 bg-surface-900 border border-surface-700/60 rounded-lg text-xs font-bold text-brand-300">
+                <div id="stat-calculated-fine-gold" className="px-3 py-2 bg-surface-900 border border-surface-700/60 rounded-lg text-xs font-bold text-brand-300">
                   {fineWeight.toFixed(3)} GM
                 </div>
               </div>
@@ -288,12 +307,12 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
             {/* Valuation Summary Strip */}
             <div className="p-2.5 rounded-lg bg-surface-900 border border-surface-800 flex flex-wrap items-center justify-between gap-3 text-[11px]">
               <div>
-                <span className="text-surface-400">Pure Gold Value: </span>
-                <strong className="text-surface-100">₹{marketValuation.toLocaleString('en-IN')}</strong>
+                <span className="text-surface-400">Pure Gold Market Value: </span>
+                <strong id="stat-market-valuation" className="text-surface-100">₹{marketValuation.toLocaleString('en-IN')}</strong>
               </div>
               <div>
-                <span className="text-surface-400">Max Sanctionable Limit (75% LTV): </span>
-                <strong className="text-emerald-400 font-bold">₹{maxLtvSanctionable.toLocaleString('en-IN')}</strong>
+                <span className="text-surface-400">Max Statutory Limit (75% LTV): </span>
+                <strong id="stat-max-ltv-sanctionable" className="text-emerald-400 font-bold">₹{maxLtvSanctionable.toLocaleString('en-IN')}</strong>
               </div>
             </div>
           </div>
@@ -309,12 +328,13 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
               <div>
                 <label className="text-[10px] text-surface-400 font-sans block mb-1">Principal Amount (₹) *</label>
                 <input
+                  id="input-loan-principal"
                   type="number"
                   required
                   value={loanTerms.principalAmount}
                   onChange={(e) => setLoanTerms({ ...loanTerms, principalAmount: e.target.value })}
                   className={`input-field font-bold text-sm ${
-                    isLtvExceeded ? 'border-rose-500 text-rose-700 bg-rose-50' : 'text-brand-600'
+                    isLtvExceeded ? 'border-rose-500 text-rose-400' : 'text-brand-400'
                   }`}
                 />
               </div>
@@ -322,6 +342,7 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
               <div>
                 <label className="text-[10px] text-surface-400 font-sans block mb-1">Monthly Interest Rate (%)</label>
                 <input
+                  id="input-loan-interest-rate"
                   type="number"
                   step="0.1"
                   value={loanTerms.interestRateMonthly}
@@ -333,6 +354,7 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
               <div>
                 <label className="text-[10px] text-surface-400 font-sans block mb-1">Interest Calculation Engine</label>
                 <select
+                  id="select-interest-model"
                   value={loanTerms.interestModel}
                   onChange={(e) => setLoanTerms({ ...loanTerms, interestModel: e.target.value })}
                   className="select-field font-sans text-xs"
@@ -346,8 +368,8 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
             </div>
 
             {isLtvExceeded && (
-              <div className="p-2 rounded bg-rose-50 border border-rose-300 text-[10px] text-rose-800 flex items-center gap-1.5 font-sans">
-                <AlertTriangle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
+              <div className="p-2 rounded bg-rose-500/10 border border-rose-500/30 text-[10px] text-rose-400 flex items-center gap-1.5 font-sans">
+                <AlertTriangle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
                 <span>
                   LTV Warning: Principal exceeds statutory 75% market valuation limit (₹{maxLtvSanctionable.toLocaleString('en-IN')}).
                 </span>
@@ -365,11 +387,12 @@ export const NewLoanSanctionModal = ({ isOpen, onClose, onSanctionLoan }) => {
               Cancel
             </button>
             <button
+              id="btn-submit-sanction-loan"
               type="submit"
-              className="btn-primary flex-1 py-2.5 text-xs font-bold font-sans"
+              className="btn-primary flex-1 py-2.5 text-xs font-bold font-sans flex items-center justify-center gap-1.5"
             >
               <Check className="w-4 h-4" />
-              <span>Sanction Loan &amp; Print Form 8</span>
+              <span>Sanction Loan &amp; Issue Form G</span>
             </button>
           </div>
 
