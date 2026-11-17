@@ -6,13 +6,14 @@ import {
   Printer, 
   Radio, 
   Edit3, 
-  SlidersHorizontal,
-  X,
-  CheckCircle2,
-  UserCheck
+  SlidersHorizontal, 
+  X, 
+  CheckCircle2, 
+  UserCheck,
+  Building2
 } from 'lucide-react';
 
-export const TopHeader = () => {
+export const TopHeader = ({ onOpenMasterAdmin }) => {
   const { tenant, currentUser, bullionRates, updateRates } = useTenant();
 
   const { 
@@ -69,6 +70,18 @@ export const TopHeader = () => {
               <span className="text-[9px] px-1.5 py-0.2 rounded bg-surface-canvas text-surface-300 border border-surface-border font-mono font-semibold shrink-0">
                 HUID Active
               </span>
+              {onOpenMasterAdmin && (
+                <button
+                  type="button"
+                  id="topheader-switch-store-btn"
+                  onClick={onOpenMasterAdmin}
+                  className="hidden sm:inline-flex items-center gap-1 text-[9px] font-mono px-2 py-0.5 rounded-full bg-brand-500/10 hover:bg-brand-500/20 text-brand-400 border border-brand-500/30 font-bold transition cursor-pointer"
+                  title="Switch Store or View All Clients in Master Dashboard"
+                >
+                  <Building2 className="w-2.5 h-2.5" />
+                  <span>Stores</span>
+                </button>
+              )}
             </div>
             <div className="flex items-center gap-1.5 font-mono text-[10px] text-surface-400 mt-0.5">
               <span className="truncate">{tenant?.branch}</span>

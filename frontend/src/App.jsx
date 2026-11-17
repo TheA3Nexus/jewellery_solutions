@@ -4,6 +4,8 @@ import { TenantProvider } from './context/TenantContext';
 import { HardwareProvider } from './context/HardwareContext';
 import { Sidebar } from './components/layout/Sidebar';
 import { TopHeader } from './components/layout/TopHeader';
+import { ImpersonationBanner } from './components/layout/ImpersonationBanner';
+import { PlatformAdminWorkspace } from './modules/admin/PlatformAdminWorkspace';
 import { POSWorkspace } from './modules/pos/POSWorkspace';
 import { InventoryWorkspace } from './modules/inventory/InventoryWorkspace';
 import { ShowroomWorkspace } from './modules/showroom/ShowroomWorkspace';
@@ -20,11 +22,14 @@ import {
 } from 'lucide-react';
 
 function AppContent() {
-  const [activeCategory, setActiveCategory] = useState('POS');
+  // Start on the Master Platform Dashboard so the owner can oversee all jeweller clients
+  const [activeCategory, setActiveCategory] = useState('MASTER_ADMIN');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const renderActiveCategory = () => {
     switch (activeCategory) {
+      case 'MASTER_ADMIN':
+        return <PlatformAdminWorkspace onEnterStore={() => setActiveCategory('POS')} />;
       case 'POS':
         return <POSWorkspace />;
       case 'INVENTORY':
@@ -72,8 +77,11 @@ function AppContent() {
 
   return (
     <div className="h-screen flex flex-col bg-surface-canvas text-surface-secondary font-sans transition-colors duration-200 overflow-hidden">
+      {/* 0. Top Impersonation Banner (Visible when platform super-admin is viewing a specific store) */}
+      <ImpersonationBanner onExitToMasterAdmin={() => setActiveCategory('MASTER_ADMIN')} />
+
       {/* 1. Top Edge-to-Edge Showroom App Bar (Outside and Above Side Panel) */}
-      <TopHeader />
+      <TopHeader onOpenMasterAdmin={() => setActiveCategory('MASTER_ADMIN')} />
 
       {/* 2. Main Workspace Body: Left Sidebar + Center Viewport */}
       <div className="flex-1 flex min-h-0 overflow-hidden">
