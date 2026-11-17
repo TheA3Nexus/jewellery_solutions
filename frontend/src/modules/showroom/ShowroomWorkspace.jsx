@@ -17,6 +17,7 @@ export const ShowroomWorkspace = () => {
       {/* Subcategory Level 2 Tab Navigation */}
       <div className="flex border-b border-surface-800 text-xs font-semibold gap-1 overflow-x-auto">
         <button
+          id="btn-tab-lookbook"
           onClick={() => setActiveSubTab('LOOKBOOK')}
           className={`pb-3 px-4 flex items-center gap-2 border-b-2 transition-colors whitespace-nowrap ${
             activeSubTab === 'LOOKBOOK'
@@ -28,6 +29,7 @@ export const ShowroomWorkspace = () => {
           In-Store Digital Lookbook &amp; Assisted Selling
         </button>
         <button
+          id="btn-tab-customer-display"
           onClick={() => setActiveSubTab('CUSTOMER_DISPLAY')}
           className={`pb-3 px-4 flex items-center gap-2 border-b-2 transition-colors whitespace-nowrap ${
             activeSubTab === 'CUSTOMER_DISPLAY'
