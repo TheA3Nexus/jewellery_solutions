@@ -28,10 +28,11 @@ import {
   PauseCircle,
   PlayCircle,
   TrendingUp,
-  Coins
+  Coins,
+  Home
 } from 'lucide-react';
 
-export const PlatformAdminWorkspace = ({ onEnterStore }) => {
+export const PlatformAdminWorkspace = ({ onEnterStore, onGoToHomepage }) => {
   const { 
     clientStores, 
     enterStore, 
@@ -176,6 +177,18 @@ export const PlatformAdminWorkspace = ({ onEnterStore }) => {
         </div>
 
         <div className="flex items-center gap-2.5 w-full sm:w-auto">
+          {onGoToHomepage && (
+            <button
+              id="admin-back-to-home-btn"
+              onClick={onGoToHomepage}
+              className="px-3.5 py-2 rounded-xl border border-surface-border bg-surface-canvas hover:bg-surface-hover text-surface-200 hover:text-surface-100 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer"
+              title="Return to Public Homepage"
+            >
+              <Home className="w-3.5 h-3.5 text-brand-400" />
+              <span>Back to Homepage (होमपेज)</span>
+            </button>
+          )}
+
           <button
             id="open-register-client-modal-btn"
             onClick={() => setIsRegisterOpen(true)}

@@ -17,7 +17,8 @@ import {
   PanelLeftOpen,
   Sun,
   Moon,
-  ShieldCheck
+  ShieldCheck,
+  Home
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -33,7 +34,7 @@ const NAV_ITEMS = [
   { id: 'SETTINGS', label: 'System Settings', icon: SlidersHorizontal }
 ];
 
-export const Sidebar = ({ activeCategory, setActiveCategory, isCollapsed, setIsCollapsed }) => {
+export const Sidebar = ({ activeCategory, setActiveCategory, isCollapsed, setIsCollapsed, onGoToHomepage }) => {
   const { theme, toggleTheme } = useTheme();
   const { clientStores, isImpersonating } = useTenant();
 
@@ -45,6 +46,25 @@ export const Sidebar = ({ activeCategory, setActiveCategory, isCollapsed, setIsC
     >
       {/* 1. Navigation Items List: Starts directly at the top with rock-solid fixed geometry */}
       <div className="flex-1 overflow-y-auto no-scrollbar py-3 px-2 space-y-1">
+        {/* Public Homepage Link */}
+        {onGoToHomepage && (
+          <div className="pb-1.5 mb-1.5 border-b border-surface-border">
+            <button
+              id="sidebar-home-link-btn"
+              onClick={onGoToHomepage}
+              className="w-full h-9 rounded-xl flex items-center px-1 text-surface-400 hover:text-surface-100 hover:bg-surface-hover text-xs font-semibold transition cursor-pointer"
+              title={isCollapsed ? 'Return to Public Homepage' : undefined}
+            >
+              <div className="w-10 h-9 flex items-center justify-center shrink-0">
+                <Home className="w-4 h-4 text-brand-400 shrink-0" />
+              </div>
+              {!isCollapsed && (
+                <span className="truncate pl-1 pr-2 font-sans">Public Homepage</span>
+              )}
+            </button>
+          </div>
+        )}
+
         {/* Master Platform Admin Command Item */}
         <div className="pb-2 mb-2 border-b border-surface-border">
           <button

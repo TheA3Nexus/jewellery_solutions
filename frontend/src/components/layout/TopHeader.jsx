@@ -10,10 +10,11 @@ import {
   X, 
   CheckCircle2, 
   UserCheck,
-  Building2
+  Building2,
+  Home
 } from 'lucide-react';
 
-export const TopHeader = ({ onOpenMasterAdmin }) => {
+export const TopHeader = ({ onOpenMasterAdmin, onGoToHomepage }) => {
   const { tenant, currentUser, bullionRates, updateRates } = useTenant();
 
   const { 
@@ -190,6 +191,19 @@ export const TopHeader = ({ onOpenMasterAdmin }) => {
             <span className="font-semibold text-surface-200 truncate max-w-[90px]">{currentUser?.name}</span>
             <span className="text-surface-500 font-mono text-[9px]">(C01)</span>
           </div>
+
+          {/* Go to Homepage / Sign Out Button */}
+          {onGoToHomepage && (
+            <button
+              type="button"
+              id="topheader-home-btn"
+              onClick={onGoToHomepage}
+              className="p-1.5 rounded-lg border border-surface-border bg-surface-canvas hover:bg-surface-hover text-surface-400 hover:text-surface-100 transition cursor-pointer"
+              title="Return to Public Homepage"
+            >
+              <Home className="w-3.5 h-3.5 text-brand-400" />
+            </button>
+          )}
         </div>
 
       </div>

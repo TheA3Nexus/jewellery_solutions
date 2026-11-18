@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ThemeProvider } from './context/ThemeContext';
 import { TenantProvider } from './context/TenantContext';
 import { HardwareProvider } from './context/HardwareContext';
+import { LandingPage } from './modules/landing/LandingPage';
 import { Sidebar } from './components/layout/Sidebar';
 import { TopHeader } from './components/layout/TopHeader';
 import { ImpersonationBanner } from './components/layout/ImpersonationBanner';
@@ -22,14 +23,51 @@ import {
 } from 'lucide-react';
 
 function AppContent() {
-  // Start on the Master Platform Dashboard so the owner can oversee all jeweller clients
-  const [activeCategory, setActiveCategory] = useState('MASTER_ADMIN');
+  // Default entry point on http://localhost:3000 is the public SaaS Homepage
+  const [currentView, setCurrentView] = useState(() => {
+    return localStorage.getItem('A3_CURRENT_VIEW') || 'HOMEPAGE';
+  });
+  
+  const [activeCategory, setActiveCategory] = useState('POS');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
+  const handleGoToHomepage = () => {
+    setCurrentView('HOMEPAGE');
+    localStorage.setItem('A3_CURRENT_VIEW', 'HOMEPAGE');
+  };
+
+  const handleNavigateToApp = (targetModule) => {
+    setCurrentView('APP');
+    setActiveCategory(targetModule || 'POS');
+    localStorage.setItem('A3_CURRENT_VIEW', 'APP');
+  };
+
+  const handleNavigateToMasterAdmin = () => {
+    setCurrentView('APP');
+    setActiveCategory('MASTER_ADMIN');
+    localStorage.setItem('A3_CURRENT_VIEW', 'APP');
+  };
+
+  // If in HOMEPAGE view, render the modern high-converting SaaS Homepage
+  if (currentView === 'HOMEPAGE') {
+    return (
+      <LandingPage
+        onNavigateToApp={handleNavigateToApp}
+        onNavigateToMasterAdmin={handleNavigateToMasterAdmin}
+      />
+    );
+  }
+
+  // Otherwise, render the authenticated ERP Workspace (Showroom or Master Admin)
   const renderActiveCategory = () => {
     switch (activeCategory) {
       case 'MASTER_ADMIN':
-        return <PlatformAdminWorkspace onEnterStore={() => setActiveCategory('POS')} />;
+        return (
+          <PlatformAdminWorkspace 
+            onEnterStore={() => setActiveCategory('POS')} 
+            onGoToHomepage={handleGoToHomepage}
+          />
+        );
       case 'POS':
         return <POSWorkspace />;
       case 'INVENTORY':
@@ -81,7 +119,10 @@ function AppContent() {
       <ImpersonationBanner onExitToMasterAdmin={() => setActiveCategory('MASTER_ADMIN')} />
 
       {/* 1. Top Edge-to-Edge Showroom App Bar (Outside and Above Side Panel) */}
-      <TopHeader onOpenMasterAdmin={() => setActiveCategory('MASTER_ADMIN')} />
+      <TopHeader 
+        onOpenMasterAdmin={() => setActiveCategory('MASTER_ADMIN')} 
+        onGoToHomepage={handleGoToHomepage}
+      />
 
       {/* 2. Main Workspace Body: Left Sidebar + Center Viewport */}
       <div className="flex-1 flex min-h-0 overflow-hidden">
@@ -91,6 +132,7 @@ function AppContent() {
           setActiveCategory={setActiveCategory} 
           isCollapsed={isSidebarCollapsed}
           setIsCollapsed={setIsSidebarCollapsed}
+          onGoToHomepage={handleGoToHomepage}
         />
 
         {/* Center / Right Main Content Viewport */}
